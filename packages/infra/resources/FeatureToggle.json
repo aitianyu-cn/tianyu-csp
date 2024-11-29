@@ -1,0 +1,17 @@
+{
+    "TIANYU_CSP_CORE": {
+        "description": "Tianyu CSP core functionality",
+        "enable": true,
+        "dependency": []
+    },
+    "USAGE_TRACK_ENABLEMENT": {
+        "description": "Tianyu CSP usage tracking enablement toggle",
+        "enable": true,
+        "dependency": ["TIANYU_CSP_CORE"]
+    },
+    "TRACE_CONSOLE_LOG_ENABLEMENT": {
+        "description": "Tianyu CSP trace recording local console log enablement",
+        "enable": true,
+        "dependency": ["TIANYU_CSP_CORE"]
+    }
+}
