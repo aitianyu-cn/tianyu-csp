@@ -1,6 +1,6 @@
-# TIANYU - CSP
+# TIANYU - Common Service Platform
 
-Project for Common Service Platform of Tianyu.
+A Common Service Platform of Tianyu includes Data API, Network API, Schedule Job and Status Monitor.
 
 ## MOTIVATION
 

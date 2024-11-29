@@ -108,7 +108,7 @@ build
 package-lock.json
 
 # test reporters
-__test__/__report__
+test/__report__
 
 # mac files
 .DS_Store

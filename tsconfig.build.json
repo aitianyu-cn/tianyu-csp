@@ -1,0 +1,32 @@
+{
+    "include": ["packages", "test"],
+    "exclude": [],
+    "compilerOptions": {
+        "composite": true,
+        "target": "ES2022",
+        "module": "CommonJS",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "jsx": "preserve",
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": false,
+        "baseUrl": ".",
+        "outDir": "./build",
+        "paths": {
+            "core": ["packages/core/index.ts"],
+            "data": ["packages/data/index.ts"],
+            "infra": ["packages/infra/index.ts"],
+            "job": ["packages/job/index.ts"],
+            "monitor": ["packages/report/index.ts"],
+            "network": ["packages/web/index.ts"]
+        }
+    }
+}
