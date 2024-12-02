@@ -5,7 +5,7 @@ import { IFeaturesConfig } from "../Constant";
 import { IFeatureManager } from "./interfaces";
 
 export class FeatureManagerImpl implements IFeatureManager {
-    allFeatures(): MapOfType<IFeaturesConfig> {
+    allFeatures(start?: number, count?: number): MapOfType<IFeaturesConfig> {
         throw new Error("Method not implemented.");
     }
     isActive(name: string): boolean {

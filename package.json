@@ -15,7 +15,8 @@
     },
     "type": "commonjs",
     "files": [
-        "dist"
+        "dist",
+        ".doc"
     ],
     "scripts": {
         "after-build": "rimraf ./build",

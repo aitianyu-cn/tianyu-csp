@@ -71,3 +71,21 @@ For the further service development of `Smart Home`, we need a solution to conta
 - **Common Status Monitor Platform**
 
   Status Monitor Platform is used for collecting all the data before mentioned, and to generate a report to user.
+
+## MODULES
+
+### Infrastructure
+
+Infrastructure contains basic API and some default resources (international strings, exported json data, etc..).
+
+All of components under this folder, based on the database accessment. In this part, will define an inner database API implementation.
+
+- **_Database_**
+
+  There are some infra database API definitions. To provide infra part needed database operation interfaces.
+
+- **_Logger_**
+- **_Message_**
+- **_Options_**
+- **_Trace_**
+- **_Usage_**

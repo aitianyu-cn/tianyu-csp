@@ -6,7 +6,7 @@ import { IFeaturesConfig } from "../Constant";
 export interface IFeatureManager extends IFeatureManagerReader, IFeatureManagerAdmin {}
 
 export interface IFeatureManagerReader {
-    allFeatures(): MapOfType<IFeaturesConfig>;
+    allFeatures(start?: number, count?: number): MapOfType<IFeaturesConfig>;
     isActive(name: string): boolean;
     contains(name: string): boolean;
 }

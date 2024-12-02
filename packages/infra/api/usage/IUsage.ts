@@ -1,7 +1,7 @@
 /** @format */
 
-import { ProjectDefine, UsageAction } from "../Constant";
+import { ProjectDefine, OperationActions } from "../Constant";
 
 export interface IUsage {
-    record(project: ProjectDefine, moduleName: string, action: UsageAction, msg?: string): void;
+    record(project: ProjectDefine, moduleName: string, action: OperationActions, msg?: string): void;
 }
