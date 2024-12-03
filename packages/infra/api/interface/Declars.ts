@@ -37,3 +37,7 @@ export interface SyncOperationCallback<TS = any, TF = {}> {
     /** operation failed callback function */
     failed?: CallbackActionT<TF & OperationFailed>;
 }
+
+export interface IGlobalEnvironmentConfig {
+    baseUrl: string;
+}
