@@ -1,7 +1,6 @@
 /** @format */
 
 import { guid } from "@aitianyu.cn/types";
-import { ProjectDefine } from "../Constant";
 
 /** Trace Helpers */
 export class TraceHelper {
@@ -12,7 +11,7 @@ export class TraceHelper {
      * @param moduleName module name
      * @returns return a guid which generated from given project and module
      */
-    public static generateTraceId(project: ProjectDefine, moduleName: string): string {
+    public static generateTraceId(project: string, moduleName: string): string {
         return guid();
     }
 }

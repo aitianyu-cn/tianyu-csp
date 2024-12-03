@@ -8,6 +8,7 @@ Logger table is used to record all the log from project running. All the records
 
 ```
 
+    `user` CHAR(45) not null,
     `level` TINYINT(3) not null default '0',
     `time` CHAR(45) not null,
     `msg` TEXT
@@ -22,6 +23,7 @@ Trace table is used to record all the trace data for project running. All the re
 
 ```
 
+    `user` CHAR(45) not null,
     `id` CHAR(45) not null,
     `level` TINYINT(3) not null default '0',
     `time` CHAR(45) not null,
@@ -41,6 +43,7 @@ Usage table is used to record all the user actions and data accesses from projec
 
 ```
 
+    `user` CHAR(45) not null,
     `project` VARCHAR(255) not null,
     `module` VARCHAR(255) not null,
     `action` CHAR(10) not null,

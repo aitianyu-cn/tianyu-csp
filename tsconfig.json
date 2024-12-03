@@ -1,5 +1,5 @@
 {
-    "include": ["packages", "test"],
+    "include": ["packages", "test", "scripts"],
     "exclude": [],
     "compilerOptions": {
         "composite": true,
@@ -21,12 +21,13 @@
         "baseUrl": ".",
         "outDir": "./build",
         "paths": {
-            "core": ["packages/core/index.ts"],
-            "data": ["packages/data/index.ts"],
-            "infra": ["packages/infra/index.ts"],
-            "job": ["packages/job/index.ts"],
-            "monitor": ["packages/report/index.ts"],
-            "network": ["packages/web/index.ts"]
+            "#core/*": ["packages/core/*"],
+            "#data/*": ["packages/data/*"],
+            "#infra/*": ["packages/infra/*", "packages/infra/index.ts"],
+            "#job/*": ["packages/job/*"],
+            "#monitor/*": ["packages/report/*"],
+            "#network/*": ["packages/web/*"],
+            "scripts/*": ["scripts/*"]
         }
     }
 }

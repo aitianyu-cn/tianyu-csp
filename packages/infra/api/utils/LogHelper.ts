@@ -1,7 +1,5 @@
 /** @format */
 
-import { ProjectDefine } from "../Constant";
-
 /** Log Helpers */
 export class LogHelper {
     /**
@@ -12,7 +10,7 @@ export class LogHelper {
      * @param msg given log message
      * @returns return a formatted log message
      */
-    public static generateMsg(project: ProjectDefine, moduleName: string, msg: string): string {
+    public static generateMsg(project: string, moduleName: string, msg: string): string {
         throw new Error("Method not implemented.");
     }
 

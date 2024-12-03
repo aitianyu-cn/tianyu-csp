@@ -1,75 +1,73 @@
 /** @format */
 
-import { CallbackActionT } from "@aitianyu.cn/types";
-import path from "path";
-
-/**
- * Type of CSP default projects
- *
- * core: core functionality of CSP
- * data: database, local storage and runtime cache APIs
- * infra: CSP infra part, no exports API
- * job: schedule job and multi-threads job worker APIs
- * monitor: status monitor of all CSP components
- * network: network related APIs
- */
-export type ProjectDefine = "core" | "data" | "infra" | "job" | "monitor" | "network";
-
-/**
- * Type of supported opertion actions
- *
- * Read: access a resource
- * Write: open a resource and to do a data write operation
- * Delete: remove a resource
- * Change: to update a resource
- * Execute: to start a job
- */
-export type OperationActions = "Read" | "Write" | "Delete" | "Change" | "Execute";
-
-/** CSP feature config for each one feature */
-export interface IFeaturesConfig {
-    /** indicates the feature is default enabled if it is true */
-    enable: boolean;
-    /** description of the feature */
-    description: string;
-    /** contains the dependent feature names, indicates current feature can be enabled
-     *  only when all the dependent features all enabled
-     */
-    dependency: string[];
-}
-
-/** Operation Failed Structure */
-export interface OperationFailed {
-    /** Error code */
-    code: string;
-    /** Error message */
-    message: string;
-    /** Technical error message */
-    error?: string;
-    /** id for trace recording */
-    traceId?: string;
-}
-
-/**
- * Callback function for sync operation
- *
- * @template TS type of success operating result
- * @template TF type of failed operating result
- */
-export interface SyncOperationCallback<TS = any, TF = {}> {
-    /** operation success callback function */
-    success: CallbackActionT<TS>;
-    /** operation failed callback function */
-    failed?: CallbackActionT<TF & OperationFailed>;
-}
-
-/** Map of internal directory map*/
-export const DirectoryMap = {
-    INFRA_RESOURCES: path.resolve(__dirname, "../resources"),
+export const EXIT_CODES = {
+    FATAL_ERROR: -100,
+    NO_ERROR: 0,
 };
-
-export const FATAL_ERROR_EXIT_CODE = -100;
 
 export const NODE_ENV_CONFIG_NAMES = {
     ENVIRONMENT: "environment",
+};
+
+export const INFRA_DEFAULT_PRIVILEGE_LIST = {
+    TRACE: {
+        key: "Trace",
+        des: "To describe a user whether can operate trace data",
+    },
+    USAGE: {
+        key: "Usage",
+        des: "To describe a user whether can operate usage data",
+    },
+};
+
+export const GENERAL_OPERATION_ERROR_CODE = {
+    OPERATION_NO_PRIVILEGE: "300",
+};
+
+export const DATABASE_EXECUTION_ERROR_CODE = {
+    DB_CORE_ERROR: "100",
+    DB_EXECUTION_ERROR: "200",
+    DB_SQL_ERROR: "201",
+    DB_OTHER_ERROR_NO_FATAL: "202",
+};
+
+export const DB_DEFAULT_TABLE_MAPPING_INFO = {
+    FEATURES: {
+        DATABASE_NAME: "infra_db",
+        TABLE_NAME: "features_tb",
+    },
+    TRACE: {
+        DATABASE_NAME: "infra_db",
+        TABLE_NAME: "trace_tb",
+    },
+    USAGE: {
+        DATABASE_NAME: "infra_db",
+        TABLE_NAME: "usage_tb",
+    },
+    LOGGER: {
+        DATABASE_NAME: "infra_db",
+        TABLE_NAME: "log_tb",
+    },
+    AUTHORIZATION: {
+        DATABASE_NAME: "secure_db",
+
+        ROLE_MAP: "role_tb",
+        USER_TABLE: "user_tb",
+        TEAMS_TABLE: "team_tb",
+        LICENSIS_TABLE: "licenses_tb",
+    },
+};
+
+export const BACKEND_SESSION_USER = "00000000-0000-0000-0000-000000000000";
+
+export const GlobalTemplateSQL: any = {
+    clear: {
+        mysql: "TRUNCATE TABLE `{0}`.`{1}`;",
+    },
+    delete: {
+        mysql: "DELETE FROM `{0}`.`{1}` WHERE `user` = '{2}';",
+    },
+    count: {
+        mysql: "SELECT COUNT(*) AS `count` FROM `{0}`.`{1}` WHERE {2};",
+    },
 };
