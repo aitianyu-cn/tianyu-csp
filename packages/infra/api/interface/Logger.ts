@@ -10,35 +10,42 @@ export interface ILogger {
      * @param level the log level, if not be specified, to print as default log
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    log(sessionId: string, msg: string, level?: LogLevel, timer?: boolean): void;
+    log(msg: string, level?: LogLevel, timer?: boolean): Promise<void>;
     /**
      * Write a info log
      * @param msg the message body
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    info(sessionId: string, msg: string, timer?: boolean): void;
+    info(msg: string, timer?: boolean): Promise<void>;
     /**
      * Write a warning log
      * @param msg the message body
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    warn(sessionId: string, msg: string, timer?: boolean): void;
+    warn(msg: string, timer?: boolean): Promise<void>;
     /**
      * Write a debug log
      * @param msg the message body
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    debug(sessionId: string, msg: string, timer?: boolean): void;
+    debug(msg: string, timer?: boolean): Promise<void>;
     /**
      * Write a error message
      * @param msg the message body
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    error(sessionId: string, msg: string, timer?: boolean): void;
+    error(msg: string, timer?: boolean): Promise<void>;
     /**
      * Write a fatal message
      * @param msg the message body
      * @param timer a boolean value indicates whether needs to add a timestamp for the log
      */
-    fatal(sessionId: string, msg: string, timer?: boolean): void;
+    fatal(msg: string, timer?: boolean): Promise<void>;
+}
+
+export interface ILogDBRecord {
+    user: string;
+    level: LogLevel;
+    time: string;
+    msg: string;
 }

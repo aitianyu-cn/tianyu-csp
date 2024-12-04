@@ -6,6 +6,9 @@ import { SyncOperationCallback } from "./Declars";
 export interface IDatabaseAPIBase {
     execute(databaseName: string, sql: string, callback: SyncOperationCallback, forceSql?: boolean): void;
     executeAsync<TR = any>(databaseName: string, sql: string, forceSql?: boolean): Promise<TR>;
+
+    executeBatch(databaseName: string, sql: string[], callback: SyncOperationCallback, forceSql?: boolean): void;
+    executeBatchAsync<TR = any>(databaseName: string, sql: string[], forceSql?: boolean): Promise<TR>;
 }
 
 export type DefaultAuthorTableId = "role" | "user" | "team" | "licenses";
@@ -13,7 +16,6 @@ export type DefaultAuthorTableId = "role" | "user" | "team" | "licenses";
 export type DefaultTableId = "feature" | "trace" | "usage" | "logger" | DefaultAuthorTableId;
 
 export interface IDatabaseManager {
-    isValid: boolean;
     connect(databaseName: string): IDatabaseAPIBase;
     databaseType(databaseName: string): SupportedDatabaseType;
     mappingTable(tableId: DefaultTableId): DatabaseDefaultTableMap & { tableMapping: string };

@@ -11,11 +11,12 @@ export interface ITraceConfig {
 }
 
 export interface ITrace {
-    log(sessionId: string, message: string, level: LogLevel): void;
-    logAndTrace(sessionId: string, message: string, level: LogLevel, config?: ITraceConfig): void;
+    log(message: string, level: LogLevel): Promise<void>;
+    logAndTrace(message: string, level: LogLevel, config?: ITraceConfig): Promise<void>;
 }
 
 export interface ITraceDBRecord {
+    user: string;
     id: string;
     level: LogLevel;
     time: string;

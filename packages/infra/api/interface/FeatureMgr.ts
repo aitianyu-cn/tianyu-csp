@@ -1,7 +1,5 @@
 /** @format */
 
-import { MapOfType } from "@aitianyu.cn/types";
-
 /** CSP feature config for each one feature */
 export interface IFeaturesConfig {
     /** indicates the feature is default enabled if it is true */
@@ -17,14 +15,12 @@ export interface IFeaturesConfig {
 export interface IFeatureManager extends IFeatureManagerReader, IFeatureManagerAdmin {}
 
 export interface IFeatureManagerReader {
-    allFeatures(sessionId: string, start?: number, count?: number): MapOfType<IFeaturesConfig>;
-    isActive(sessionId: string, name: string): boolean;
-    contains(sessionId: string, name: string): boolean;
+    allFeatures(start?: number, count?: number): Promise<(IFeaturesConfig & { id: string })[]>;
+    isActive(name: string): Promise<boolean>;
+    contains(name: string): Promise<boolean>;
 }
 
 export interface IFeatureManagerAdmin {
-    enable(sessionId: string, name: string, impactDepFeatures?: boolean): boolean;
-    disable(sessionId: string, name: string, impactDepFeatures?: boolean): boolean;
-    addFeature(sessionId: string, name: string, config: IFeaturesConfig): boolean;
-    removeFeature(sessionId: string, name: string): boolean;
+    enable(name: string): Promise<void>;
+    disable(name: string): Promise<void>;
 }

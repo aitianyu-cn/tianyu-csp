@@ -24,7 +24,7 @@ export interface ISessionPrivilege {
 }
 
 export interface ISessionManagerBase {
-    getInfo(id: string): ISessionInfo;
-    getPrivilege(userId: string): MapOfType<ISessionPrivilege>;
-    checkPrivilege(userId: string, functionality: string, action: OperationActions): boolean;
+    getInfo(): ISessionInfo;
+    getPrivilege(): MapOfType<ISessionPrivilege>;
+    checkPrivilege(functionality: string, action: OperationActions): boolean;
 }

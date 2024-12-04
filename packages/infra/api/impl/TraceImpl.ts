@@ -9,7 +9,7 @@ import { pushLog } from "../db/LoggerAccessor";
 import { selectFeatureIsActive } from "../db/FeatureAccessor";
 
 export class TraceImpl implements ITrace {
-    log(sessionId: string, message: string, level: LogLevel): void {
+    log(message: string, level: LogLevel): void {
         if (RuntimeHelper.isProduction) {
             selectFeatureIsActive(sessionId, "TRACE_CONSOLE_LOG_ENABLEMENT").then(
                 (isActive) => {
@@ -23,7 +23,7 @@ export class TraceImpl implements ITrace {
             );
         }
     }
-    logAndTrace(sessionId: string, message: string, level: LogLevel, config?: ITraceConfig): void {
+    logAndTrace(message: string, level: LogLevel, config?: ITraceConfig): void {
         this.log(sessionId, message, level);
 
         pushTrace(

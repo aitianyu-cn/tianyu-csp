@@ -1,42 +1,56 @@
 /** @format */
 
-import { Log, LogLevel, StringHelper } from "@aitianyu.cn/types";
+import { Log, LogLevel } from "@aitianyu.cn/types";
 import { RuntimeHelper } from "../utils/RuntimeHelper";
 import { LogHelper } from "../utils/LogHelper";
-import { DATABASE_EXECUTION_ERROR_CODE, EXIT_CODES } from "../Constant";
-import { InfraDB } from "../utils/InfraDB";
 import { TemplateSQL } from "./sql/LogSql";
+import { IRuntimeManager } from "../interface/RuntimeMgr";
+import { clearDBTable, pushDBRecord, selectDBCount, selectDBRecords } from "./CommonAccessor";
+import { ILogDBRecord } from "../interface/Logger";
 
-export function pushLog(sessionId: string, msg: string, level: LogLevel, timer: boolean): void {
+export async function pushLog(runtime: IRuntimeManager, msg: string, level: LogLevel, timer: boolean): Promise<void> {
     if (!RuntimeHelper.isProduction) {
         Log.log(msg, level, timer);
     }
 
-    const timeString = LogHelper.generateTime();
-    const { dbName, tableMapping } = InfraDB.translateTable("logger");
-    const sql = StringHelper.format(TemplateSQL["push"][InfraDB.databaseType(dbName) as string], [
-        dbName,
-        tableMapping,
-        level,
-        timeString,
-        msg,
-    ]);
+    const { dbName } = runtime.db.mappingTable("logger");
+    const { user } = runtime.session.getInfo();
 
-    const connection = InfraDB.getConnection(dbName);
-    connection.execute(
-        dbName,
-        sql,
-        {
-            success: () => {
-                // nothing to do when success
-            },
-            failed: (error) => {
-                // when fatal core error occurs, exit application to aviod the further errors.
-                if (error.code === DATABASE_EXECUTION_ERROR_CODE.DB_CORE_ERROR) {
-                    process.exit(EXIT_CODES.FATAL_ERROR);
-                }
-            },
-        },
-        true,
+    return pushDBRecord(
+        runtime,
+        TemplateSQL["push"][runtime.db.databaseType(dbName)],
+        [user.id, level.toString(), LogHelper.generateTime(), msg],
+        "logger",
     );
+}
+
+export async function selectLogsCount(runtime: IRuntimeManager): Promise<number> {
+    return selectDBCount(runtime, "logger");
+}
+
+export async function selectLogRecords(runtime: IRuntimeManager, start: number, count: number): Promise<ILogDBRecord[]> {
+    const { dbName } = runtime.db.mappingTable("logger");
+
+    return selectDBRecords(runtime, TemplateSQL["select"][runtime.db.databaseType(dbName)], start, count, "logger").then(
+        async (result: any) => {
+            const records: ILogDBRecord[] = [];
+            if (Array.isArray(result) && result.length) {
+                for (const item of result) {
+                    records.push({
+                        user: item["user"],
+                        level: item["level"] as LogLevel,
+                        time: item["time"],
+                        msg: item["msg"],
+                    });
+                }
+            }
+
+            return Promise.resolve(records);
+        },
+        async (error) => Promise.reject(error),
+    );
+}
+
+export async function clearLogger(runtime: IRuntimeManager): Promise<void> {
+    return clearDBTable(runtime, "logger");
 }

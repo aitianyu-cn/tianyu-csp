@@ -13,6 +13,11 @@ import { CallbackActionT } from "@aitianyu.cn/types";
  */
 export type OperationActions = "Read" | "Write" | "Delete" | "Change" | "Execute";
 
+export enum RolePrivilegeType {
+    ALLOW = 1,
+    NOT = 0,
+}
+
 /** Operation Failed Structure */
 export interface OperationFailed {
     /** Error code */

@@ -11,12 +11,34 @@ export const NODE_ENV_CONFIG_NAMES = {
 
 export const INFRA_DEFAULT_PRIVILEGE_LIST = {
     TRACE: {
-        key: "Trace",
+        key: "System/Trace",
         des: "To describe a user whether can operate trace data",
     },
     USAGE: {
-        key: "Usage",
+        key: "System/Usage",
         des: "To describe a user whether can operate usage data",
+    },
+    LOGGER: {
+        key: "System/Logger",
+        des: "To describe a user whether can operate log data",
+    },
+    FEATURE: {
+        key: "System/Feature Toggle",
+        des: "To describe a user whether can operate feature toggle",
+    },
+    AUTHORIZATION: {
+        ROLE: {
+            key: "Authorizaton/Role",
+        },
+        USER: {
+            key: "Authorizaton/User",
+        },
+        TEAM: {
+            key: "Authorizaton/Team",
+        },
+        LICENSES: {
+            key: "Authorizaton/Licenses",
+        },
     },
 };
 
@@ -54,20 +76,8 @@ export const DB_DEFAULT_TABLE_MAPPING_INFO = {
         ROLE_MAP: "role_tb",
         USER_TABLE: "user_tb",
         TEAMS_TABLE: "team_tb",
-        LICENSIS_TABLE: "licenses_tb",
+        LICENSES_TABLE: "licenses_tb",
     },
 };
 
 export const BACKEND_SESSION_USER = "00000000-0000-0000-0000-000000000000";
-
-export const GlobalTemplateSQL: any = {
-    clear: {
-        mysql: "TRUNCATE TABLE `{0}`.`{1}`;",
-    },
-    delete: {
-        mysql: "DELETE FROM `{0}`.`{1}` WHERE `user` = '{2}';",
-    },
-    count: {
-        mysql: "SELECT COUNT(*) AS `count` FROM `{0}`.`{1}` WHERE {2};",
-    },
-};

@@ -40,6 +40,14 @@ For the further service development of `Smart Home`, we need a solution to conta
 
     Authorization is the security core for the whole platform. It contains <u>User Management</u> to verify the user access and <u>Privileges Management</u> to control the user activities.
 
+    User Authorization includes `User`, `Licenses` and `Teams` three parts.
+
+    1. Licenses: this is a privilege controller contains all functions permission description. There will be a `role` table as additional description to record each privilege status.
+
+    2. Teams: this is an additional records to create a group for users.
+
+    3. User: this is a user main part for <u>logon authorization</u>, <u>operation permission control</u> and <u>relationship management</u>.
+
   - **_Resources Control_**
 
     Resources Control is the virtual data center to allow user to save data into program internal space. (The data of internal space will be persist in local storage or data base.) According to the data type and configuration, the data will be persist in different target entity and managed in a common place
