@@ -5,9 +5,11 @@ import { ITraceConfig, ITraceDBRecord, TraceArea } from "../interface/Trace";
 import { LogHelper } from "../utils/LogHelper";
 import { TemplateSQL } from "./sql/TraceSql";
 import { IRuntimeManager } from "../interface/RuntimeMgr";
-import { clearDBTable, pushDBRecord, selectDBCount, selectDBRecords } from "./CommonAccessor";
+import { clearDBTable, executeDBCustom, pushDBRecord, selectDBCount } from "./CommonAccessor";
+import { RecordsResult } from "../interface/Declars";
+import { FilterHelper } from "../utils/FilterHelper";
 
-export async function pushTrace(runtime: IRuntimeManager, message: string, level: LogLevel, config: ITraceConfig): Promise<void> {
+async function pushTrace(runtime: IRuntimeManager, message: string, level: LogLevel, config: ITraceConfig): Promise<void> {
     const { dbName } = runtime.db.mappingTable("trace");
     const { user } = runtime.session.getInfo();
 
@@ -19,14 +21,36 @@ export async function pushTrace(runtime: IRuntimeManager, message: string, level
     );
 }
 
-export async function selectTraceCount(runtime: IRuntimeManager): Promise<number> {
-    return selectDBCount(runtime, "trace");
+async function selectTraceCount(runtime: IRuntimeManager): Promise<number> {
+    return searchTraceCount(runtime, FilterHelper.format(runtime));
 }
 
-export async function selectTraceRecords(runtime: IRuntimeManager, start: number, count: number): Promise<ITraceDBRecord[]> {
+async function selectTraceRecords(runtime: IRuntimeManager, start: number, count: number): RecordsResult<ITraceDBRecord[]> {
+    return searchTraceRecords(runtime, start, count, FilterHelper.format(runtime));
+}
+
+async function clearTrace(runtime: IRuntimeManager): Promise<void> {
+    return clearDBTable(runtime, "trace");
+}
+
+async function searchTraceCount(runtime: IRuntimeManager, filter: string): Promise<number> {
+    return selectDBCount(runtime, "trace", filter);
+}
+
+async function searchTraceRecords(
+    runtime: IRuntimeManager,
+    start: number,
+    count: number,
+    filter: string,
+): RecordsResult<ITraceDBRecord[]> {
     const { dbName } = runtime.db.mappingTable("trace");
 
-    return selectDBRecords(runtime, TemplateSQL["select"][runtime.db.databaseType(dbName)], start, count, "trace").then(
+    return executeDBCustom(
+        runtime,
+        TemplateSQL["select"][runtime.db.databaseType(dbName)],
+        [count.toString(), start.toString(), filter],
+        "trace",
+    ).then(
         async (result: any) => {
             const records: ITraceDBRecord[] = [];
             if (Array.isArray(result) && result.length) {
@@ -43,12 +67,17 @@ export async function selectTraceRecords(runtime: IRuntimeManager, start: number
                 }
             }
 
-            return Promise.resolve(records);
+            return Promise.resolve({ records, start, end: start + count - 1 });
         },
         async (error) => Promise.reject(error),
     );
 }
 
-export async function clearTrace(runtime: IRuntimeManager): Promise<void> {
-    return clearDBTable(runtime, "trace");
-}
+export {
+    pushTrace as push,
+    clearTrace as clear,
+    selectTraceCount as count,
+    selectTraceRecords as getTraces,
+    searchTraceCount as getSearchCount,
+    searchTraceRecords as getSearchTraces,
+};

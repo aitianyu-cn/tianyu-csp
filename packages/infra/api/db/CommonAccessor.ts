@@ -6,6 +6,7 @@ import { DefaultTableId } from "../interface/Database";
 import { OperationFailed } from "../interface/Declars";
 import { IRuntimeManager } from "../interface/RuntimeMgr";
 import { GlobalTemplateSQL } from "./sql/GlobalSql";
+import { FilterHelper } from "../utils/FilterHelper";
 
 const PRIVILEGE_TABLE_ID_MAP: {
     [key in DefaultTableId]: string;
@@ -42,32 +43,6 @@ export async function clearDBTable(runtime: IRuntimeManager, tableId: DefaultTab
 
     const connection = runtime.db.connect(dbName);
     return connection.executeAsync(dbName, sql, true);
-}
-
-export async function selectDBRecords(
-    runtime: IRuntimeManager,
-    sqlTemp: string,
-    start: number,
-    count: number,
-    tableId: DefaultTableId,
-    bypassPrivilege: boolean = false,
-): Promise<any> {
-    const { user } = runtime.session.getInfo();
-    const adminMode = user.admin;
-
-    return executeDBCustom(
-        runtime,
-        sqlTemp,
-        [
-            count.toString(),
-            start.toString(),
-            // in admin mode, to get all trace data of all users
-            // not in admin mode, to get trace data of current user
-            adminMode ? "true" : "`user` = '" + user.id + "'",
-        ],
-        tableId,
-        bypassPrivilege,
-    );
 }
 
 export async function executeDBCustom(
@@ -119,7 +94,7 @@ export async function batchDBCustom(
     return connection.executeBatchAsync(dbName, sql, true);
 }
 
-export async function selectDBCount(runtime: IRuntimeManager, tableId: DefaultTableId): Promise<number> {
+export async function selectDBCount(runtime: IRuntimeManager, tableId: DefaultTableId, condition: string): Promise<number> {
     const { dbName, tableMapping } = runtime.db.mappingTable(tableId);
     const { user } = runtime.session.getInfo();
 
@@ -136,9 +111,7 @@ export async function selectDBCount(runtime: IRuntimeManager, tableId: DefaultTa
     const sql = StringHelper.format(GlobalTemplateSQL["count"][runtime.db.databaseType(dbName)], [
         dbName,
         tableMapping,
-        // in admin mode, to get all usage data of all users
-        // not in admin mode, to get usage data of current user
-        adminMode ? "true" : "`user` = '" + user.id + "'",
+        condition,
     ]);
 
     const connection = runtime.db.connect(dbName);

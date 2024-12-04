@@ -30,6 +30,10 @@ export interface OperationFailed {
     traceId?: string;
 }
 
+export type RecordsResult<T> = Promise<{ start: number; end: number; records: T }>;
+
+export type ResultsetValidState = { valid: boolean };
+
 /**
  * Callback function for sync operation
  *

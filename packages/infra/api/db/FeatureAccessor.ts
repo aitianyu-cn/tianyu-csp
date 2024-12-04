@@ -1,12 +1,14 @@
 /** @format */
 
-import { getBoolean } from "@aitianyu.cn/types";
+import { getBoolean, StringHelper } from "@aitianyu.cn/types";
 import { IFeaturesConfig } from "../interface/FeatureMgr";
 import { IRuntimeManager } from "../interface/RuntimeMgr";
-import { selectDBCount, executeDBCustom, selectDBRecords } from "./CommonAccessor";
+import { selectDBCount, executeDBCustom, batchDBCustom } from "./CommonAccessor";
 import { TemplateSQL } from "./sql/FeatureSql";
+import { FilterHelper } from "../utils/FilterHelper";
+import { RecordsResult } from "../interface/Declars";
 
-export async function selectFeatureIsActive(runtime: IRuntimeManager, name: string): Promise<boolean> {
+async function selectFeatureIsActive(runtime: IRuntimeManager, name: string): Promise<boolean> {
     const { dbName } = runtime.db.mappingTable("feature");
 
     return executeDBCustom(runtime, TemplateSQL["isActive"][runtime.db.databaseType(dbName)], [name], "feature", true).then(
@@ -18,18 +20,76 @@ export async function selectFeatureIsActive(runtime: IRuntimeManager, name: stri
     );
 }
 
-export async function selectFeaturesCount(runtime: IRuntimeManager): Promise<number> {
-    return selectDBCount(runtime, "feature");
+async function selectFeaturesCount(runtime: IRuntimeManager): Promise<number> {
+    return searchFeaturesCount(runtime, FilterHelper.format(runtime));
 }
 
-export async function selectAllFeatures(
+async function selectAllFeatures(
     runtime: IRuntimeManager,
     start: number,
     count: number,
-): Promise<(IFeaturesConfig & { id: string })[]> {
+): RecordsResult<(IFeaturesConfig & { id: string })[]> {
+    return searchFeatures(runtime, start, count, FilterHelper.format(runtime));
+}
+
+async function selectFeatureContains(runtime: IRuntimeManager, name: string): Promise<boolean> {
     const { dbName } = runtime.db.mappingTable("feature");
 
-    return selectDBRecords(runtime, TemplateSQL["selectAll"][runtime.db.databaseType(dbName)], start, count, "feature").then(
+    return executeDBCustom(runtime, TemplateSQL["contains"][runtime.db.databaseType(dbName)], [name], "feature").then(
+        async (result) => {
+            const active = getBoolean(Array.isArray(result) && result.length);
+            return Promise.resolve(active);
+        },
+        async (error) => Promise.reject(error),
+    );
+}
+
+async function enableFeature(runtime: IRuntimeManager, features: string[]): Promise<void> {
+    const { dbName, tableMapping } = runtime.db.mappingTable("feature");
+
+    const sqls: string[] = [];
+    for (const feature of features) {
+        sqls.push(StringHelper.format(TemplateSQL["enable"][runtime.db.databaseType(dbName)], [dbName, tableMapping, feature]));
+    }
+
+    return batchDBCustom(runtime, sqls, "feature").then(
+        async () => Promise.resolve(),
+        async (error) => Promise.reject(error),
+    );
+}
+
+async function disableFeature(runtime: IRuntimeManager, features: string[]): Promise<void> {
+    const { dbName, tableMapping } = runtime.db.mappingTable("feature");
+
+    const sqls: string[] = [];
+    for (const feature of features) {
+        sqls.push(StringHelper.format(TemplateSQL["disable"][runtime.db.databaseType(dbName)], [dbName, tableMapping, feature]));
+    }
+
+    return batchDBCustom(runtime, sqls, "feature").then(
+        async () => Promise.resolve(),
+        async (error) => Promise.reject(error),
+    );
+}
+
+async function searchFeaturesCount(runtime: IRuntimeManager, filter: string): Promise<number> {
+    return selectDBCount(runtime, "feature", filter);
+}
+
+async function searchFeatures(
+    runtime: IRuntimeManager,
+    start: number,
+    count: number,
+    filter: string,
+): RecordsResult<(IFeaturesConfig & { id: string })[]> {
+    const { dbName } = runtime.db.mappingTable("feature");
+
+    return executeDBCustom(
+        runtime,
+        TemplateSQL["selectAll"][runtime.db.databaseType(dbName)],
+        [count.toString(), start.toString(), filter],
+        "feature",
+    ).then(
         async (result: any) => {
             const records: (IFeaturesConfig & { id: string })[] = [];
             if (Array.isArray(result) && result.length) {
@@ -43,38 +103,19 @@ export async function selectAllFeatures(
                 }
             }
 
-            return Promise.resolve(records);
+            return Promise.resolve({ records, start, end: start + count - 1 });
         },
         async (error) => Promise.reject(error),
     );
 }
 
-export async function selectFeatureContains(runtime: IRuntimeManager, name: string): Promise<boolean> {
-    const { dbName } = runtime.db.mappingTable("feature");
-
-    return executeDBCustom(runtime, TemplateSQL["contains"][runtime.db.databaseType(dbName)], [name], "feature").then(
-        async (result) => {
-            const active = getBoolean(Array.isArray(result) && result.length);
-            return Promise.resolve(active);
-        },
-        async (error) => Promise.reject(error),
-    );
-}
-
-export async function enableFeature(runtime: IRuntimeManager, name: string): Promise<void> {
-    const { dbName } = runtime.db.mappingTable("feature");
-
-    return executeDBCustom(runtime, TemplateSQL["enable"][runtime.db.databaseType(dbName)], [name], "feature").then(
-        async () => Promise.resolve(),
-        async (error) => Promise.reject(error),
-    );
-}
-
-export async function disableFeature(runtime: IRuntimeManager, name: string): Promise<void> {
-    const { dbName } = runtime.db.mappingTable("feature");
-
-    return executeDBCustom(runtime, TemplateSQL["disable"][runtime.db.databaseType(dbName)], [name], "feature").then(
-        async () => Promise.resolve(),
-        async (error) => Promise.reject(error),
-    );
-}
+export {
+    selectFeatureIsActive as isActive,
+    selectFeaturesCount as count,
+    selectAllFeatures as allFeatures,
+    selectFeatureContains as contains,
+    enableFeature as enable,
+    disableFeature as disable,
+    searchFeaturesCount as getSearchCount,
+    searchFeatures as getSearchFeatures,
+};

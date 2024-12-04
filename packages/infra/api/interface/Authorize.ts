@@ -16,3 +16,11 @@ export interface ITeamDBRecord {
     name: string;
     desc: string;
 }
+
+export interface IUserDBRecord {
+    id: string;
+    name: string;
+    email: string;
+    license: string;
+    team: string[];
+}

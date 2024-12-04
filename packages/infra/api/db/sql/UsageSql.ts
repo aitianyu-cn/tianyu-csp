@@ -7,10 +7,4 @@ export const TemplateSQL: any = {
     select: {
         mysql: "SELECT `user`, `project`, `module`, `action`, `time`, `msg` FROM `{0}`.`{1}` LIMIT {2} OFFSET {3} WHERE {4};",
     },
-
-    searchByUser: {},
-    searchByProject: {},
-    searchByModule: {},
-    searchByAction: {},
-    searchByAny: {},
 };
