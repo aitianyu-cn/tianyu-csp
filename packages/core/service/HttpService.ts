@@ -11,6 +11,7 @@ import {
     ServiceResolveData,
 } from "#interface";
 import { HttpHelper } from "#utils/HttpHelper";
+import { TraceHelper } from "#utils/TraceHelper";
 import { guid, MapOfString } from "@aitianyu.cn/types";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
@@ -96,6 +97,7 @@ export class HttpService implements IHttpService {
             serviceId: this.id,
             type: "http",
             body: null,
+            traceId: TraceHelper.generateTraceId(),
         };
 
         this._requestTable.set(requestId, res);
@@ -131,6 +133,7 @@ export class HttpService implements IHttpService {
                 url: req.url || "",
                 serviceId: this.id,
                 type: "http",
+                traceId: TraceHelper.generateTraceId(),
             };
 
             this._requestTable.set(requestId, res);

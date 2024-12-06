@@ -4,6 +4,7 @@ import { IDatabaseManager } from "./api/database";
 import { IEnvironment } from "./api/environment";
 import { IImporter } from "./api/importer";
 import { ILogger } from "./api/logger";
+import { IMonitor } from "./api/monitor";
 import { IServerRequest } from "./api/request";
 import { ISession } from "./api/session";
 import { ITrace } from "./api/trace";
@@ -24,6 +25,8 @@ export interface IGlobalDefinition {
     db: IDatabaseManager;
     /** Import Manager */
     import: IImporter;
+    /** Monitor Manager */
+    monitor: IMonitor;
 
     /** Network request data */
     request: IServerRequest;

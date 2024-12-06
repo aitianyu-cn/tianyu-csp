@@ -20,6 +20,7 @@ export interface PayloadData {
     url: string;
     serviceId: string;
     requestId: string;
+    traceId?: string;
 
     type: RequestType;
 
