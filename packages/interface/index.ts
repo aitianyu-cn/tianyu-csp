@@ -22,6 +22,7 @@ export * from "./api/session";
 export * from "./api/trace";
 export * from "./api/usage";
 
+export * from "./lib/dispatch-handler";
 export * from "./lib/http-service";
 export * from "./lib/request-handler";
 export * from "./lib/service";

@@ -1,20 +1,26 @@
 /** @format */
 
 import { IncomingMessage, ServerResponse } from "http";
-import { IService } from "./service";
+import { INetworkService } from "./service";
 
 /** Http Query Response Callback */
 export type HttpCallback = (req: IncomingMessage, res: ServerResponse) => void;
 
+/** Htto Service Option */
 export interface HttpServiceOption {
+    /** Host to bind */
     host: string;
+    /** Port to bind */
     port: number;
 }
 
-export interface IHttpService extends IService {
+/** Http Service API */
+export interface IHttpService extends INetworkService {
+    /** To start http listening ont the binding host and port  */
     listen(): void;
 }
 
+/** Http Status Code */
 export const HTTP_STATUS_CODE = {
     CONTINUE: 100,
     SWITCHING_PROTOCOLS: 101,

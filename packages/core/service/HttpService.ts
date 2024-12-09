@@ -8,7 +8,7 @@ import {
     IRequestHandler,
     PayloadData,
     RequestType,
-    ServiceResolveData,
+    NetworkServiceResponseData,
 } from "#interface";
 import { HttpHelper } from "#utils/HttpHelper";
 import { TraceHelper } from "#utils/TraceHelper";
@@ -65,7 +65,7 @@ export class HttpService implements IHttpService {
     public close(): void {
         this._server.close();
     }
-    public resolve(requestId: string, data: ServiceResolveData): void {
+    public resolve(requestId: string, data: NetworkServiceResponseData): void {
         const response = this._requestTable.get(requestId);
         if (response) {
             this._requestTable.delete(requestId);
