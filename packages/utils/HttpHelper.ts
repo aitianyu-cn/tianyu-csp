@@ -74,10 +74,11 @@ export class HttpHelper {
         cookies: MapOfString,
         params: MapOfString,
         headers: IncomingHttpHeaders,
-        defaultName: string,
+        defaultNameForCookie: string,
+        defaultNameForParam: string,
     ): AreaCode {
-        const paramsLanguage = params[defaultName] || "";
-        const cookieLanguage = cookies[defaultName.toLocaleUpperCase()] || "";
+        const paramsLanguage = params[defaultNameForParam] || "";
+        const cookieLanguage = cookies[defaultNameForCookie] || "";
         const acceptLanguage = parseAcceptLanguage(headers["accept-language"] || "");
 
         const language = paramsLanguage || cookieLanguage || acceptLanguage;

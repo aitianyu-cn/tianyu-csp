@@ -33,7 +33,6 @@ export class HttpService implements IHttpService {
         this._requestTable = new Map<string, ServerResponse>();
 
         this._handler = handler;
-        this._handler.register(this);
 
         this._server = createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
@@ -60,9 +59,11 @@ export class HttpService implements IHttpService {
         return "http";
     }
     public listen(): void {
+        this._handler.register(this);
         this._server.listen(this._port, this._host);
     }
     public close(): void {
+        this._handler.unregister(this.id);
         this._server.close();
     }
     public resolve(requestId: string, data: NetworkServiceResponseData): void {
@@ -83,7 +84,13 @@ export class HttpService implements IHttpService {
         const param = HttpHelper.processParameters(req.url || "");
         const cookie = HttpHelper.processCookie(req.headers.cookie || "");
         const headers = HttpHelper.processHeader(req.headers);
-        const language = HttpHelper.processLanguage(cookie, param, req.headers, this._handler.getRequestItem("language"));
+        const language = HttpHelper.processLanguage(
+            cookie,
+            param,
+            req.headers,
+            this._handler.getRequestItem("language", "cookie"),
+            this._handler.getRequestItem("language", "search"),
+        );
         const requestId = guid();
 
         const payload: PayloadData = {
@@ -119,7 +126,13 @@ export class HttpService implements IHttpService {
             const param: MapOfString = HttpHelper.processParameters(req.url || "");
             const cookie: MapOfString = HttpHelper.processCookie(req.headers.cookie || "");
             const headers = HttpHelper.processHeader(req.headers);
-            const language = HttpHelper.processLanguage(cookie, param, req.headers, this._handler.getRequestItem("language"));
+            const language = HttpHelper.processLanguage(
+                cookie,
+                param,
+                req.headers,
+                this._handler.getRequestItem("language", "cookie"),
+                this._handler.getRequestItem("language", "search"),
+            );
             const requestId = guid();
 
             const payload: PayloadData = {

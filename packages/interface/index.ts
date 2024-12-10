@@ -13,6 +13,7 @@ export * from "./Error";
 
 export * from "./api/database";
 export * from "./api/environment";
+export * from "./api/fwk";
 export * from "./api/importer";
 export * from "./api/logger";
 export * from "./api/monitor";
@@ -22,10 +23,13 @@ export * from "./api/session";
 export * from "./api/trace";
 export * from "./api/usage";
 
-export * from "./lib/dispatch-handler";
-export * from "./lib/http-service";
-export * from "./lib/request-handler";
-export * from "./lib/service";
+export * from "./handler/dispatch-handler";
+export * from "./handler/request-handler";
+
+export * from "./service/http-service";
+export * from "./service/service";
 
 export * from "./job/worker";
 export * from "./job/worker-mgr";
+
+export * from "./lib/filter";

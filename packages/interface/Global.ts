@@ -2,6 +2,7 @@
 
 import { IDatabaseManager } from "./api/database";
 import { IEnvironment } from "./api/environment";
+import { ICSPFramework } from "./api/fwk";
 import { IImporter } from "./api/importer";
 import { ILogger } from "./api/logger";
 import { IMonitor } from "./api/monitor";
@@ -27,6 +28,8 @@ export interface IGlobalDefinition {
     import: IImporter;
     /** Monitor Manager */
     monitor: IMonitor;
+    /** Framework utils */
+    fwk: ICSPFramework;
 
     /** Network request data */
     request: IServerRequest;

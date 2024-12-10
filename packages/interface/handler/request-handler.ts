@@ -1,7 +1,7 @@
 /** @format */
 
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
-import { INetworkService } from "./service";
+import { INetworkService } from "../service/service";
 
 /**
  * Default Requestion Item name map

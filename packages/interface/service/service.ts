@@ -1,7 +1,7 @@
 /** @format */
 
 import { MapOfType } from "@aitianyu.cn/types";
-import { RequestType } from "./request-handler";
+import { RequestType } from "../handler/request-handler";
 
 /** Network Serivce Response Data */
 export interface NetworkServiceResponseData {

@@ -3,13 +3,14 @@
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
+    IDispatcherConsumer,
     IDispatchHandler,
     INetworkService,
     IRequestHandler,
     PayloadData,
 } from "#interface";
 
-export class RequestHandler implements IRequestHandler {
+export class RequestHandler implements IRequestHandler, IDispatcherConsumer {
     private _dispatcher: IDispatchHandler;
     private _nameMap: DefaultRequestItemsMap;
 
@@ -20,6 +21,8 @@ export class RequestHandler implements IRequestHandler {
         this._nameMap = itemNameMap || {};
 
         this._services = new Map<string, INetworkService>();
+
+        this._dispatcher.bind(this);
     }
 
     public dispatch(payload: PayloadData): void {
