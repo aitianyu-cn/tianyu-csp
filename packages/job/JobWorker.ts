@@ -1,6 +1,13 @@
 /** @format */
 
-import { IJobWorker, JobExecutionStatus, JobWorkerExecutionResult, JobWorkerOptions } from "#interface";
+import {
+    IJobWorker,
+    JobExecutionStatus,
+    JobWorkerExecutionEntry,
+    JobWorkerExecutionResult,
+    JobWorkerOptions,
+    JobWorkerPayload,
+} from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 
@@ -34,7 +41,7 @@ export class JobWorker implements IJobWorker {
         return this._status;
     }
 
-    public async run(script: string, options: JobWorkerOptions, executionId?: string): Promise<JobWorkerExecutionResult> {
+    public async run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<JobWorkerExecutionResult> {
         if (this._status === "invalid" || this._worker) {
             return Promise.reject(new Error("Job execution failed!!!"));
         }
@@ -44,7 +51,22 @@ export class JobWorker implements IJobWorker {
                 // create a new execution id for each job.
                 this._executionId = executionId || guid();
 
-                this._worker = new Worker(script, { ...options });
+                const argv = payload.options.argv;
+                const env = payload.options.env;
+                const data = payload.options.workerData;
+                const entry: JobWorkerExecutionEntry = {
+                    package: payload.package,
+                    module: payload.module,
+                    method: payload.method,
+                };
+                this._worker = new Worker(script, {
+                    argv,
+                    env,
+                    workerData: {
+                        payload: data,
+                        script: entry,
+                    },
+                });
 
                 this._worker.on("error", (error: Error) => {
                     this._status = "error";

@@ -9,7 +9,7 @@ export type JobStatusHandler = CallbackActionT<JobExecutionResult>;
 /** Job manager options */
 export interface JobManagerOptions {
     /** the maximum workers count */
-    limitWorkers: number;
+    limitWorkers?: number;
 
     /** Job Manager id */
     id?: string;

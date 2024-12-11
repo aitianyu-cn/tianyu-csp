@@ -7,6 +7,7 @@ import {
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
     RequestPayloadData,
+    RequestRestData,
 } from "#interface";
 
 export class RequestHandler {
@@ -37,12 +38,12 @@ export class RequestHandler {
         return item[payload.type];
     }
 
-    private _dispatch(payload: RequestPayloadData): Promise<NetworkServiceResponseData> {
-        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.dispatcher", DISPATCH_HANDLER_MODULE_ID);
+    private _dispatch(data: { rest: RequestRestData; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
+        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         if (!dispatcher) {
             return Promise.reject(new Error());
         }
 
-        return dispatcher({ ...payload, trigger: "network" });
+        return dispatcher({ ...data });
     }
 }

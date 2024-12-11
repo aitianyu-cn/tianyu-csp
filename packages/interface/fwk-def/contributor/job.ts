@@ -20,3 +20,13 @@ export interface JobWorkerExecutionResult {
     /** Error message when job execution */
     error: string;
 }
+
+export interface JobWorkerExecutionEntry {
+    package: string;
+    module: string;
+    method: string;
+}
+
+export interface JobWorkerPayload extends JobWorkerExecutionEntry {
+    options: JobWorkerOptions;
+}

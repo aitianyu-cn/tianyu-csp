@@ -11,6 +11,7 @@ import {
     REQUEST_HANDLER_MODULE_ID,
 } from "#interface";
 import { HttpHelper } from "#utils/HttpHelper";
+import { RestHelper } from "#utils/RestHelper";
 import { TraceHelper } from "#utils/TraceHelper";
 import { guid, MapOfString } from "@aitianyu.cn/types";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
@@ -135,24 +136,40 @@ export class HttpService implements IHttpService {
         setTimeout(() => {
             const dispatcher = TIANYU.fwk.contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             if (dispatcher) {
-                dispatcher(payload).then(
-                    (data) => this.onResponse(res, data),
-                    (error) => {
-                        const responseData: NetworkServiceResponseData = {
-                            statusCode: HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR,
-                            headers,
-                            body: {
-                                error: [
-                                    {
-                                        code: SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                        message: error?.message || "Technical error occurs when processing request.",
-                                    },
-                                ],
-                            },
-                        };
-                        this.onResponse(res, responseData);
-                    },
-                );
+                const rest = RestHelper.getRest(payload.url);
+                if (rest) {
+                    dispatcher({ rest, payload }).then(
+                        (data) => this.onResponse(res, data),
+                        (error) => {
+                            const responseData: NetworkServiceResponseData = {
+                                statusCode: HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR,
+                                headers,
+                                body: {
+                                    error: [
+                                        {
+                                            code: error?.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                                            message: error?.message || "Technical error occurs when processing request.",
+                                        },
+                                    ],
+                                },
+                            };
+                            this.onResponse(res, responseData);
+                        },
+                    );
+                } else {
+                    this.onResponse(res, {
+                        statusCode: HTTP_STATUS_CODE.NOT_FOUND,
+                        headers,
+                        body: {
+                            error: [
+                                {
+                                    code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
+                                    message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
+                                },
+                            ],
+                        },
+                    });
+                }
             } else {
                 this.onDispatcherInvalid(req, res);
             }

@@ -2,6 +2,7 @@
 
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
+import { JobWorkerExecutionEntry } from "./job";
 
 export type DefaultRequestItemTargetType = "cookie" | "search";
 
@@ -44,6 +45,8 @@ export interface RequestPayloadData {
     /** Headers */
     headers: MapOfString;
 }
+
+export interface RequestRestData extends JobWorkerExecutionEntry {}
 
 export interface ResponsePayloadData extends NetworkServiceResponseData {
     /** Network service id */

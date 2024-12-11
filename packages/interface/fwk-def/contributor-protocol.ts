@@ -1,13 +1,12 @@
 /** @format */
 
 import { ContributorProtocolWithReturn } from "./contributor/basic";
-import { DispatcherTriggerType } from "./contributor/dispatcher";
-import { JobWorkerExecutionResult, JobWorkerOptions } from "./contributor/job";
+import { JobWorkerExecutionResult, JobWorkerPayload } from "./contributor/job";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
     RequestPayloadData,
-    ResponsePayloadData,
+    RequestRestData,
 } from "./contributor/requests";
 import { NetworkServiceResponseData } from "./contributor/service";
 
@@ -23,16 +22,21 @@ export interface IContributorFactorProtocolMap {
         string
     >;
     /** To get a request dispatcher for request service */
-    "request-handler.dispatcher": ContributorProtocolWithReturn<RequestPayloadData, Promise<NetworkServiceResponseData>>;
-
-    /** To get a request dispatcher for request service */
-    "dispatch-handler.dispatcher": ContributorProtocolWithReturn<
-        RequestPayloadData & { trigger: DispatcherTriggerType },
+    "request-handler.dispatcher": ContributorProtocolWithReturn<
+        { rest: RequestRestData; payload: RequestPayloadData },
         Promise<NetworkServiceResponseData>
     >;
 
+    /** To get a request dispatcher for request service */
+    "dispatch-handler.network-dispatcher": ContributorProtocolWithReturn<
+        { rest: RequestRestData; payload: RequestPayloadData },
+        Promise<NetworkServiceResponseData>
+    >;
+    /** To get a request dispatcher for request service */
+    "dispatch-handler.job-dispatcher": ContributorProtocolWithReturn<JobWorkerPayload, Promise<JobWorkerExecutionResult>>;
+
     "job-manager.dispatch": ContributorProtocolWithReturn<
-        { script: string; options: JobWorkerOptions },
+        { script: string; payload: JobWorkerPayload },
         Promise<JobWorkerExecutionResult>
     >;
 }

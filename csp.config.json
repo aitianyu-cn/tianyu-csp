@@ -1,0 +1,19 @@
+{
+    "config": {
+        "name": "CSP-Test-App",
+        "version": "1.0.0",
+        "environment": "development",
+        "src": "scripts",
+        "language": "zh-CN"
+    },
+    "rest": {
+        "file": ".config/rest.json"
+    },
+    "database": {
+        "file": ".config/db.js",
+        "rename": {
+            "types": "DatabaseTypesMap",
+            "configs": "DatabaseConfigMap"
+        }
+    }
+}
