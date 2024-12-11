@@ -1,5 +1,6 @@
 /** @format */
 
+import { DEFAULT_REQUEST_LANGUAGE_ITEM } from "#core/Constant";
 import { AreaCode, MapOfString, parseAreaString } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 import { URLSearchParams } from "url";
@@ -74,11 +75,11 @@ export class HttpHelper {
         cookies: MapOfString,
         params: MapOfString,
         headers: IncomingHttpHeaders,
-        defaultNameForCookie: string,
-        defaultNameForParam: string,
+        defaultNameForCookie?: string,
+        defaultNameForParam?: string,
     ): AreaCode {
-        const paramsLanguage = params[defaultNameForParam] || "";
-        const cookieLanguage = cookies[defaultNameForCookie] || "";
+        const paramsLanguage = params[defaultNameForParam || DEFAULT_REQUEST_LANGUAGE_ITEM] || "";
+        const cookieLanguage = cookies[defaultNameForCookie || DEFAULT_REQUEST_LANGUAGE_ITEM] || "";
         const acceptLanguage = parseAcceptLanguage(headers["accept-language"] || "");
 
         const language = paramsLanguage || cookieLanguage || acceptLanguage;

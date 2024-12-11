@@ -2,11 +2,6 @@
 
 import { IGlobalDefinition } from "./Global";
 
-declare global {
-    /** Tianyu CSP global instances */
-    export const tianyu: IGlobalDefinition;
-}
-
 export type { IGlobalDefinition };
 
 export * from "./Error";
@@ -22,6 +17,15 @@ export * from "./api/request";
 export * from "./api/session";
 export * from "./api/trace";
 export * from "./api/usage";
+
+export * from "./declares/global-declare";
+
+export * from "./fwk-def/contributor/basic";
+export * from "./fwk-def/contributor/dispatcher";
+export * from "./fwk-def/contributor/job";
+export * from "./fwk-def/contributor/requests";
+export * from "./fwk-def/contributor/service";
+export * from "./fwk-def/contributor-protocol";
 
 export * from "./handler/dispatch-handler";
 export * from "./handler/request-handler";

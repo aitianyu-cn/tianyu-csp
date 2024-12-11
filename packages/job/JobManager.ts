@@ -1,92 +1,80 @@
 /** @format */
 
-import { IJobManager, IJobWorker, IJobWorkerManager, JobExecutionResult, JobManagerOptions, JobWorkerOptions } from "#interface";
+import {
+    IJobManager,
+    IJobWorker,
+    IJobWorkerManager,
+    JobExecutionResult,
+    JobManagerOptions,
+    JobWorkerExecutionResult,
+    JobWorkerOptions,
+} from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { JobWorker } from "./JobWorker";
+import { Mutex } from "async-mutex";
 
 export class JobManager implements IJobManager, IJobWorkerManager {
     private _options: JobManagerOptions;
 
-    private _workerMap: Map<string, IJobWorker>;
+    private _mutex: Mutex;
+    private _counter: number;
     private _waitingQueue: { script: string; options: JobWorkerOptions; executionId: string }[];
-
-    private get _workerCount(): number {
-        return this._workerMap.size;
-    }
 
     public constructor(options: JobManagerOptions) {
         this._options = options;
 
-        this._workerMap = new Map<string, IJobWorker>();
+        this._mutex = new Mutex();
+        this._counter = 0;
         this._waitingQueue = [];
+
+        TIANYU.fwk.contributor.registerEndpoint("job-manager.dispatch");
+        TIANYU.fwk.contributor.exportModule("job-manager.dispatch", this._options.id, this._dispatch.bind(this));
     }
 
-    public dispatch(script: string, options: JobWorkerOptions): string {
-        const executionId = guid();
+    private async _dispatch(payload: { script: string; options: JobWorkerOptions }): Promise<{}> {
+        return new Promise<{}>((resolve, reject) => {
+            const executionId = guid();
 
-        this._waitingQueue.push({ executionId, script, options: { ...options } });
+            this._mutex.acquire().then((release) => {
+                this._waitingQueue.push({ executionId, script: payload.script, options: { ...payload.options } });
 
-        // release current thread and to dispatch job async.
-        setTimeout(() => {
-            this.toDispatch();
-        }, 0);
+                // release current thread and to dispatch job async.
+                setTimeout(() => {
+                    this.toDispatch();
+                }, 0);
 
-        return executionId;
-    }
-
-    public done(workerId: string): void {
-        const worker = this._workerMap.get(workerId);
-        if (worker) {
-            const jobResult: JobExecutionResult = {
-                id: worker.id,
-                status: worker.status,
-
-                executionId: worker.executionId,
-                exitCode: worker.exitCode,
-                value: worker.value,
-                error: worker.error,
-            };
-
-            // to release current thread to avoid time-comsuming logic in current thread.
-            // to quickly release the done job and to start a new job.
-            setTimeout(() => {
-                this._options.handler(jobResult);
-            }, 0);
-        }
-
-        // whatever the status of previous logic, to remove this worker and to do the next dispatch.
-        this.finishWorker(workerId);
-        this.toDispatch();
+                // release lock
+                release();
+            }, reject);
+        });
     }
 
     private createWorker(): IJobWorker | null {
-        if (this._workerCount >= this._options.limitWorkers) {
+        if (this._counter >= this._options.limitWorkers) {
             return null;
         }
 
-        const worker = new JobWorker(this);
-        this._workerMap.set(worker.id, worker);
-
+        const worker = new JobWorker();
         return worker;
     }
-    private finishWorker(workerId: string): void {
-        this._workerMap.delete(workerId);
-    }
-    private toDispatch(): void {
+    private async _dispatchInternal(): Promise<JobWorkerExecutionResult> {
+        const release = await this._mutex.acquire();
         if (!this._waitingQueue.length) {
+            release();
             return;
         }
 
         const worker = this.createWorker();
         if (!worker) {
+            release();
             return;
         }
 
         // to skip the type checking due to the queue DOES NOT be empty
         const { script, options, executionId } = this._waitingQueue.shift() as any;
+        release();
 
         // to start a job
-        worker.reset();
-        worker.run(script, options, executionId);
+        return worker.run(script, options, executionId);
     }
 }

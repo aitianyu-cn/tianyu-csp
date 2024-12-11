@@ -11,8 +11,8 @@ export interface JobManagerOptions {
     /** the maximum workers count */
     limitWorkers: number;
 
-    /** Job execution result callback */
-    handler: JobStatusHandler;
+    /** Job Manager id */
+    id: string;
 }
 
 /** Job manager expose API */

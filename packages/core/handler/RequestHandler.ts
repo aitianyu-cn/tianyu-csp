@@ -3,46 +3,46 @@
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
-    IDispatcherConsumer,
-    IDispatchHandler,
-    INetworkService,
-    IRequestHandler,
-    PayloadData,
+    DISPATCH_HANDLER_MODULE_ID,
+    NetworkServiceResponseData,
+    REQUEST_HANDLER_MODULE_ID,
+    RequestPayloadData,
 } from "#interface";
 
-export class RequestHandler implements IRequestHandler, IDispatcherConsumer {
-    private _dispatcher: IDispatchHandler;
+export class RequestHandler {
     private _nameMap: DefaultRequestItemsMap;
 
-    private _services: Map<string, INetworkService>;
-
-    public constructor(dispatcher: IDispatchHandler, itemNameMap?: DefaultRequestItemsMap) {
-        this._dispatcher = dispatcher;
+    public constructor(itemNameMap?: DefaultRequestItemsMap) {
         this._nameMap = itemNameMap || {};
 
-        this._services = new Map<string, INetworkService>();
+        // create endpoints
+        TIANYU.fwk.contributor.registerEndpoint("request-handler.dispatcher");
+        TIANYU.fwk.contributor.registerEndpoint("request-handler.items-getter");
 
-        this._dispatcher.bind(this);
+        // register execution modules for request handler
+        TIANYU.fwk.contributor.exportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID, this._dispatch.bind(this));
+        TIANYU.fwk.contributor.exportModule(
+            "request-handler.items-getter",
+            REQUEST_HANDLER_MODULE_ID,
+            this._getRequestItem.bind(this),
+        );
     }
 
-    public dispatch(payload: PayloadData): void {
-        throw new Error("Method not implemented.");
-    }
-
-    public register(service: INetworkService): void {
-        this._services.set(service.id, service);
-    }
-
-    public unregister(serviceId: string): void {
-        this._services.delete(serviceId);
-    }
-
-    public getRequestItem(name: keyof DefaultRequestItemsMap, type: DefaultRequestItemTargetType): string {
-        const item = this._nameMap[name] || "";
+    private _getRequestItem(payload: { name: keyof DefaultRequestItemsMap; type: DefaultRequestItemTargetType }): string {
+        const item = this._nameMap[payload.name] || "";
         if (typeof item === "string") {
             return item;
         }
 
-        return item[type];
+        return item[payload.type];
+    }
+
+    private _dispatch(payload: RequestPayloadData): Promise<NetworkServiceResponseData> {
+        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.dispatcher", DISPATCH_HANDLER_MODULE_ID);
+        if (!dispatcher) {
+            return Promise.reject(new Error());
+        }
+
+        return dispatcher({ ...payload, trigger: "network" });
     }
 }

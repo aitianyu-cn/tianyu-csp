@@ -1,7 +1,8 @@
 /** @format */
 
-import { IJobWorker, IJobWorkerManager, JobExecutionStatus, JobWorkerOptions } from "#interface";
+import { IJobWorker, IJobWorkerManager, JobExecutionStatus, JobWorkerExecutionResult, JobWorkerOptions } from "#interface";
 import { guid } from "@aitianyu.cn/types";
+import { rejects } from "assert";
 import { Worker } from "worker_threads";
 
 export class JobWorker implements IJobWorker {
@@ -9,17 +10,13 @@ export class JobWorker implements IJobWorker {
     private _worker: Worker | null;
     private _status: JobExecutionStatus;
 
-    private _workerMgr: IJobWorkerManager;
-
     private _executionId: string;
     private _exitCode: number;
     private _returnValue: any;
     private _error: string;
 
-    public constructor(workerMgr: IJobWorkerManager) {
+    public constructor() {
         this._id = guid();
-
-        this._workerMgr = workerMgr;
 
         this._status = "active";
         this._worker = null;
@@ -38,44 +35,40 @@ export class JobWorker implements IJobWorker {
         return this._status;
     }
 
-    public run(script: string, options: JobWorkerOptions, executionId?: string): void {
+    public async run(script: string, options: JobWorkerOptions, executionId?: string): Promise<JobWorkerExecutionResult> {
         if (this._status === "invalid" || this._worker) {
-            return;
+            return Promise.reject(new Error("Job execution failed!!!"));
         }
 
-        try {
-            // create a new execution id for each job.
-            this._executionId = executionId || guid();
+        return new Promise<JobWorkerExecutionResult>((resolve, rejects) => {
+            try {
+                // create a new execution id for each job.
+                this._executionId = executionId || guid();
 
-            this._worker = new Worker(script, { ...options });
+                this._worker = new Worker(script, { ...options });
 
-            this._worker.on("error", (error: Error) => {
-                this._status = "error";
-                this._error = error.message;
-            });
-            this._worker.on("message", (value: any) => {
-                this._returnValue = value;
-            });
-            this._worker.on("exit", (exitCode: number) => {
-                // only set to done if the pre-status is running
-                // other cases mean the job execution not fully succesed.
-                this._status = this._status === "running" ? "done" : this._status;
-                this._exitCode = exitCode;
+                this._worker.on("error", (error: Error) => {
+                    this._status = "error";
+                    this._error = error.message;
+                });
+                this._worker.on("message", (value: any) => {
+                    this._returnValue = value;
+                });
+                this._worker.on("exit", (exitCode: number) => {
+                    // only set to done if the pre-status is running
+                    // other cases mean the job execution not fully succesed.
+                    this._status = this._status === "running" ? "done" : this._status;
+                    this._exitCode = exitCode;
 
-                // to call manager to done the process
-                this._workerMgr.done(this.id);
-            });
+                    resolve({ exitCode: this.exitCode, value: this.value, error: this.error });
+                });
 
-            this._status = "running";
-        } catch {
-            this._status = "invalid";
-
-            // to async invoke the worker manager to end the job
-            setTimeout(() => {
-                // to call manager to done the process
-                this._workerMgr.done(this.id);
-            }, 0);
-        }
+                this._status = "running";
+            } catch (e) {
+                this._status = "invalid";
+                rejects(typeof e === "string" ? new Error(e) : e);
+            }
+        });
     }
 
     public get exitCode(): number {

@@ -1,25 +1,35 @@
 /** @format */
 
-import { DispatchHandlerOption, IDispatcherConsumer, IDispatchHandler, IJobManager, JobExecutionResult } from "#interface";
+import {
+    DISPATCH_HANDLER_MODULE_ID,
+    DispatcherTriggerType,
+    DispatchHandlerOption,
+    IJobManager,
+    JobExecutionResult,
+    NetworkServiceResponseData,
+    RequestPayloadData,
+} from "#interface";
 import { JobManager } from "#job/JobManager";
 
 const DEFAULT_MAX_JOB_COUNT = 1024;
 
-export class DispatchHandler implements IDispatchHandler {
+export class DispatchHandler {
     private _jobMgr: IJobManager;
-    private _consumer: IDispatcherConsumer | null;
 
     public constructor(options?: DispatchHandlerOption) {
-        this._consumer = null;
         this._jobMgr = new JobManager({
             limitWorkers: options?.limitWorkers || DEFAULT_MAX_JOB_COUNT,
             handler: this._jobHandler.bind(this),
         });
+
+        // create endpoints
+        TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.dispatcher");
+
+        // export execution module
+        TIANYU.fwk.contributor.exportModule("dispatch-handler.dispatcher", DISPATCH_HANDLER_MODULE_ID, this._dispatch.bind(this));
     }
 
-    public bind(consumer: IDispatcherConsumer): void {
-        this._consumer = consumer;
-    }
-
-    private _jobHandler(result: JobExecutionResult): void {}
+    private async _dispatch(
+        payload: RequestPayloadData & { trigger: DispatcherTriggerType },
+    ): Promise<NetworkServiceResponseData> {}
 }

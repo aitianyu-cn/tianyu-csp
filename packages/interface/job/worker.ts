@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfString } from "@aitianyu.cn/types";
+import { JobWorkerExecutionResult, JobWorkerOptions } from "../fwk-def/contributor/job";
 
 /** Job Execution Status */
 export type JobExecutionStatus = "active" | "invalid" | "running" | "done" | "error";
@@ -31,17 +31,5 @@ export interface IJobWorker extends JobExecutionResult {
      * @param options job execution options
      * @param executionId specified execution id
      */
-    run(script: string, options: JobWorkerOptions, executionId?: string): void;
-    /** To reset Job worker for the next job execution */
-    reset(): void;
-}
-
-/** Job worker exection options */
-export interface JobWorkerOptions {
-    /** environment argv use same as process.argv */
-    argv?: any[] | undefined;
-    /** environment config use same as process.env */
-    env?: MapOfString;
-    /** execution data */
-    workerData?: any;
+    run(script: string, options: JobWorkerOptions, executionId?: string): Promise<JobWorkerExecutionResult>;
 }
