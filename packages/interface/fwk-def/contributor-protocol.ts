@@ -2,7 +2,7 @@
 
 import { ContributorProtocolWithReturn } from "./contributor/basic";
 import { DispatcherTriggerType } from "./contributor/dispatcher";
-import { JobWorkerOptions } from "./contributor/job";
+import { JobWorkerExecutionResult, JobWorkerOptions } from "./contributor/job";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
@@ -31,5 +31,8 @@ export interface IContributorFactorProtocolMap {
         Promise<NetworkServiceResponseData>
     >;
 
-    "job-manager.dispatch": ContributorProtocolWithReturn<{ script: string; options: JobWorkerOptions }, Promise<{}>>;
+    "job-manager.dispatch": ContributorProtocolWithReturn<
+        { script: string; options: JobWorkerOptions },
+        Promise<JobWorkerExecutionResult>
+    >;
 }

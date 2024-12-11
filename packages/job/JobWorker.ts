@@ -1,8 +1,7 @@
 /** @format */
 
-import { IJobWorker, IJobWorkerManager, JobExecutionStatus, JobWorkerExecutionResult, JobWorkerOptions } from "#interface";
+import { IJobWorker, JobExecutionStatus, JobWorkerExecutionResult, JobWorkerOptions } from "#interface";
 import { guid } from "@aitianyu.cn/types";
-import { rejects } from "assert";
 import { Worker } from "worker_threads";
 
 export class JobWorker implements IJobWorker {
