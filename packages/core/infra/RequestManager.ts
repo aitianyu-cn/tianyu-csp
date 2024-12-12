@@ -1,8 +1,8 @@
 /** @format */
 
-import { IServerRequest, RequestPayloadData, RequestType } from "#interface";
+import { HTTP_STATUS_CODE, IServerRequest, RequestPayloadData, RequestType } from "#interface";
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
-import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "packages/Common";
+import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
 
 export class GlobalRequestManager implements IServerRequest {
     public get id(): string {
@@ -19,6 +19,16 @@ export class GlobalRequestManager implements IServerRequest {
     }
     public get language(): AreaCode {
         return PROJECT_DEFAULT_LANGUAGE;
+    }
+    public get session(): string {
+        return "";
+    }
+    public get body(): any {
+        return null;
+    }
+    public setResponseCode(_code: number): void {}
+    public getResponseCode(): number {
+        return HTTP_STATUS_CODE.OK;
     }
     public cookie(_key: string): string {
         return "";
@@ -37,10 +47,15 @@ export class GenericRequestManager implements IServerRequest {
     private _type: RequestType;
     private _version: string;
     private _language: AreaCode;
+    private _session: string;
+
+    private _body: any;
 
     private _cookie: MapOfString;
     private _headers: MapOfString;
     private _params: MapOfString;
+
+    private _responseCode: number;
 
     public constructor(req: RequestPayloadData) {
         this._id = req.requestId;
@@ -48,10 +63,22 @@ export class GenericRequestManager implements IServerRequest {
         this._type = req.type;
         this._version = req.headers["version"];
         this._language = req.language;
+        this._session = req.sessionId;
+
+        this._body = req.body;
 
         this._cookie = req.cookie;
         this._headers = req.headers;
         this._params = req.param;
+
+        this._responseCode = HTTP_STATUS_CODE.OK;
+    }
+
+    public setResponseCode(code: number): void {
+        this._responseCode = code;
+    }
+    public getResponseCode(): number {
+        return this._responseCode;
     }
 
     public get id(): string {
@@ -68,6 +95,12 @@ export class GenericRequestManager implements IServerRequest {
     }
     public get language(): AreaCode {
         return this._language;
+    }
+    public get session(): string {
+        return this._session;
+    }
+    public get body(): any {
+        return this._body;
     }
     public cookie(key: string): string {
         return this._cookie[key] || "";

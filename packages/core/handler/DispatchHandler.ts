@@ -59,15 +59,25 @@ export class DispatchHandler {
             payload: {
                 ...data.rest,
                 options: {
+                    env: process.env,
+                    argv: process.argv,
                     workerData: data.payload,
                 },
             },
         });
 
         if (error) {
-            return Promise.reject(ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", error));
+            return Promise.reject(
+                ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", JSON.stringify(error)),
+            );
         } else {
-            return value;
+            return (
+                value || {
+                    statusCode: HTTP_STATUS_CODE.NO_CONTENT,
+                    body: "",
+                    headers: {},
+                }
+            );
         }
     }
 
@@ -76,15 +86,21 @@ export class DispatchHandler {
         if (!dispatcher) {
             return Promise.reject(new Error());
         }
-        const { exitCode, value, error } = await dispatcher({
+        const result = await dispatcher({
             payload,
             script: path.resolve(__dirname, "../script/job-runner.js"),
         });
 
-        if (error) {
-            return Promise.reject(ErrorHelper.getError(exitCode.toString(), "error occurs when job execution.", error));
+        if (result.error) {
+            return Promise.reject(
+                ErrorHelper.getError(
+                    result.exitCode.toString(),
+                    "error occurs when job execution.",
+                    JSON.stringify(result.error),
+                ),
+            );
         } else {
-            return value;
+            return result;
         }
     }
 }

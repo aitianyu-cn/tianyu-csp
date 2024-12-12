@@ -19,6 +19,13 @@ export interface IServerRequest {
     type: RequestType;
     /** Request language */
     language: AreaCode;
+    /** session id */
+    session: string;
+    /** request body */
+    body: any;
+
+    setResponseCode(code: number): void;
+    getResponseCode(): number;
 
     /**
      * To get a cookie value by key. This field is used in HTTP request.

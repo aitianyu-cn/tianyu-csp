@@ -21,12 +21,12 @@
         "baseUrl": ".",
         "outDir": "./build",
         "paths": {
-            "core": ["packages/core/index.ts"],
-            "data": ["packages/data/index.ts"],
-            "infra": ["packages/infra/index.ts"],
-            "job": ["packages/job/index.ts"],
-            "monitor": ["packages/report/index.ts"],
-            "network": ["packages/web/index.ts"]
+            "#core/*": ["packages/core/*"],
+            "#module/*": ["packages/modules/*"],
+            "#utils/*": ["packages/utils/*"],
+            "#interface": ["packages/interface/index.ts"],
+            "#job/*": ["packages/job/*"],
+            "scripts/*": ["scripts/*"]
         }
     }
 }

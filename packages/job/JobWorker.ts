@@ -1,6 +1,14 @@
 /** @format */
 
-import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerExecutionResult, JobWorkerPayload } from "#interface";
+import { SERVICE_ERROR_CODES } from "#core/Constant";
+import {
+    IJobWorker,
+    JobExecutionStatus,
+    JobWorkerExecutionEntry,
+    JobWorkerExecutionResult,
+    JobWorkerMessageValue,
+    JobWorkerPayload,
+} from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 
@@ -11,7 +19,7 @@ export class JobWorker implements IJobWorker {
 
     private _executionId: string;
     private _exitCode: number;
-    private _returnValue: any;
+    private _returnValue: JobWorkerMessageValue | null;
     private _error: string;
 
     public constructor() {
@@ -65,7 +73,7 @@ export class JobWorker implements IJobWorker {
                     this._status = "error";
                     this._error = error.message;
                 });
-                this._worker.on("message", (value: any) => {
+                this._worker.on("message", (value: JobWorkerMessageValue) => {
                     this._returnValue = value;
                 });
                 this._worker.on("exit", (exitCode: number) => {
@@ -74,7 +82,19 @@ export class JobWorker implements IJobWorker {
                     this._status = this._status === "running" ? "done" : this._status;
                     this._exitCode = exitCode;
 
-                    resolve({ exitCode: this.exitCode, value: this.value, error: this.error });
+                    const result: JobWorkerExecutionResult = {
+                        exitCode: this._exitCode === 1 ? Number(SERVICE_ERROR_CODES.INTERNAL_ERROR) : this._exitCode,
+                        value: this.value?.data,
+                        error: [
+                            {
+                                code: SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                                message: this._error,
+                            },
+                            ...(this.value?.error || []),
+                        ],
+                    };
+
+                    resolve(result);
                 });
 
                 this._status = "running";
@@ -89,7 +109,7 @@ export class JobWorker implements IJobWorker {
         return this._exitCode;
     }
 
-    public get value(): any {
+    public get value(): JobWorkerMessageValue | null {
         return this._returnValue;
     }
 

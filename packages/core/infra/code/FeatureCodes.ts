@@ -4,7 +4,34 @@ import { SupportedDatabaseType } from "#interface";
 import { getBoolean, MapOfBoolean, MapOfType, StringHelper } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP } from "../../../Common";
 import { DEFAULT_SYS_DB_MAP } from "../Constant";
-import { IFeaturesConfig } from "packages/interface/modules/feature";
+import { IFeaturesConfig } from "#interface";
+
+const IsActiveSql: { [key in SupportedDatabaseType]: string } = {
+    mysql: "SELECT `{2}` as enable FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
+};
+
+export async function handleFeatureIsActive(feature: string): Promise<boolean> {
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const sql = StringHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)], [
+        dbInfo.database,
+        dbInfo.table,
+
+        dbInfo.field.enable,
+
+        dbInfo.field.id,
+        feature,
+    ]);
+    const connection = TIANYU.db.connect(dbInfo.database);
+    const result = await connection.query(sql).catch((error) => {
+        TIANYU.logger.error(JSON.stringify(error));
+        return [];
+    });
+
+    if (Array.isArray(result) && result.length) {
+        return getBoolean(result[0]["enable"]);
+    }
+    return false;
+}
 
 const GetCountSql: { [key in SupportedDatabaseType]: string } = {
     mysql: "SELECT COUNT(*) as counter FROM `{0}`.`{1}`;",

@@ -31,6 +31,8 @@ export interface RequestPayloadData {
     requestId: string;
     /** Given Error Trace id */
     traceId?: string;
+    /** Network session id */
+    sessionId: string;
 
     /** Network request type */
     type: RequestType;

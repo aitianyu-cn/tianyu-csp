@@ -1,6 +1,7 @@
 /** @format */
 
 import { DEFAULT_HTTP_HOST, DEFAULT_HTTP_PORT, SERVICE_ERROR_CODES } from "#core/Constant";
+import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import {
     HTTP_STATUS_CODE,
     HttpServiceOption,
@@ -71,6 +72,13 @@ export class HttpService implements IHttpService {
             itemsGetter?.({ name: "language", type: "cookie" }),
             itemsGetter?.({ name: "language", type: "search" }),
         );
+        const sessionIdKey =
+            TIANYU.fwk.contributor.findModule(
+                "request-handler.items-getter",
+                REQUEST_HANDLER_MODULE_ID,
+            )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
+        const sessionId = cookie[sessionIdKey];
+
         const requestId = guid();
 
         const payload: RequestPayloadData = {
@@ -79,6 +87,7 @@ export class HttpService implements IHttpService {
             headers,
             language,
             requestId,
+            sessionId,
 
             url: req.url || "",
             serviceId: this.id,
@@ -114,6 +123,13 @@ export class HttpService implements IHttpService {
                 itemsGetter?.({ name: "language", type: "cookie" }),
                 itemsGetter?.({ name: "language", type: "search" }),
             );
+            const sessionIdKey =
+                TIANYU.fwk.contributor.findModule(
+                    "request-handler.items-getter",
+                    REQUEST_HANDLER_MODULE_ID,
+                )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
+            const sessionId = cookie[sessionIdKey];
+
             const requestId = guid();
 
             const payload: RequestPayloadData = {
@@ -123,6 +139,7 @@ export class HttpService implements IHttpService {
                 headers,
                 language,
                 requestId,
+                sessionId,
 
                 url: req.url || "",
                 serviceId: this.id,
@@ -205,10 +222,11 @@ export class HttpService implements IHttpService {
     }
     private onResponse(response: ServerResponse, data: NetworkServiceResponseData): void {
         response.statusCode = data.statusCode;
+
         for (const key of Object.keys(data.headers)) {
             response.setHeader(key, data.headers[key]);
         }
 
-        response.end(JSON.stringify(data.body));
+        response.end(data.body ? JSON.stringify(data.body) : "");
     }
 }

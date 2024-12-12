@@ -28,9 +28,9 @@
         "copy-types": "copyfiles -u 2 \"build/packages/**/*.d.ts\" dist/types",
         "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
-        "test": "jest --config=\"./.config/jest.config.js\" --no-cache --verbose --passWithNoTests",
-        "test-all": "jest --config=\"./.config/jest.config.js\" --no-cache --verbose --coverage --passWithNoTests",
-        "test-coverage": "jest --config=\"./.config/jest.config.js\" --no-cache --coverage --passWithNoTests"
+        "test": "jest  --no-cache --verbose --passWithNoTests",
+        "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests",
+        "test-coverage": "jest  --no-cache --coverage --passWithNoTests"
     },
     "repository": {
         "type": "git",
@@ -59,6 +59,7 @@
         "typescript": "^5.4.2"
     },
     "devDependencies": {
+        "@types/jest": "^29.5.14",
         "@types/mysql": "^2.15.26",
         "@types/node": "^20.11.28",
         "copyfiles": "^2.4.1",

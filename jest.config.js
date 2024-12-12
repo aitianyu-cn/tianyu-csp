@@ -9,7 +9,7 @@ module.exports = {
     reporters: [
         "default",
         [
-            "../node_modules/jest-html-reporters",
+            "./node_modules/jest-html-reporters",
             {
                 pageTitle: "Tianyu CSP Unit Test",
                 publicPath: "test/__report__/unit",
@@ -19,8 +19,8 @@ module.exports = {
             },
         ],
     ],
-    coverageDirectory: "../test/__report__/coverage",
-    // setupFilesAfterEnv: ["<rootDir>/test/env/setupTestsAfterEnv.ts"],
+    coverageDirectory: "test/__report__/coverage",
+    setupFilesAfterEnv: ["<rootDir>/test/config/testEnvSetup.ts"],
     resetMocks: true,
     clearMocks: true,
     resetModules: true,
@@ -34,6 +34,12 @@ module.exports = {
         // "^shell-ui/(.*)$": "<rootDir>/packages/shell-ui/$1",
         // "^infra/(.*)$": "<rootDir>/packages/infra/$1",
         // "^test/(.*)$": "<rootDir>/__test__/$1",
+        "^#core/(.*)$": "<rootDir>/packages/core/$1",
+        "^#module/(.*)$": "<rootDir>/packages/modules/$1",
+        "^#utils/(.*)$": "<rootDir>/packages/utils/$1",
+        "^#job/(.*)$": "<rootDir>/packages/job/$1",
+
+        "^#interface$": "<rootDir>/packages/interface/index.ts",
     },
     // coveragePathIgnorePatterns: coverageIgnorePatterns,
     // transformIgnorePatterns: ["<rootDir>/node_modules/$"],

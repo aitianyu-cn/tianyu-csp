@@ -1,13 +1,14 @@
 /** @format */
 
-import { MapOfString } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { OperationError } from "#interface";
 
 /** Job worker exection options */
 export interface JobWorkerOptions {
     /** environment argv use same as process.argv */
-    argv?: any[] | undefined;
+    argv?: string[];
     /** environment config use same as process.env */
-    env?: MapOfString;
+    env?: MapOfType<string | undefined>;
     /** execution data */
     workerData?: any;
 }
@@ -18,7 +19,7 @@ export interface JobWorkerExecutionResult {
     /** Job exection result data */
     value: any;
     /** Error message when job execution */
-    error: string;
+    error: OperationError[];
 }
 
 export interface JobWorkerExecutionEntry {
@@ -29,4 +30,9 @@ export interface JobWorkerExecutionEntry {
 
 export interface JobWorkerPayload extends JobWorkerExecutionEntry {
     options: JobWorkerOptions;
+}
+
+export interface JobWorkerMessageValue {
+    data: any;
+    error: OperationError[];
 }

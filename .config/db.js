@@ -24,7 +24,7 @@ module.exports.SystemDBMap = {
         table: "logger",
         field: {
             user: "user",
-            levle: "level",
+            level: "level",
             time: "time",
             msg: "msg",
         },

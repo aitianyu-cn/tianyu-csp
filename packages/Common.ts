@@ -2,10 +2,10 @@
 
 import path from "path";
 import fs from "fs";
-import { guid, parseAreaString } from "@aitianyu.cn/types";
+import { AreaCode, guid, parseAreaString } from "@aitianyu.cn/types";
 
-export const INTERNAL_PROJECT_ROOT = __dirname;
-export const PROJECT_ROOT_PATH = process.cwd();
+export const INTERNAL_PROJECT_ROOT: string = __dirname;
+export const PROJECT_ROOT_PATH: string = process.cwd();
 
 const DEFAULT_CSP_CONFIG_NAME = "csp.config.json";
 const DEFAULT_EXTERNAL_MODULE_PATH = "src";
@@ -26,12 +26,15 @@ if (fs.existsSync(config_file_path)) {
     }
 }
 
-export const EXTERNAL_MODULE_ROOT_PATH = path.resolve(PROJECT_ROOT_PATH, raw_config?.config?.src || DEFAULT_EXTERNAL_MODULE_PATH);
+export const EXTERNAL_MODULE_ROOT_PATH: string = path.resolve(
+    PROJECT_ROOT_PATH,
+    raw_config?.config?.src || DEFAULT_EXTERNAL_MODULE_PATH,
+);
 
-export const PROJECT_VERSION = raw_config?.config?.version || "1.0.0";
-export const PROJECT_ENVIRONMENT_MODE = raw_config?.config?.environment || "development";
-export const PROJECT_NAME = raw_config?.config?.name || guid();
-export const PROJECT_DEFAULT_LANGUAGE = parseAreaString(raw_config?.config?.language, true);
+export const PROJECT_VERSION: string = raw_config?.config?.version || "1.0.0";
+export const PROJECT_ENVIRONMENT_MODE: string = raw_config?.config?.environment || "development";
+export const PROJECT_NAME: string = raw_config?.config?.name || guid();
+export const PROJECT_DEFAULT_LANGUAGE: AreaCode = parseAreaString(raw_config?.config?.language, true);
 
 const rest_file_path = path.resolve(PROJECT_ROOT_PATH, raw_config?.rest?.file || DEFAULT_REST_CONFIG_NAME);
 let raw_rest: any = {};

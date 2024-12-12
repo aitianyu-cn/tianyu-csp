@@ -37,3 +37,6 @@ export * from "./job/worker-mgr";
 
 export * from "./lib/filter";
 export * from "./lib/monitor";
+export * from "./lib/schedule";
+
+export * from "./modules/feature";

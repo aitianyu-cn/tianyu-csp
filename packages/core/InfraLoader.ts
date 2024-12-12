@@ -1,7 +1,14 @@
 /** @format */
 
-import { IGlobalDefinition, ILogger, IServerRequest, ISession } from "#interface";
-import { DATABASE_CONFIGS_MAP, DATABASE_TYPES_MAP, PROJECT_ROOT_PATH } from "packages/Common";
+import { IGlobalDefinition, IServerRequest, ISession } from "#interface";
+import {
+    DATABASE_CONFIGS_MAP,
+    DATABASE_TYPES_MAP,
+    PROJECT_ENVIRONMENT_MODE,
+    PROJECT_NAME,
+    PROJECT_ROOT_PATH,
+    PROJECT_VERSION,
+} from "../Common";
 import { ContributorManager } from "./infra/ContributorManager";
 import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
@@ -40,6 +47,9 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
 
         environment: {
             baseUrl: PROJECT_ROOT_PATH,
+            version: PROJECT_VERSION,
+            development: PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development",
+            name: PROJECT_NAME,
         },
     };
 

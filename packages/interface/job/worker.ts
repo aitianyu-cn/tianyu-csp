@@ -1,6 +1,6 @@
 /** @format */
 
-import { JobWorkerExecutionResult, JobWorkerPayload } from "../fwk-def/contributor/job";
+import { JobWorkerExecutionResult, JobWorkerMessageValue, JobWorkerPayload } from "../fwk-def/contributor/job";
 
 /** Job Execution Status */
 export type JobExecutionStatus = "active" | "invalid" | "running" | "done" | "error";
@@ -17,7 +17,7 @@ export interface JobExecutionResult {
     /** Job script exit code */
     exitCode: number;
     /** Job exection result data */
-    value: any;
+    value: JobWorkerMessageValue | null;
     /** Error message when job execution */
     error: string;
 }
