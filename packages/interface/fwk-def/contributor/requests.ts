@@ -15,6 +15,7 @@ export type DefaultRequestItemTargetType = "cookie" | "search";
 export interface DefaultRequestItemsMap {
     /** key of language in cookie and search */
     language?: string | { [key in DefaultRequestItemTargetType]: string };
+    session?: string | { [key in DefaultRequestItemTargetType]: string };
 }
 
 /** Supported Network Request Service Type */

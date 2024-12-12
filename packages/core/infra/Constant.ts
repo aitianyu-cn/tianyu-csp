@@ -1,27 +1,9 @@
 /** @format */
 
-module.exports.DatabaseTypesMap = {
-    csp_sys: "mysql",
-    csp_user: "mysql",
-};
-module.exports.DatabaseConfigMap = {
-    csp_sys: {
-        host: "server.tencent.backend.aitianyu.cn",
-        port: 3306,
-        user: "root",
-        password: "ysy1998ysy[]",
-    },
-    csp_user: {
-        host: "server.tencent.backend.aitianyu.cn",
-        port: 3306,
-        user: "root",
-        password: "ysy1998ysy[]",
-    },
-};
-module.exports.SystemDBMap = {
+export const DEFAULT_SYS_DB_MAP = {
     logger: {
-        database: "csp_sys",
-        table: "logger",
+        database: "infra_db",
+        table: "log_tb",
         field: {
             user: "user",
             levle: "level",
@@ -108,4 +90,12 @@ module.exports.SystemDBMap = {
             execute: "execute",
         },
     },
+};
+
+export const DEFAULT_REST_REQUEST_ITEM_MAP = {
+    language: {
+        cookie: "LANGUAGE",
+        search: "x-language",
+    },
+    session: "SESSION_ID",
 };

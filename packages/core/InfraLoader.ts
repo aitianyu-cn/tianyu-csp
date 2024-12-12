@@ -1,31 +1,43 @@
 /** @format */
 
-import { IGlobalDefinition, RequestPayloadData } from "#interface";
+import { IGlobalDefinition, ILogger, IServerRequest, ISession } from "#interface";
 import { DATABASE_CONFIGS_MAP, DATABASE_TYPES_MAP, PROJECT_ROOT_PATH } from "packages/Common";
 import { ContributorManager } from "./infra/ContributorManager";
 import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
-import { GenericRequestManager, GlobalRequestManager } from "./infra/RequestManager";
+import { GlobalRequestManager } from "./infra/RequestManager";
+import { GlobalSessionManager } from "./infra/SessionManager";
+import { LoggerManager } from "./infra/LoggerManager";
+import { UsageManager } from "./infra/UsageManager";
+import { TraceManager } from "./infra/TraceManager";
 
 export function loadInfra(): void {
     if ((global as any).TIANYU) {
         return;
     }
 
-    (global as any).TIANYU = generateInfra();
+    const requestMgr = new GlobalRequestManager();
+    const sessionMgr = new GlobalSessionManager();
+    (global as any).TIANYU = generateInfra(sessionMgr, requestMgr);
 }
 
-export function generateInfra(request?: RequestPayloadData): IGlobalDefinition {
+export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
         db: new DatabaseManager({
             dbTypes: DATABASE_TYPES_MAP,
             configMap: DATABASE_CONFIGS_MAP,
         }),
-        import: importImpl,
         fwk: {
             contributor: new ContributorManager(),
         },
-        request: request ? new GenericRequestManager(request) : new GlobalRequestManager(),
+        import: importImpl(),
+
+        logger: new LoggerManager(),
+        request: request,
+        session: sessionMgr,
+        usage: new UsageManager(),
+        trace: new TraceManager(),
+
         environment: {
             baseUrl: PROJECT_ROOT_PATH,
         },

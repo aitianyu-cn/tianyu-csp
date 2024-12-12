@@ -13,4 +13,6 @@ export interface IImporter {
      *          for # or not provided, indicate the imported package is customized, and will import the object based on the 'baseUrl'
      */
     (packageName: string, objectName: string): any;
+
+    MODULE: typeof import("#module/module-export");
 }

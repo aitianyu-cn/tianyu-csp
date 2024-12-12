@@ -1,21 +1,22 @@
 /** @format */
 
+import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
     DISPATCH_HANDLER_MODULE_ID,
+    HTTP_STATUS_CODE,
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
     RequestPayloadData,
     RequestRestData,
 } from "#interface";
+import { ErrorHelper } from "#utils/ErrorHelper";
+import { REST_REQUEST_ITEM_MAP } from "packages/Common";
 
 export class RequestHandler {
-    private _nameMap: DefaultRequestItemsMap;
-
-    public constructor(itemNameMap?: DefaultRequestItemsMap) {
-        this._nameMap = itemNameMap || {};
-
+    public constructor() {
         // create endpoints
         TIANYU.fwk.contributor.registerEndpoint("request-handler.dispatcher");
         TIANYU.fwk.contributor.registerEndpoint("request-handler.items-getter");
@@ -30,7 +31,10 @@ export class RequestHandler {
     }
 
     private _getRequestItem(payload: { name: keyof DefaultRequestItemsMap; type: DefaultRequestItemTargetType }): string {
-        const item = this._nameMap[payload.name] || "";
+        const c_item = REST_REQUEST_ITEM_MAP[payload.name];
+        const d_item = DEFAULT_REST_REQUEST_ITEM_MAP[payload.name];
+
+        const item = c_item || d_item || "";
         if (typeof item === "string") {
             return item;
         }
@@ -41,7 +45,13 @@ export class RequestHandler {
     private _dispatch(data: { rest: RequestRestData; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
         const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         if (!dispatcher) {
-            return Promise.reject(new Error());
+            return Promise.reject(
+                ErrorHelper.getError(
+                    HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString(),
+                    "request could not be handled",
+                    "network dispatcher is not inited or not exist.",
+                ),
+            );
         }
 
         return dispatcher({ ...data });

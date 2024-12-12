@@ -7,13 +7,25 @@
         "language": "zh-CN"
     },
     "rest": {
-        "file": ".config/rest.json"
+        "file": ".config/rest.json",
+        "request-map": {
+            "language": {
+                "cookie": "LANGUAGE",
+                "search": "x-language"
+            },
+            "session": "SESSION_ID"
+        }
     },
     "database": {
         "file": ".config/db.js",
         "rename": {
             "types": "DatabaseTypesMap",
-            "configs": "DatabaseConfigMap"
+            "configs": "DatabaseConfigMap",
+            "sys": "SystemDBMap"
         }
+    },
+    "user": {
+        "login": 10,
+        "session_life": 30
     }
 }

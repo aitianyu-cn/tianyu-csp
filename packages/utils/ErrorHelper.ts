@@ -7,7 +7,7 @@ export class ErrorHelper {
         return {
             code,
             message,
-            traceId: tianyu.trace.getId() || undefined,
+            traceId: TIANYU.trace.getId() || undefined,
             error: errorDetails,
         };
     }

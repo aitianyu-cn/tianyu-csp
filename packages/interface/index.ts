@@ -9,8 +9,13 @@ export * from "./Error";
 export * from "./api/database";
 export * from "./api/environment";
 export * from "./api/fwk";
+export * from "./api/logger";
 export * from "./api/importer";
+export * from "./api/privilege";
 export * from "./api/request";
+export * from "./api/session";
+export * from "./api/trace";
+export * from "./api/usage";
 
 export * from "./declares/global-declare";
 
@@ -31,9 +36,4 @@ export * from "./job/worker";
 export * from "./job/worker-mgr";
 
 export * from "./lib/filter";
-export * from "./lib/logger";
 export * from "./lib/monitor";
-export * from "./lib/privilege";
-export * from "./lib/session";
-export * from "./lib/trace";
-export * from "./lib/usage";

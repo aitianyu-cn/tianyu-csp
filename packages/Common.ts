@@ -14,6 +14,7 @@ const DEFAULT_DB_CONFIG_NAME = "db.config.js";
 
 const DEFAULT_DB_CONFIG_TYPES_ID = "databaseTypes";
 const DEFAULT_DB_CONFIG_CONFIG_ID = "databaseConfigs";
+const DEFAULT_DB_CONFIG_DBMAP_ID = "SystemDatabaseMap";
 
 const config_file_path = path.resolve(PROJECT_ROOT_PATH, DEFAULT_CSP_CONFIG_NAME);
 let raw_config = null;
@@ -47,10 +48,12 @@ export const REST = {
 
     // this is the default resets
 };
+export const REST_REQUEST_ITEM_MAP = raw_config?.rest?.["request-map"] || {};
 
 const dbconfig_file_path = path.resolve(PROJECT_ROOT_PATH, raw_config?.database?.file || DEFAULT_DB_CONFIG_NAME);
 const dbconfig_types_id = raw_config?.database?.rename?.["types"] || DEFAULT_DB_CONFIG_TYPES_ID;
 const dbconfig_configs_id = raw_config?.database?.rename?.["configs"] || DEFAULT_DB_CONFIG_CONFIG_ID;
+const dbconfig_sys_map_id = raw_config?.database?.rename?.["sys"] || DEFAULT_DB_CONFIG_DBMAP_ID;
 
 let raw_db_config: any = {};
 if (fs.existsSync(dbconfig_file_path)) {
@@ -60,14 +63,20 @@ if (fs.existsSync(dbconfig_file_path)) {
         raw_db_config = {
             [dbconfig_types_id]: {},
             [dbconfig_configs_id]: {},
+            [dbconfig_sys_map_id]: {},
         };
     }
 } else {
     raw_db_config = {
         [dbconfig_types_id]: {},
         [dbconfig_configs_id]: {},
+        [dbconfig_sys_map_id]: {},
     };
 }
 
-export const DATABASE_TYPES_MAP = raw_db_config[dbconfig_types_id];
-export const DATABASE_CONFIGS_MAP = raw_db_config[dbconfig_configs_id];
+export const DATABASE_TYPES_MAP = raw_db_config[dbconfig_types_id] || {};
+export const DATABASE_CONFIGS_MAP = raw_db_config[dbconfig_configs_id] || {};
+export const DATABASE_SYS_DB_MAP = raw_db_config[dbconfig_sys_map_id] || {};
+
+export const SESSION_LIFE_TIME = raw_config?.user?.session_life || 30;
+export const USER_LOGIN_LIFE_TIME = raw_config?.user?.login || 10;

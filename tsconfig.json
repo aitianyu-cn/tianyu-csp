@@ -22,6 +22,7 @@
         "outDir": "./build",
         "paths": {
             "#core/*": ["packages/core/*"],
+            "#module/*": ["packages/modules/*"],
             "#utils/*": ["packages/utils/*"],
             "#interface": ["packages/interface/index.ts"],
             "#job/*": ["packages/job/*"],

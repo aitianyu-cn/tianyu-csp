@@ -3,6 +3,7 @@
 import {
     DISPATCH_HANDLER_MODULE_ID,
     DispatchHandlerOption,
+    HTTP_STATUS_CODE,
     JobWorkerExecutionResult,
     JobWorkerPayload,
     NetworkServiceResponseData,
@@ -10,8 +11,7 @@ import {
     RequestRestData,
 } from "#interface";
 import { createJobManager } from "#job/index";
-import { RestHelper } from "#utils/RestHelper";
-import { ObjectHelper } from "@aitianyu.cn/types";
+import { ErrorHelper } from "#utils/ErrorHelper";
 import path from "path";
 
 export class DispatchHandler {
@@ -45,7 +45,13 @@ export class DispatchHandler {
     }): Promise<NetworkServiceResponseData> {
         const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._requestJobPool);
         if (!dispatcher) {
-            return Promise.reject(new Error());
+            return Promise.reject(
+                ErrorHelper.getError(
+                    HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString(),
+                    "error occurs when request processing.",
+                    "network requestion could not be handled internally due to some technical errors.",
+                ),
+            );
         }
 
         const { exitCode, value, error } = await dispatcher({
@@ -59,7 +65,7 @@ export class DispatchHandler {
         });
 
         if (error) {
-            return Promise.reject({ code: exitCode, message: error });
+            return Promise.reject(ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", error));
         } else {
             return value;
         }
@@ -76,7 +82,7 @@ export class DispatchHandler {
         });
 
         if (error) {
-            return Promise.reject({ code: exitCode, message: error });
+            return Promise.reject(ErrorHelper.getError(exitCode.toString(), "error occurs when job execution.", error));
         } else {
             return value;
         }

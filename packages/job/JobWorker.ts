@@ -1,13 +1,6 @@
 /** @format */
 
-import {
-    IJobWorker,
-    JobExecutionStatus,
-    JobWorkerExecutionEntry,
-    JobWorkerExecutionResult,
-    JobWorkerOptions,
-    JobWorkerPayload,
-} from "#interface";
+import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerExecutionResult, JobWorkerPayload } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 

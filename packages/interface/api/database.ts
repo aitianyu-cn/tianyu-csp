@@ -90,7 +90,8 @@ export interface IDBLifecycle {
 }
 
 /** CSP Database Connection */
-export interface IDBConnection {
+export interface IDBConnection extends IDBLifecycle {
+    name: string;
     /**
      * To execute a single query without return value
      *

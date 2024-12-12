@@ -90,7 +90,7 @@ export class JobManager {
                     .finally(() => this._dispatchInternal());
             },
             (reason) => {
-                TIANYU.logger.error(reason?.message || "Technical error occurs.", true);
+                TIANYU.logger.error(reason?.message || "Technical error occurs.");
             },
         );
     }
