@@ -27,10 +27,10 @@ export class SessionManager implements ISession {
     public async loadData(): Promise<void> {
         const userId = await handleSession(this.sessionId);
         const { name, license } = await handleSessionUser(userId);
-        const adminMode = await handleSessionIsAdminMode(license);
+        const { admin } = await handleSessionIsAdminMode(license);
         const privileges = await handleSessionPrivileges(license);
 
-        this._adminMode = adminMode;
+        this._adminMode = admin;
 
         this._userId = userId;
         this._userDpname = name;

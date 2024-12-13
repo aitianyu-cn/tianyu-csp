@@ -12,7 +12,7 @@ export class TraceHelper {
         const millisecondString = date.getMilliseconds().toString();
         const timeString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${millisecondString.substring(
             0,
-            millisecondString.length > 3 ? 3 : millisecondString.length,
+            /* istanbul ignore next */ millisecondString.length > 3 ? 3 : millisecondString.length,
         )}`;
         return timeString;
     }

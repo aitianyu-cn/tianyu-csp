@@ -1,7 +1,17 @@
 {
-    "/test": {
+    "/test/valid": {
+        "package": "a",
+        "module": "b",
+        "method": "c"
+    },
+    "/test/invalid": {
         "package": "",
         "module": "",
-        "methods": ""
+        "method": ""
+    },
+    "/test/no_prefix": {
+        "package": "a",
+        "module": "b",
+        "method": "c"
     }
 }

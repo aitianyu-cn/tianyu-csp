@@ -19,6 +19,7 @@ import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
 
 export function loadInfra(): void {
+    /* istanbul ignore if */
     if ((global as any).TIANYU) {
         return;
     }

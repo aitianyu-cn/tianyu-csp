@@ -12,7 +12,7 @@ const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
 
 export class UsageManager implements IUsage {
     public async record(project: string, moduleOrFunctionName: string, action: OperationActions, msg?: string): Promise<void> {
-        const dbInfo = DATABASE_SYS_DB_MAP["usage"] || DEFAULT_SYS_DB_MAP["usage"];
+        const dbInfo = DATABASE_SYS_DB_MAP["usage"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["usage"];
         const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
             dbInfo.database,
             dbInfo.table,

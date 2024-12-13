@@ -24,7 +24,7 @@ export class TraceManager implements ITrace {
         this._traceId = id;
     }
     public async trace(message: string, errorDetails?: string, area?: TraceArea): Promise<void> {
-        const dbInfo = DATABASE_SYS_DB_MAP["trace"] || DEFAULT_SYS_DB_MAP["trace"];
+        const dbInfo = DATABASE_SYS_DB_MAP["trace"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["trace"];
         const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
             dbInfo.database,
             dbInfo.table,

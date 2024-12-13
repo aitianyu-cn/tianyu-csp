@@ -51,7 +51,7 @@ export class HttpHelper {
             if (pair.length > 1) {
                 const key = pair[0];
                 pair.shift();
-                parsedCookie[key] = pair.join("=");
+                parsedCookie[key] = pair.join("=").trim();
             }
         }
 
@@ -79,7 +79,7 @@ export class HttpHelper {
         defaultNameForParam?: string,
     ): AreaCode {
         const paramsLanguage = params[defaultNameForParam || DEFAULT_REQUEST_LANGUAGE_ITEM] || "";
-        const cookieLanguage = cookies[defaultNameForCookie || DEFAULT_REQUEST_LANGUAGE_ITEM] || "";
+        const cookieLanguage = cookies[defaultNameForCookie || DEFAULT_REQUEST_LANGUAGE_ITEM.toUpperCase()] || "";
         const acceptLanguage = parseAcceptLanguage(headers["accept-language"] || "");
 
         const language = paramsLanguage || cookieLanguage || acceptLanguage;

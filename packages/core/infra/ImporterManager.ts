@@ -9,15 +9,12 @@ import { IImporter } from "#interface";
 
 import * as MODULE_IMPORT from "#module/module-export";
 
-const SUPPORTED_SUFFIX = ["", "js", "json"];
+const SUPPORTED_SUFFIX = ["", ".ts", ".js", ".json"];
 
 export function importImpl(): IImporter {
     const importer = ((packageName: string, objectName: string) => {
         if (!packageName || !objectName) {
-            throw ErrorHelper.getError(
-                SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `import package '${packageName}' and Object '${objectName}' not valid`,
-            );
+            throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `import package and Object should not be empty`);
         }
 
         const isInternal = packageName.startsWith("$");
@@ -27,7 +24,6 @@ export function importImpl(): IImporter {
         const dir = path.resolve(
             isInternal ? INTERNAL_PROJECT_ROOT : EXTERNAL_MODULE_ROOT_PATH,
             processedPackageName.replace(/\./g, "/"),
-            objectName,
         );
 
         let targetPath = "";

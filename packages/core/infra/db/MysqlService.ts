@@ -29,19 +29,17 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                 connection.end();
 
                 if (error) {
-                    if (error) {
-                        reject(
-                            ErrorHelper.getError(
-                                INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
-                                `Database (${this._database}) Query ("${sql}") Execution Failed`,
-                                error.message,
-                            ),
-                        );
-                        return;
-                    }
-
-                    resolve();
+                    reject(
+                        ErrorHelper.getError(
+                            INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
+                            `Database (${this._database}) Query ("${sql}") Execution Failed`,
+                            error.message,
+                        ),
+                    );
+                    return;
                 }
+
+                resolve();
             });
         });
     }
@@ -61,6 +59,8 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                             transactionError.message,
                         ),
                     );
+                    connection.end();
+                    return;
                 }
 
                 const queryPromises: Promise<void>[] = [];
@@ -69,18 +69,16 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                         new Promise<void>((done, fail) => {
                             connection.query(sql, (error: mysql.MysqlError | null) => {
                                 if (error) {
-                                    if (error) {
-                                        fail(
-                                            ErrorHelper.getError(
-                                                INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
-                                                `Database (${this._database}) Query ("${sql}") Execution Failed`,
-                                                error.message,
-                                            ),
-                                        );
-                                        return;
-                                    }
-                                    done();
+                                    fail(
+                                        ErrorHelper.getError(
+                                            INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
+                                            `Database (${this._database}) Query ("${sql}") Execution Failed`,
+                                            error.message,
+                                        ),
+                                    );
+                                    return;
                                 }
+                                done();
                             });
                         }),
                     );
@@ -98,7 +96,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                                 ErrorHelper.getError(
                                     INFRA_ERROR_CODES.DATABASE_BATCH_QUERY_EXECUTION_ERROR,
                                     `Database (${this._database}) Transaction Query Execution Failed`,
-                                    error.error || error.message,
+                                    /* istanbul ignore next */ error.error || error.message,
                                 ),
                             );
                         },
@@ -122,19 +120,17 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                 connection.end();
 
                 if (error) {
-                    if (error) {
-                        reject(
-                            ErrorHelper.getError(
-                                INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
-                                `Database (${this._database}) Query ("${sql}") Execution Failed`,
-                                error.message,
-                            ),
-                        );
-                        return;
-                    }
-
-                    resolve(result);
+                    reject(
+                        ErrorHelper.getError(
+                            INFRA_ERROR_CODES.DATABASE_QUERY_EXECUTION_ERROR,
+                            `Database (${this._database}) Query ("${sql}") Execution Failed`,
+                            error.message,
+                        ),
+                    );
+                    return;
                 }
+
+                resolve(result);
             });
         });
     }
@@ -155,6 +151,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                                 error.message,
                             ),
                         );
+                        connection?.destroy();
                         return;
                     }
 
@@ -165,7 +162,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                     ErrorHelper.getError(
                         INFRA_ERROR_CODES.DATABASE_GENERAL_ERROR,
                         `Database (${this._database}) Error`,
-                        (e as any)?.message || undefined,
+                        (e as any)?.message || /* istanbul ignore next */ undefined,
                     ),
                 );
             }

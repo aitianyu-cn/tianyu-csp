@@ -1,10 +1,21 @@
 /** @format */
 
+import { IDatabaseConnectionConfig } from "#interface";
+import { DBConfigConverter } from "#utils/DBConfigConverter";
+
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.DBConfigConverter", () => {
     describe("toMysql", () => {
         it("-", () => {
-            console.log(TIANYU.environment);
-            console.log(TIANYU.db.databaseType("csp_user"));
+            const config: IDatabaseConnectionConfig = {
+                host: "localhost",
+                port: 3306,
+                user: "test",
+                password: "test",
+                timeout: 3000,
+            };
+            const configForMysql = DBConfigConverter.toMysql(config);
+
+            expect(configForMysql).toEqual(config);
         });
     });
 });

@@ -11,7 +11,7 @@ const IsActiveSql: { [key in SupportedDatabaseType]: string } = {
 };
 
 export async function handleFeatureIsActive(feature: string): Promise<boolean> {
-    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
     const sql = StringHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
@@ -38,7 +38,7 @@ const GetCountSql: { [key in SupportedDatabaseType]: string } = {
 };
 
 export async function handleFeatureGetCount(): Promise<number> {
-    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
     const sql = StringHelper.format(GetCountSql[TIANYU.db.databaseType(dbInfo.database)], [dbInfo.database, dbInfo.table]);
     const connection = TIANYU.db.connect(dbInfo.database);
     const counter = await connection.query(sql).then(
@@ -62,7 +62,7 @@ const GetFeatureListSql: { [key in SupportedDatabaseType]: string } = {
 };
 
 export async function handleFeatureGetFeatures(start: number, count: number): Promise<MapOfType<IFeaturesConfig>> {
-    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
     const sql = StringHelper.format(GetFeatureListSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
@@ -81,20 +81,7 @@ export async function handleFeatureGetFeatures(start: number, count: number): Pr
         return [];
     });
 
-    const returnValue: MapOfType<IFeaturesConfig> = {};
-    if (Array.isArray(result) && result.length) {
-        for (const item of result) {
-            const key = item["id"] || "";
-            const enable = getBoolean(item["enable"]);
-            const desc = item["desc"] || "";
-            const deps = ((item["deps"] || "") as string).split(",").filter((dep_item) => !!dep_item);
-
-            if (key) {
-                returnValue[key] = { enable, description: desc, dependency: deps };
-            }
-        }
-    }
-    return returnValue;
+    return processFeatureConfigFromDBResult(result);
 }
 
 const EnableOrDisableFeatureSql: { [key in SupportedDatabaseType]: string } = {
@@ -102,7 +89,7 @@ const EnableOrDisableFeatureSql: { [key in SupportedDatabaseType]: string } = {
 };
 
 export async function handleFeatureStateChange(changes: MapOfBoolean): Promise<void> {
-    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
     const template = EnableOrDisableFeatureSql[TIANYU.db.databaseType(dbInfo.database)];
     const sqls: string[] = [];
     for (const key of Object.keys(changes)) {
@@ -124,7 +111,7 @@ export async function handleFeatureStateChange(changes: MapOfBoolean): Promise<v
     const connection = TIANYU.db.connect(dbInfo.database);
     await connection.executeBatch(sqls).catch((error) => {
         TIANYU.logger.error(JSON.stringify(error));
-        return [];
+        return;
     });
 }
 
@@ -133,7 +120,7 @@ const SearchFeatureSql: { [key in SupportedDatabaseType]: string } = {
 };
 
 export async function handleFeatureSearchFeatures(search: string, start: number): Promise<MapOfType<IFeaturesConfig>> {
-    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || DEFAULT_SYS_DB_MAP["feature"];
+    const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
     const sql = StringHelper.format(SearchFeatureSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
@@ -153,13 +140,20 @@ export async function handleFeatureSearchFeatures(search: string, start: number)
         return [];
     });
 
+    return processFeatureConfigFromDBResult(result);
+}
+
+function processFeatureConfigFromDBResult(result: any[]): MapOfType<IFeaturesConfig> {
     const returnValue: MapOfType<IFeaturesConfig> = {};
     if (Array.isArray(result) && result.length) {
         for (const item of result) {
             const key = item["id"] || "";
             const enable = getBoolean(item["enable"]);
             const desc = item["desc"] || "";
-            const deps = ((item["deps"] || "") as string).split(",").filter((dep_item) => !!dep_item);
+            const deps = ((item["deps"] || "") as string)
+                .split(",")
+                .filter((dep_item) => !!dep_item)
+                .map((dep_item) => dep_item.trim());
 
             if (key) {
                 returnValue[key] = { enable, description: desc, dependency: deps };

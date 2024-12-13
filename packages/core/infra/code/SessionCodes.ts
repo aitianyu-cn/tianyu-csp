@@ -22,7 +22,7 @@ const TemplateSQL: { [id: string]: { [key in SupportedDatabaseType]: string } } 
 };
 
 export async function handleSession(sessionId: string): Promise<string> {
-    const dbInfo = DATABASE_SYS_DB_MAP["session"] || DEFAULT_SYS_DB_MAP["session"];
+    const dbInfo = DATABASE_SYS_DB_MAP["session"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["session"];
     const connection = TIANYU.db.connect(dbInfo.database);
     const sessionInfo = await connection
         .query(
@@ -61,7 +61,7 @@ export async function handleSession(sessionId: string): Promise<string> {
 }
 
 export async function handleSessionUser(user: string): Promise<{ name: string; license: string }> {
-    const dbInfo = DATABASE_SYS_DB_MAP["user"] || DEFAULT_SYS_DB_MAP["user"];
+    const dbInfo = DATABASE_SYS_DB_MAP["user"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["user"];
     const connection = TIANYU.db.connect(dbInfo.database);
     const userInfo = await connection
         .query(
@@ -90,8 +90,8 @@ export async function handleSessionUser(user: string): Promise<{ name: string; l
     return userInfo[0];
 }
 
-export async function handleSessionIsAdminMode(license: string): Promise<boolean> {
-    const dbInfo = DATABASE_SYS_DB_MAP["license"] || DEFAULT_SYS_DB_MAP["license"];
+export async function handleSessionIsAdminMode(license: string): Promise<{ admin: boolean }> {
+    const dbInfo = DATABASE_SYS_DB_MAP["license"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["license"];
     const connection = TIANYU.db.connect(dbInfo.database);
     const licenseInfo = await connection
         .query(
@@ -115,10 +115,10 @@ export async function handleSessionIsAdminMode(license: string): Promise<boolean
         });
     }
 
-    return getBoolean(licenseInfo[0]);
+    return licenseInfo[0];
 }
 export async function handleSessionPrivileges(license: string): Promise<MapOfType<FunctionalityPrivilegeMap>> {
-    const dbInfo = DATABASE_SYS_DB_MAP["role"] || DEFAULT_SYS_DB_MAP["role"];
+    const dbInfo = DATABASE_SYS_DB_MAP["role"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["role"];
     const connection = TIANYU.db.connect(dbInfo.database);
     const roleInfos = await connection
         .query(

@@ -19,7 +19,7 @@ export class LoggerManager implements ILogger {
     private _field_msg: string;
 
     public constructor() {
-        const dbinfo = DATABASE_SYS_DB_MAP["logger"] || DEFAULT_SYS_DB_MAP["logger"];
+        const dbinfo = DATABASE_SYS_DB_MAP["logger"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["logger"];
         this._db = dbinfo.database;
         this._tb = dbinfo.table;
 
