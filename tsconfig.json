@@ -1,0 +1,35 @@
+{
+    "include": ["packages", "test", "scripts"],
+    "exclude": [],
+    "compilerOptions": {
+        "composite": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "jsx": "preserve",
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": false,
+        "baseUrl": ".",
+        "outDir": "./build",
+        "paths": {
+            "#core/*": ["packages/core/*"],
+            "#module/*": ["packages/modules/*"],
+            "#utils/*": ["packages/utils/*"],
+            "#interface": ["packages/interface/index.ts"],
+            "#job/*": ["packages/job/*"],
+            "install/*": ["install/*"],
+            "scripts/*": ["scripts/*"],
+            "test/*": ["test/*"],
+            "OUT": ["dist/lib/index.js"]
+        }
+    }
+}

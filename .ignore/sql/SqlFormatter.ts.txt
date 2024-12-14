@@ -1,0 +1,15 @@
+/** @format */
+
+import { SupportedDatabaseType } from "../interface";
+import { formatForMySql } from "./MySqlFormatter";
+import { SqlInStruct } from "./Sql";
+
+export class SqlFormatter {
+    public static format(source: SqlInStruct, dbType: SupportedDatabaseType): string {
+        switch (dbType) {
+            case "mysql":
+            default:
+                return formatForMySql(source);
+        }
+    }
+}

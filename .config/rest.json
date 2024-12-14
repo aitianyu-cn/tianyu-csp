@@ -1,0 +1,29 @@
+{
+    "/test/valid": {
+        "package": "a",
+        "module": "b",
+        "method": "c"
+    },
+    "/test/invalid": {
+        "package": "",
+        "module": "",
+        "method": ""
+    },
+    "/test/no_prefix": {
+        "package": "a",
+        "module": "b",
+        "method": "c"
+    },
+    "/test": { "package": "a", "module": "b", "method": "c" },
+
+    "/feature": {
+        "package": "run/infra",
+        "module": "Feature",
+        "method": "execute"
+    },
+    "/": {
+        "package": "run",
+        "module": "Info",
+        "method": "execute"
+    }
+}

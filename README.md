@@ -1,6 +1,6 @@
-# TIANYU - CSP
+# TIANYU - Common Service Platform
 
-Project for Common Service Platform of Tianyu.
+A Common Service Platform of Tianyu includes Data API, Network API, Schedule Job and Status Monitor.
 
 ## MOTIVATION
 
@@ -40,6 +40,14 @@ For the further service development of `Smart Home`, we need a solution to conta
 
     Authorization is the security core for the whole platform. It contains <u>User Management</u> to verify the user access and <u>Privileges Management</u> to control the user activities.
 
+    User Authorization includes `User`, `Licenses` and `Teams` three parts.
+
+    1. Licenses: this is a privilege controller contains all functions permission description. There will be a `role` table as additional description to record each privilege status.
+
+    2. Teams: this is an additional records to create a group for users.
+
+    3. User: this is a user main part for <u>logon authorization</u>, <u>operation permission control</u> and <u>relationship management</u>.
+
   - **_Resources Control_**
 
     Resources Control is the virtual data center to allow user to save data into program internal space. (The data of internal space will be persist in local storage or data base.) According to the data type and configuration, the data will be persist in different target entity and managed in a common place
@@ -71,3 +79,21 @@ For the further service development of `Smart Home`, we need a solution to conta
 - **Common Status Monitor Platform**
 
   Status Monitor Platform is used for collecting all the data before mentioned, and to generate a report to user.
+
+## MODULES
+
+### Infrastructure
+
+Infrastructure contains basic API and some default resources (international strings, exported json data, etc..).
+
+All of components under this folder, based on the database accessment. In this part, will define an inner database API implementation.
+
+- **_Database_**
+
+  There are some infra database API definitions. To provide infra part needed database operation interfaces.
+
+- **_Logger_**
+- **_Message_**
+- **_Options_**
+- **_Trace_**
+- **_Usage_**
