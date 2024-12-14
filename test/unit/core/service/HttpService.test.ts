@@ -113,6 +113,23 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             }, done.fail);
         }, 50000);
 
+        it("get success - in string response", (done) => {
+            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+                return {
+                    statusCode: HTTP_STATUS_CODE.OK,
+                    headers: {},
+                    body: "response",
+                };
+            });
+
+            const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
+            client.get().then((value) => {
+                expect(value).toEqual("response");
+                expect(DISPATCH_SPY).toHaveBeenCalled();
+                done();
+            }, done.fail);
+        }, 50000);
+
         it("path not valid", (done) => {
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test_not_valid?TEST=true`);
             client.get().then(
@@ -183,6 +200,23 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             }, done.fail);
         }, 50000);
 
+        it("success - in string response", (done) => {
+            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+                return {
+                    statusCode: HTTP_STATUS_CODE.OK,
+                    headers: {},
+                    body: "response",
+                };
+            });
+
+            const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
+            client.post({ data: "test-data" }).then((value) => {
+                expect(value).toEqual("response");
+                expect(DISPATCH_SPY).toHaveBeenCalled();
+                done();
+            }, done.fail);
+        }, 50000);
+
         it("path not valid", (done) => {
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test_not_valid?TEST=true`);
             client.post({ data: "test-data" }).then(
@@ -232,7 +266,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
 
     it("invalid method", (done) => {
         const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
-        client.send("TRACE", { data: "test-data" }).then(
+        client.send("PUT", { data: "test-data" }).then(
             () => {
                 done.fail();
             },

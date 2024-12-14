@@ -88,7 +88,7 @@ export class DispatchHandler {
                     value?.statusCode === undefined
                         ? exitCode || HTTP_STATUS_CODE.NO_CONTENT
                         : value?.statusCode || HTTP_STATUS_CODE.OK,
-                headers: value?.handler || {},
+                headers: value?.headers || {},
                 body: value?.body || "",
             };
             return result;

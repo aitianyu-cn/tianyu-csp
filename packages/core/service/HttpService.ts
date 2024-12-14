@@ -62,7 +62,6 @@ export class HttpService implements IHttpService {
     }
 
     private onGet(req: IncomingMessage, res: ServerResponse): void {
-        // console.log(req);
         const param = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
         const cookie = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
         const headers = HttpHelper.processHeader(req.headers);
@@ -230,6 +229,8 @@ export class HttpService implements IHttpService {
             response.setHeader(key, data.headers[key]);
         }
 
-        response.end(data.body ? JSON.stringify(data.body) : /* istanbul ignore next */ "");
+        response.end(
+            data.body ? (typeof data.body === "string" ? data.body : JSON.stringify(data.body)) : /* istanbul ignore next */ "",
+        );
     }
 }
