@@ -14,7 +14,8 @@
                 "search": "x-language"
             },
             "session": "SESSION_ID"
-        }
+        },
+        "loader": "data"
     },
     "database": {
         "file": ".config/db.js",

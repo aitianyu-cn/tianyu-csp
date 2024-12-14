@@ -108,4 +108,13 @@ module.exports.SystemDBMap = {
             execute: "execute",
         },
     },
+    team: {
+        database: "csp_user",
+        table: "team_tb",
+        field: {
+            id: "id",
+            name: "name",
+            desc: "desc",
+        },
+    },
 };

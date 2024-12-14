@@ -22,8 +22,13 @@
         "method": "execute"
     },
     "/": {
-        "package": "run",
-        "module": "Info",
-        "method": "execute"
+        "package": "$",
+        "module": "default-loader",
+        "method": "html"
+    },
+    "/welcome": {
+        "package": "$",
+        "module": "default-loader",
+        "method": "html"
     }
 }

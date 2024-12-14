@@ -24,6 +24,7 @@
             "#core/*": ["packages/core/*"],
             "#module/*": ["packages/modules/*"],
             "#utils/*": ["packages/utils/*"],
+            "#loader/*": ["packages/loader/*"],
             "#interface": ["packages/interface/index.ts"],
             "#job/*": ["packages/job/*"],
             "install/*": ["install/*"]

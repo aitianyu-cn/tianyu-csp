@@ -40,6 +40,7 @@ module.exports = {
         "^#core/(.*)$": "<rootDir>/packages/core/$1",
         "^#module/(.*)$": "<rootDir>/packages/modules/$1",
         "^#utils/(.*)$": "<rootDir>/packages/utils/$1",
+        "^#loader/(.*)$": "<rootDir>/packages/loader/$1",
         "^#job/(.*)$": "<rootDir>/packages/job/$1",
         "^test/(.*)$": "<rootDir>/test/$1",
 

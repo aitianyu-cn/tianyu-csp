@@ -1,6 +1,7 @@
 /** @format */
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { findActualModule } from "#core/infra/ImporterManager";
 import {
     DISPATCH_HANDLER_MODULE_ID,
     DispatchHandlerOption,
@@ -64,8 +65,9 @@ export class DispatchHandler {
             });
         }
 
+        const dir = path.resolve(__dirname, "../script/network-runner");
         const { exitCode, value, error, status } = await dispatcher({
-            script: path.resolve(__dirname, "../script/network-runner.js"),
+            script: findActualModule(dir) || /* istanbul ignore next */ dir,
             payload: {
                 ...data.rest,
                 traceId: data.payload.traceId,
@@ -112,9 +114,10 @@ export class DispatchHandler {
             };
             return errorRes;
         }
+        const dir = path.resolve(__dirname, "../script/job-runner");
         const result = await dispatcher({
             payload,
-            script: path.resolve(__dirname, "../script/job-runner.js"),
+            script: findActualModule(dir) || /* istanbul ignore next */ dir,
         });
 
         return result;

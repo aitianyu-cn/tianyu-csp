@@ -55,6 +55,9 @@ export const REST = {
     // this is the default resets
 };
 export const REST_REQUEST_ITEM_MAP = raw_config?.rest?.["request-map"] || /* istanbul ignore next */ {};
+export const REST_LOADER_RES_PATH = raw_config?.rest?.["loader"]
+    ? path.resolve(EXTERNAL_MODULE_ROOT_PATH, raw_config?.rest?.["loader"])
+    : /* istanbul ignore next */ EXTERNAL_MODULE_ROOT_PATH;
 
 const dbconfig_file_path = path.resolve(
     PROJECT_ROOT_PATH,

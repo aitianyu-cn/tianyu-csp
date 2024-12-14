@@ -4,6 +4,10 @@ import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessageValue, JobWorkerPayload } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
+import { INTERNAL_PROJECT_ROOT } from "../Common";
+import path from "path";
+
+const TS_PROXY_SCRIPT = path.resolve(INTERNAL_PROJECT_ROOT, "core/script/typescript-proxy.js");
 
 export class JobWorker implements IJobWorker {
     private _id: string;
@@ -65,13 +69,16 @@ export class JobWorker implements IJobWorker {
                     module: payload.module,
                     method: payload.method,
                 };
-                this._worker = new Worker(script, {
+                const isTypescript = /\.ts$/.test(script);
+                const workData: any = { payload: data, script: entry };
+                /* istanbul ignore if */
+                if (isTypescript) {
+                    workData["__filename"] = script;
+                }
+                this._worker = new Worker(isTypescript ? /* istanbul ignore next */ TS_PROXY_SCRIPT : script, {
                     argv,
                     env,
-                    workerData: {
-                        payload: data,
-                        script: entry,
-                    },
+                    workerData: workData,
                 });
 
                 this._worker.on("error", (error: Error) => {

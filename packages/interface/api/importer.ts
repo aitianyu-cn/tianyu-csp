@@ -15,4 +15,19 @@ export interface IImporter {
     (packageName: string, objectName: string): any;
 
     MODULE: typeof import("#module/module-export");
+    html(file: string): string;
 }
+
+export type DataEncoding =
+    | "ascii"
+    | "utf8"
+    | "utf-8"
+    | "utf16le"
+    | "utf-16le"
+    | "ucs2"
+    | "ucs-2"
+    | "base64"
+    | "base64url"
+    | "latin1"
+    | "binary"
+    | "hex";

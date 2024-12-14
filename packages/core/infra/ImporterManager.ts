@@ -5,11 +5,14 @@ import path from "path";
 import { EXTERNAL_MODULE_ROOT_PATH, INTERNAL_PROJECT_ROOT } from "../../Common";
 import { ErrorHelper } from "#utils/ErrorHelper";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { IImporter } from "#interface";
+import { DataEncoding, IImporter } from "#interface";
 
 import * as MODULE_IMPORT from "#module/module-export";
+import { SUPPORTED_SUFFIX } from "./Constant";
 
-const SUPPORTED_SUFFIX = ["", ".ts", ".js", ".json"];
+const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
+
+const DEFAULT_EMPTY_HTML = `<!DOCTYPE html><html lang="en"><head></head><body></body></html>`;
 
 export function importImpl(): IImporter {
     const importer = ((packageName: string, objectName: string) => {
@@ -24,17 +27,10 @@ export function importImpl(): IImporter {
         const dir = path.resolve(
             isInternal ? INTERNAL_PROJECT_ROOT : EXTERNAL_MODULE_ROOT_PATH,
             processedPackageName.replace(/\./g, "/"),
+            objectName,
         );
 
-        let targetPath = "";
-        for (const suffix of SUPPORTED_SUFFIX) {
-            const newObjectPath = path.resolve(dir, `${objectName}${suffix}`);
-            if (fs.existsSync(newObjectPath)) {
-                targetPath = newObjectPath;
-                break;
-            }
-        }
-
+        const targetPath = findActualModule(dir);
         if (!targetPath) {
             throw ErrorHelper.getError(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
@@ -45,6 +41,35 @@ export function importImpl(): IImporter {
         return require(targetPath);
     }) as IImporter;
     importer.MODULE = MODULE_IMPORT;
+    importer.html = (file: string, encoding: DataEncoding = "utf-8"): string => {
+        if (!file) {
+            return "";
+        }
+
+        const dir = path.resolve(EXTERNAL_MODULE_ROOT_PATH, file);
+        const targetPath = _findFileWithSuffix(dir, SUPPORTED_HTML_SUFFIX);
+        const result = targetPath ? fs.readFileSync(targetPath, encoding) : DEFAULT_EMPTY_HTML;
+        return result;
+    };
 
     return importer;
+}
+
+export function findActualModule(src: string): string {
+    return _findFileWithSuffix(src, SUPPORTED_SUFFIX);
+}
+
+function _findFileWithSuffix(src: string, suffixs: string[]): string {
+    let targetPath = "";
+    for (const suffix of suffixs) {
+        const newObjectPath = `${src}${suffix}`;
+        if (fs.existsSync(newObjectPath)) {
+            const fileInfo = fs.statSync(newObjectPath);
+            if (fileInfo.isFile()) {
+                targetPath = newObjectPath;
+                break;
+            }
+        }
+    }
+    return targetPath;
 }

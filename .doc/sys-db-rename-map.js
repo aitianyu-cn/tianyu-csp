@@ -1,12 +1,56 @@
 /** @format */
 
-export const DEFAULT_SYS_DB_MAP = {
+/**
+ * This is a template configuration JS file for "System Basic Database Rename Map"
+ *
+ * The reference database setting in "csp.config.json", please see the below notes
+ *
+ * "database": {
+ *      "file": "",
+ *      "rename": {
+ *          "types": "db_types",
+ *          "configs": "db_config",
+ *          "sys": "db_map"
+ *       }
+ *  },
+ */
+
+/** @type {{[dbname: string]: SupportedDatabaseType}} */
+module.exports.db_types = {
+    db1: "mysql", // replace a real db name in your database
+    db2: "mysql",
+};
+
+/** @type {{[dbname: string]: IDatabaseConnectionConfig}} */
+module.exports.db_config = {
+    db1: {}, // details of the config, please refer interface IDatabaseConnectionConfig
+    db2: {},
+};
+
+/**
+ * @description
+ * the structure of db_map please DO NOT to change. you can change the database name,
+ * table name and field item values to adapt your database.
+ * @type {{[dbname: string]: {database: string; table: string; field: {[key: string]: string}}}}
+ *
+ * @field logger
+ * @field usage
+ * @field trace
+ * @field feature
+ * @field session
+ * @field user
+ * @field license
+ * @field role
+ * @field team
+ *
+ */
+module.exports.db_map = {
     logger: {
-        database: "infra_db",
-        table: "log_tb",
+        database: "csp_sys",
+        table: "logger",
         field: {
             user: "user",
-            levle: "level",
+            level: "level",
             time: "time",
             msg: "msg",
         },
@@ -90,14 +134,13 @@ export const DEFAULT_SYS_DB_MAP = {
             execute: "execute",
         },
     },
-};
-
-export const DEFAULT_REST_REQUEST_ITEM_MAP = {
-    language: {
-        cookie: "LANGUAGE",
-        search: "x-language",
+    team: {
+        database: "csp_user",
+        table: "team_tb",
+        field: {
+            id: "id",
+            name: "name",
+            desc: "desc",
+        },
     },
-    session: "SESSION_ID",
 };
-
-export const SUPPORTED_SUFFIX = ["", ".ts", ".js", ".json"];

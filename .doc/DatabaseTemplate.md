@@ -2,6 +2,10 @@
 
 This doc will describe some default database table structure which should not be changed. All the definitions are based on `MySQL` database, for other database, please take the corresponding documents as reference.
 
+<h4><u>
+*** Please follow the data types definition from the template file. The name of field can use your cutomized name by describing in `database` configuration javascript file.
+</u></h4>
+
 ## System Part
 
 In this part, all sections are working for system default setting.
@@ -29,7 +33,6 @@ Trace table is used to record all the trace data for project running. All the re
 
     `user` CHAR(45) not null,
     `id` CHAR(45) not null,
-    `level` TINYINT(3) not null default '0',
     `time` CHAR(45) not null,
     `msg` TEXT,
     `error` TEXT not null default '',
@@ -48,8 +51,7 @@ Usage table is used to record all the user actions and data accesses from projec
 ```
 
     `user` CHAR(45) not null,
-    `project` VARCHAR(255) not null,
-    `module` VARCHAR(255) not null,
+    `func` VARCHAR(255) not null,
     `action` CHAR(10) not null,
     `time` CHAR(45) not null,
     `msg` TEXT
@@ -79,6 +81,20 @@ Feature table is used to record all the feature activity status. It can be used 
 
 In this part, all sections are working for authorizing and permittion.
 
+### Session Table
+
+Session table is used to record user requests. For each login user, will have a session info to indicate the connection. The table definition please follow the following structure.
+
+```
+
+    `id` CHAR(45) not null,
+    `user` CHAR(255) not null,
+    `time` CHAR(45) not null,
+
+    primary key (`id`, `user`) using BTREE,
+
+```
+
 ### Licenses Table
 
 Licenses table is used to record all licenses basic information. The table definition please follow the following structure.
@@ -88,7 +104,7 @@ Licenses table is used to record all licenses basic information. The table defin
     `id` CHAR(45) not null,
     `name` CHAR(255) not null,
     `desc` TEXT,
-    `sys` TINYINT(3) not null default '1',
+    `admin` TINYINT(3) not null default '1',
 
     primary key (`name`) using BTREE,
 

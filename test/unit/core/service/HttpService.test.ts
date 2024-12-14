@@ -12,10 +12,8 @@ import {
     REQUEST_HANDLER_MODULE_ID,
 } from "#interface";
 import { REST_REQUEST_ITEM_MAP } from "packages/Common";
+import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
-
-const SERVICE_HOST = "0.0.0.0";
-const SERVICE_PORT = 32000;
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () => {
     const Mock_RequestHandler = {
