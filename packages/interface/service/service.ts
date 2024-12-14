@@ -10,5 +10,5 @@ export interface INetworkService {
     type: RequestType;
 
     /** To close current service */
-    close(): void;
+    close(callback?: (err?: Error) => void): void;
 }

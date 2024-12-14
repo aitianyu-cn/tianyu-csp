@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDBConnection, ILogger, SupportedDatabaseType } from "#interface";
-import { LogLevel, StringHelper } from "@aitianyu.cn/types";
+import { Log, LogLevel, StringHelper } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
@@ -30,6 +30,8 @@ export class LoggerManager implements ILogger {
     }
 
     public async log(msg: string, level?: LogLevel): Promise<void> {
+        TIANYU.environment.development && Log.log(msg, level, true);
+
         const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(this._db)], [
             this._db,
             this._tb,

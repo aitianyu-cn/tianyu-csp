@@ -3,7 +3,7 @@
 import { JobWorkerExecutionResult, JobWorkerMessageValue, JobWorkerPayload } from "../fwk-def/contributor/job";
 
 /** Job Execution Status */
-export type JobExecutionStatus = "active" | "invalid" | "running" | "done" | "error";
+export type JobExecutionStatus = "active" | "invalid" | "running" | "done" | "error" | "timeout";
 
 /** Job Execution Result */
 export interface JobExecutionResult {
@@ -31,5 +31,6 @@ export interface IJobWorker extends JobExecutionResult {
      * @param options job execution options
      * @param executionId specified execution id
      */
-    run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<JobWorkerExecutionResult>;
+    run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<void>;
+    terminate(): Promise<void>;
 }

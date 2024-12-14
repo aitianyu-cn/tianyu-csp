@@ -1,5 +1,6 @@
 /** @format */
 
+import { SERVICE_ERROR_CODES } from "#core/Constant";
 import {
     DISPATCH_HANDLER_MODULE_ID,
     DispatchHandlerOption,
@@ -15,12 +16,15 @@ import { ErrorHelper } from "#utils/ErrorHelper";
 import path from "path";
 
 export class DispatchHandler {
+    private _options?: DispatchHandlerOption;
+
     private _requestJobPool: string;
     private _scheduleJobPool: string;
 
     public constructor(options?: DispatchHandlerOption) {
-        this._requestJobPool = createJobManager({ limitWorkers: options?.limitRequestsWorkers });
-        this._scheduleJobPool = createJobManager({ limitWorkers: options?.limitScheduleWorkers });
+        this._options = options;
+        this._requestJobPool = "";
+        this._scheduleJobPool = "";
 
         // create endpoints
         TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.network-dispatcher");
@@ -39,25 +43,32 @@ export class DispatchHandler {
         );
     }
 
+    public initialize(): void {
+        this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers });
+        this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers });
+    }
+
     private async _networkDispatch(data: {
         rest: RequestRestData;
         payload: RequestPayloadData;
     }): Promise<NetworkServiceResponseData> {
         const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._requestJobPool);
         if (!dispatcher) {
-            return Promise.reject(
-                ErrorHelper.getError(
+            return Promise.reject({
+                status: "error",
+                error: ErrorHelper.getError(
                     HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString(),
                     "error occurs when request processing.",
-                    "network requestion could not be handled internally due to some technical errors.",
+                    "network request could not be handled internally due to some technical errors.",
                 ),
-            );
+            });
         }
 
-        const { exitCode, value, error } = await dispatcher({
+        const { exitCode, value, error, status } = await dispatcher({
             script: path.resolve(__dirname, "../script/network-runner.js"),
             payload: {
                 ...data.rest,
+                traceId: data.payload.traceId,
                 options: {
                     env: process.env,
                     argv: process.argv,
@@ -66,41 +77,46 @@ export class DispatchHandler {
             },
         });
 
-        if (error) {
-            return Promise.reject(
-                ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", JSON.stringify(error)),
-            );
+        if (error.length) {
+            return Promise.reject({
+                status,
+                error: ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", JSON.stringify(error)),
+            });
         } else {
-            return (
-                value || {
-                    statusCode: HTTP_STATUS_CODE.NO_CONTENT,
-                    body: "",
-                    headers: {},
-                }
-            );
+            const result: NetworkServiceResponseData = {
+                statusCode:
+                    value?.statusCode === undefined
+                        ? exitCode || HTTP_STATUS_CODE.NO_CONTENT
+                        : value?.statusCode || HTTP_STATUS_CODE.OK,
+                headers: value?.handler || {},
+                body: value?.body || "",
+            };
+            return result;
         }
     }
 
     private async _jobDispatch(payload: JobWorkerPayload): Promise<JobWorkerExecutionResult> {
         const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._scheduleJobPool);
         if (!dispatcher) {
-            return Promise.reject(new Error());
+            const errorRes: JobWorkerExecutionResult = {
+                exitCode: Number(SERVICE_ERROR_CODES.INTERNAL_ERROR),
+                value: undefined,
+                error: [
+                    ErrorHelper.getError(
+                        SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED,
+                        "error occurs when job processing.",
+                        "job could not be handled internally due to some technical errors (JobManager is not valid).",
+                    ),
+                ],
+                status: "error",
+            };
+            return errorRes;
         }
         const result = await dispatcher({
             payload,
             script: path.resolve(__dirname, "../script/job-runner.js"),
         });
 
-        if (result.error) {
-            return Promise.reject(
-                ErrorHelper.getError(
-                    result.exitCode.toString(),
-                    "error occurs when job execution.",
-                    JSON.stringify(result.error),
-                ),
-            );
-        } else {
-            return result;
-        }
+        return result;
     }
 }

@@ -1,7 +1,7 @@
 /** @format */
 
 import { MapOfString, MapOfType } from "@aitianyu.cn/types";
-import { OperationError } from "#interface";
+import { JobExecutionStatus, OperationError } from "#interface";
 
 /** Job worker exection options */
 export interface JobWorkerOptions {
@@ -11,6 +11,7 @@ export interface JobWorkerOptions {
     env?: MapOfType<string | undefined>;
     /** execution data */
     workerData?: any;
+    overtime?: number;
 }
 
 export interface JobWorkerExecutionResult {
@@ -20,6 +21,7 @@ export interface JobWorkerExecutionResult {
     value: any;
     /** Error message when job execution */
     error: OperationError[];
+    status: JobExecutionStatus;
 }
 
 export interface JobWorkerExecutionEntry {
@@ -30,6 +32,7 @@ export interface JobWorkerExecutionEntry {
 
 export interface JobWorkerPayload extends JobWorkerExecutionEntry {
     options: JobWorkerOptions;
+    traceId?: string;
 }
 
 export interface JobWorkerMessageValue {

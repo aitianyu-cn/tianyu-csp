@@ -24,6 +24,8 @@ module.exports = {
     resetMocks: true,
     clearMocks: true,
     resetModules: true,
+    forceExit: true,
+    detectOpenHandles: true,
     transform: {
         // "message\\.properties$": "./__test__/config/i18nLoader.js",
     },
@@ -39,9 +41,10 @@ module.exports = {
         "^#module/(.*)$": "<rootDir>/packages/modules/$1",
         "^#utils/(.*)$": "<rootDir>/packages/utils/$1",
         "^#job/(.*)$": "<rootDir>/packages/job/$1",
+        "^test/(.*)$": "<rootDir>/test/$1",
 
         "^#interface$": "<rootDir>/packages/interface/index.ts",
     },
-    // coveragePathIgnorePatterns: coverageIgnorePatterns,
+    coveragePathIgnorePatterns: ["<rootDir>/test/"],
     // transformIgnorePatterns: ["<rootDir>/node_modules/$"],
 };

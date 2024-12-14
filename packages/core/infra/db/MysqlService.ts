@@ -26,7 +26,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
         const connection = await this._getConnection();
         return new Promise<void>((resolve, reject) => {
             connection.query(sql, (error: mysql.MysqlError | null) => {
-                connection.end();
+                connection.release();
 
                 if (error) {
                     reject(
@@ -59,7 +59,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                             transactionError.message,
                         ),
                     );
-                    connection.end();
+                    connection.release();
                     return;
                 }
 
@@ -103,7 +103,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
                     )
                     .finally(() => {
                         if (connection.threadId) {
-                            connection.end();
+                            connection.release();
                         }
                     });
             });
@@ -117,7 +117,7 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
         const connection = await this._getConnection();
         return new Promise<any>((resolve, reject) => {
             connection.query(sql, (error: mysql.MysqlError | null, result?: any) => {
-                connection.end();
+                connection.release();
 
                 if (error) {
                     reject(

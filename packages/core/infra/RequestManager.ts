@@ -61,7 +61,7 @@ export class GenericRequestManager implements IServerRequest {
         this._id = req.requestId;
         this._url = req.url;
         this._type = req.type;
-        this._version = req.headers["version"];
+        this._version = req.headers["version"] || "";
         this._language = req.language;
         this._session = req.sessionId;
 

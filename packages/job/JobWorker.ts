@@ -1,14 +1,7 @@
 /** @format */
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import {
-    IJobWorker,
-    JobExecutionStatus,
-    JobWorkerExecutionEntry,
-    JobWorkerExecutionResult,
-    JobWorkerMessageValue,
-    JobWorkerPayload,
-} from "#interface";
+import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessageValue, JobWorkerPayload } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 
@@ -42,12 +35,24 @@ export class JobWorker implements IJobWorker {
         return this._status;
     }
 
-    public async run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<JobWorkerExecutionResult> {
+    public async terminate(): Promise<void> {
+        return this._worker?.threadId
+            ? this._worker.terminate().then(
+                  () => Promise.resolve(),
+                  () => Promise.resolve(),
+              )
+            : Promise.resolve();
+    }
+
+    public async run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<void> {
         if (this._status === "invalid" || this._worker) {
-            return Promise.reject(new Error("Job execution failed!!!"));
+            return Promise.reject({
+                message: "New job run failed, Preious job is in running or has fatal error.",
+                code: this._status === "invalid" ? SERVICE_ERROR_CODES.PRE_JOB_INVALID : SERVICE_ERROR_CODES.PRE_JOB_RUNNING,
+            });
         }
 
-        return new Promise<JobWorkerExecutionResult>((resolve, rejects) => {
+        return new Promise<void>((resolve) => {
             try {
                 // create a new execution id for each job.
                 this._executionId = executionId || guid();
@@ -81,26 +86,20 @@ export class JobWorker implements IJobWorker {
                     // other cases mean the job execution not fully succesed.
                     this._status = this._status === "running" ? "done" : this._status;
                     this._exitCode = exitCode;
-
-                    const result: JobWorkerExecutionResult = {
-                        exitCode: this._exitCode === 1 ? Number(SERVICE_ERROR_CODES.INTERNAL_ERROR) : this._exitCode,
-                        value: this.value?.data,
-                        error: [
-                            {
-                                code: SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                message: this._error,
-                            },
-                            ...(this.value?.error || []),
-                        ],
-                    };
-
-                    resolve(result);
+                    resolve();
                 });
 
                 this._status = "running";
             } catch (e) {
-                this._status = "invalid";
-                rejects(typeof e === "string" ? new Error(e) : e);
+                const workerTerminate = this._worker?.threadId ? this._worker.terminate() : Promise.resolve(0);
+                workerTerminate
+                    .catch(() => {}) // there is nothing to do since should not have any error
+                    .finally(() => {
+                        this._exitCode = Number(SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED);
+                        this._status = "invalid";
+                        this._error = typeof e === "string" ? e : (e as any)?.message || "";
+                        resolve();
+                    });
             }
         });
     }

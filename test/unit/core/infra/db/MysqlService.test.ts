@@ -78,7 +78,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 query: (_sql: string, callback: (error: mysql.MysqlError | null) => void) => {
                     callback({ message: "test_error" } as any);
                 },
-                end: () => undefined,
+                release: () => undefined,
             });
 
             service.execute("sql").then(
@@ -99,7 +99,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 query: (_sql: string, callback: (error: mysql.MysqlError | null) => void) => {
                     callback(null);
                 },
-                end: () => undefined,
+                release: () => undefined,
             });
 
             service.execute("sql").then(done, done.fail);
@@ -123,7 +123,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 beginTransaction: (callback: (transactionError: mysql.MysqlError | null) => void) => {
                     callback({ message: "test_error" } as any);
                 },
-                end: () => undefined,
+                release: () => undefined,
                 threadId: 1,
             });
 
@@ -153,7 +153,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                     callback(null);
                 },
                 rollback: () => undefined,
-                end: () => undefined,
+                release: () => undefined,
                 threadId: 1,
             };
             jest.spyOn(connection, "rollback");
@@ -183,7 +183,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 },
                 rollback: () => undefined,
                 commit: () => undefined,
-                end: () => undefined,
+                release: () => undefined,
                 threadId: 1,
             };
             jest.spyOn(connection, "commit");
@@ -213,7 +213,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 query: (_sql: string, callback: (error: mysql.MysqlError | null) => void) => {
                     callback({ message: "test_error" } as any);
                 },
-                end: () => undefined,
+                release: () => undefined,
             });
 
             service.query("sql").then(
@@ -234,7 +234,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
                 query: (_sql: string, callback: (error: mysql.MysqlError | null, result: any) => void) => {
                     callback(null, [{ a: "1" }, { a: "2" }]);
                 },
-                end: () => undefined,
+                release: () => undefined,
             });
 
             service.query("sql").then((result) => {

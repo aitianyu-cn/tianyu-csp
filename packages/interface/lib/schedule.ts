@@ -9,3 +9,9 @@ export interface ScheduleJobPayload {
 
     req: RequestPayloadData;
 }
+
+export interface SchedultJobExecuteParam {
+    id: string;
+    name: string;
+    payload: any;
+}

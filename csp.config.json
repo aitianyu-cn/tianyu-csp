@@ -4,8 +4,7 @@
         "version": "1.0.0",
         "environment": "development",
         "src": "scripts",
-        "language": "zh_CN",
-        "feature": ".config/features"
+        "language": "zh_CN"
     },
     "rest": {
         "file": ".config/rest.json",

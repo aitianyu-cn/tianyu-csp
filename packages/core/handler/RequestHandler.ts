@@ -1,6 +1,5 @@
 /** @format */
 
-import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import {
     DefaultRequestItemsMap,
@@ -20,7 +19,9 @@ export class RequestHandler {
         // create endpoints
         TIANYU.fwk.contributor.registerEndpoint("request-handler.dispatcher");
         TIANYU.fwk.contributor.registerEndpoint("request-handler.items-getter");
+    }
 
+    public initialize(): void {
         // register execution modules for request handler
         TIANYU.fwk.contributor.exportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID, this._dispatch.bind(this));
         TIANYU.fwk.contributor.exportModule(
@@ -30,11 +31,16 @@ export class RequestHandler {
         );
     }
 
+    public destroy(): void {
+        TIANYU.fwk.contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+        TIANYU.fwk.contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+    }
+
     private _getRequestItem(payload: { name: keyof DefaultRequestItemsMap; type: DefaultRequestItemTargetType }): string {
         const c_item = REST_REQUEST_ITEM_MAP[payload.name];
         const d_item = DEFAULT_REST_REQUEST_ITEM_MAP[payload.name];
 
-        const item = c_item || d_item || "";
+        const item = c_item || /* istanbul ignore next */ d_item || /* istanbul ignore next */ "";
         if (typeof item === "string") {
             return item;
         }

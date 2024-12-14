@@ -11,6 +11,7 @@ export function createJobManager(options?: JobManagerOptions): string {
     const id = options?.id || guid();
     new JobManager({
         limitWorkers: options?.limitWorkers,
+        overtime: options?.overtime,
         id,
     });
 

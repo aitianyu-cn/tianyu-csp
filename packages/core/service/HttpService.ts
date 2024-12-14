@@ -11,6 +11,7 @@ import {
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
 } from "#interface";
+import { ErrorHelper } from "#utils/ErrorHelper";
 import { HttpHelper } from "#utils/HttpHelper";
 import { RestHelper } from "#utils/RestHelper";
 import { TraceHelper } from "#utils/TraceHelper";
@@ -26,8 +27,8 @@ export class HttpService implements IHttpService {
 
     public constructor(options?: HttpServiceOption) {
         this._id = guid();
-        this._host = options?.host || DEFAULT_HTTP_HOST;
-        this._port = options?.port || DEFAULT_HTTP_PORT;
+        this._host = options?.host || /* istanbul ignore next */ DEFAULT_HTTP_HOST;
+        this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
 
         this._server = createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
@@ -56,13 +57,14 @@ export class HttpService implements IHttpService {
     public listen(): void {
         this._server.listen(this._port, this._host);
     }
-    public close(): void {
-        this._server.close();
+    public close(callback?: (err?: Error) => void): void {
+        this._server.close(callback);
     }
 
     private onGet(req: IncomingMessage, res: ServerResponse): void {
-        const param = HttpHelper.processParameters(req.url || "");
-        const cookie = HttpHelper.processCookie(req.headers.cookie || "");
+        // console.log(req);
+        const param = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
+        const cookie = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
         const headers = HttpHelper.processHeader(req.headers);
         const itemsGetter = TIANYU.fwk.contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
         const language = HttpHelper.processLanguage(
@@ -89,7 +91,7 @@ export class HttpService implements IHttpService {
             requestId,
             sessionId,
 
-            url: req.url || "",
+            url: req.url?.split("?")[0] || /* istanbul ignore next */ "",
             serviceId: this.id,
             type: "http",
             body: null,
@@ -111,8 +113,8 @@ export class HttpService implements IHttpService {
                 body = JSON.parse(decodeURI(data));
             } catch {}
 
-            const param: MapOfString = HttpHelper.processParameters(req.url || "");
-            const cookie: MapOfString = HttpHelper.processCookie(req.headers.cookie || "");
+            const param: MapOfString = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
+            const cookie: MapOfString = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
             const headers = HttpHelper.processHeader(req.headers);
 
             const itemsGetter = TIANYU.fwk.contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
@@ -141,7 +143,7 @@ export class HttpService implements IHttpService {
                 requestId,
                 sessionId,
 
-                url: req.url || "",
+                url: req.url?.split("?")[0] || /* istanbul ignore next */ "",
                 serviceId: this.id,
                 type: "http",
                 traceId: TraceHelper.generateTraceId(),
@@ -159,13 +161,14 @@ export class HttpService implements IHttpService {
                         (data) => this.onResponse(res, data),
                         (error) => {
                             const responseData: NetworkServiceResponseData = {
-                                statusCode: HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR,
+                                statusCode: ErrorHelper.getHttpStatusByJobStatus(error?.status),
                                 headers,
                                 body: {
                                     error: [
                                         {
-                                            code: error?.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                            message: error?.message || "Technical error occurs when processing request.",
+                                            code: error?.error.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                                            message: error?.error.message || "Technical error occurs when processing request.",
+                                            error: error?.error.error,
                                         },
                                     ],
                                 },
@@ -227,6 +230,6 @@ export class HttpService implements IHttpService {
             response.setHeader(key, data.headers[key]);
         }
 
-        response.end(data.body ? JSON.stringify(data.body) : "");
+        response.end(data.body ? JSON.stringify(data.body) : /* istanbul ignore next */ "");
     }
 }

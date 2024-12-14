@@ -34,6 +34,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ContributorManager"
                 exitCode: 0,
                 value: data.payload.options.workerData,
                 error: [],
+                status: "done",
             };
 
             if (!data.payload.options.workerData) {

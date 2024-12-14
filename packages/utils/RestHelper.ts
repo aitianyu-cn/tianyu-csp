@@ -5,7 +5,7 @@ import { REST } from "../Common";
 
 export class RestHelper {
     public static getRest(path: string): RequestRestData | null {
-        if (!path || path === "/") return null;
+        if (!path) return null;
 
         const restPath = path.startsWith("/") ? path : `/${path}`;
         const restData = REST[restPath];

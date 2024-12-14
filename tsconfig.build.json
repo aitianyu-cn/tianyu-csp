@@ -26,7 +26,7 @@
             "#utils/*": ["packages/utils/*"],
             "#interface": ["packages/interface/index.ts"],
             "#job/*": ["packages/job/*"],
-            "scripts/*": ["scripts/*"]
+            "install/*": ["install/*"]
         }
     }
 }

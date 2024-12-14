@@ -26,7 +26,10 @@
             "#utils/*": ["packages/utils/*"],
             "#interface": ["packages/interface/index.ts"],
             "#job/*": ["packages/job/*"],
-            "scripts/*": ["scripts/*"]
+            "install/*": ["install/*"],
+            "scripts/*": ["scripts/*"],
+            "test/*": ["test/*"],
+            "OUT": ["dist/lib/index.js"]
         }
     }
 }

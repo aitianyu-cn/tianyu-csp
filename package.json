@@ -2,8 +2,6 @@
     "name": "tianyu-csp",
     "version": "0.0.1",
     "description": "Project for Common Service Platform of Tianyu.",
-    "main": "./dist/lib/index.js",
-    "types": "./dist/types/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/types/index.d.ts",
@@ -19,6 +17,7 @@
         ".doc"
     ],
     "scripts": {
+        "start": "node \"./scripts/starter.js\"",
         "after-build": "rimraf ./build",
         "before-build": "rimraf ./build ./dist",
         "build": "npm run before-build && npm run compiler && npm run copy && npm run after-build",
@@ -29,7 +28,7 @@
         "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
         "test": "jest  --no-cache --verbose --passWithNoTests",
-        "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests",
+        "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
         "test-coverage": "jest  --no-cache --coverage --passWithNoTests"
     },
     "repository": {
