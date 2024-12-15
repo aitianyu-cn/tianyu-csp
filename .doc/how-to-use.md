@@ -14,7 +14,7 @@
 
   - main config: [`csp.config.json`](./main-config.md)
 
-  - rest config: [`<name>.json`](./rest-config.md)
+  - rest config: [`<name>.json or <name>.js`](./rest-config.md)
 
   - database config
 

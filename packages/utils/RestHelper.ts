@@ -1,7 +1,7 @@
 /** @format */
 
+import { REST } from "#core/handler/RestHandlerConstant";
 import { RequestRestData } from "#interface";
-import { REST } from "../Common";
 
 export class RestHelper {
     public static getRest(path: string): RequestRestData | null {
@@ -9,11 +9,11 @@ export class RestHelper {
 
         const restPath = path.startsWith("/") ? path : `/${path}`;
         const restData = REST[restPath];
-        return restData?.package && restData?.module && restData?.method
+        return restData?.package && restData?.module
             ? {
                   package: restData.package,
                   module: restData.module,
-                  method: restData.method,
+                  method: restData.method || "default",
               }
             : null;
     }

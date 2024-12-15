@@ -1,0 +1,49 @@
+{
+    "/": {
+        "package": "$",
+        "module": "default-loader",
+        "method": "html"
+    },
+    "/package": {
+        "package": "package",
+        "module": "test-module",
+        "method": "default"
+    },
+    "/package/*": {
+        "package": "package",
+        "module": "generic",
+        "method": "default"
+    },
+    "/package/{module}/{method}": {
+        "package": "package",
+        "module": "{module}",
+        "method": "{method}"
+    },
+    "/package/{module}/{method}/*": {
+        "package": "package-generic",
+        "module": "{module}",
+        "method": "{method}"
+    },
+    "/config/{user}/*": {
+        "package": "package",
+        "module": "{user}",
+        "method": "default"
+    },
+
+    "/double/*": {
+        "package": "double-package",
+        "module": "default",
+        "method": "default"
+    },
+    "/double/data": {
+        "package": "double-package.data",
+        "module": "data",
+        "method": "default"
+    },
+
+    "/format-test/{module}": {
+        "package": "format-test",
+        "module": "{module}{}",
+        "method": "default"
+    }
+}

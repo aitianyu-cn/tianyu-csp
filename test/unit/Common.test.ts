@@ -1,5 +1,6 @@
 /** @format */
 
+import { REST, REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { AreaCode } from "@aitianyu.cn/types";
 import {
     DATABASE_CONFIGS_MAP,
@@ -12,15 +13,13 @@ import {
     PROJECT_NAME,
     PROJECT_ROOT_PATH,
     PROJECT_VERSION,
-    REST,
-    REST_REQUEST_ITEM_MAP,
     SESSION_LIFE_TIME,
     USER_LOGIN_LIFE_TIME,
 } from "packages/Common";
 import path from "path";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
-    const CONFIG = require(path.resolve(process.cwd(), "csp.config.json"));
+    const CONFIG = require(path.resolve(process.cwd(), "csp.config"));
     const DB_CONFIG = require(path.resolve(process.cwd(), ".config/db.js"));
 
     it("global defines test", () => {
@@ -34,7 +33,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
         expect(PROJECT_NAME).toEqual("CSP-Test-App");
         expect(PROJECT_DEFAULT_LANGUAGE).toEqual(AreaCode.zh_CN);
 
-        const custom_rest = require(path.resolve(process.cwd(), ".config/rest.json"));
+        const custom_rest = require(path.resolve(process.cwd(), CONFIG.rest.file));
         const rest = { ...custom_rest };
         expect(REST).toEqual(rest);
 

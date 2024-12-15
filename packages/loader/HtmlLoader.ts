@@ -1,7 +1,7 @@
 /** @format */
 
+import { REST_LOADER_RES_PATH } from "#core/handler/RestHandlerConstant";
 import { HTTP_STATUS_CODE, NetworkServiceResponseData } from "#interface";
-import { REST_LOADER_RES_PATH } from "../Common";
 import path from "path";
 
 export function loader(): NetworkServiceResponseData {

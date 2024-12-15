@@ -12,6 +12,8 @@ export interface HttpServiceOption {
     host: string;
     /** Port to bind */
     port: number;
+    advanceRest?: boolean;
+    enablefallback?: boolean;
 }
 
 /** Http Service API */

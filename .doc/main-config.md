@@ -4,13 +4,13 @@
 
 Tianyu-CSP configs are in a global configuration file.
 
-- Path: `<project_root>/csp.config.json`
+- Path: `<project_root>/csp.config.json` or `<project_root>/csp.config.js`
 
 NOTES: CSP config file should be stored in the root path of project.
 
 ### Configs
 
-Base structure
+Base structure in `csp.config.json` file:
 
 ```
     {
@@ -25,13 +25,18 @@ Base structure
             "file": "",         // file of rest setting(3)
             "request-map": {},  // definition of request item map(4)
             "loader": ""        // path of url direction router(5)
+            "fallback": {       // default rest target, is used for rest path is not found(6)
+                "package": "",
+                "module": "",
+                "method": ""
+            }
         },
         "database": {
             "file": "",         // file of database configuration
             "rename": {
-                "types": "",    // custom name of database types in config file(6)
-                "configs": "",  // custom name of db connection config in config file(7)
-                "sys": ""       // custom name of db system rename map in config file(8)
+                "types": "",    // custom name of database types in config file(7)
+                "configs": "",  // custom name of db connection config in config file(8)
+                "sys": ""       // custom name of db system rename map in config file(9)
             }
         },
         "user": {
@@ -40,6 +45,19 @@ Base structure
         }
     }
 ```
+
+If javascript (`csp.config.js`) is used in your application instead of json file, please following the below code to export config:
+
+```
+    module.exports = {
+        config: {
+            ...
+        },
+        ...
+    }
+```
+
+<u>NOTE: config items are totally samed in javascript file and json file. config items details please take a reference to json configuration.</u>
 
 1. enviroment provides two values `development` and `production` (Please follow the case in this doc). `development` indicates the application will generate more info when running for debugging. If this item is not provides, "development" mode will be set as default.
 
@@ -63,8 +81,10 @@ Base structure
 
 5. loader is working for some static resources only, like `html` file, and this is a root path of static files. you can define the static source in some dicionary structure and consume this by setting a system loader in [`Rest Config`](#1).
 
-6. database types indicates the remote dasebase type of each database. this will be used for creating a currect db connection automatically. supporting value: `mysql`
+6. fallback config is used for when the url is not mapped any path in rest file, to return a default call. fallback config please take a reference from [rest config file](./rest-config.md).
 
-7. database connection config indicates the user, password, and other connection information for each database. data structure please check the type of `IDatabaseConnectionConfig` in code.
+7. database types indicates the remote dasebase type of each database. this will be used for creating a currect db connection automatically. supporting value: `mysql`
 
-8. due to `Tianyu-CSP` needs to consume some database table internally, and also to make a generic database implementation. database system rename map is to indicate the database name, table name and field names for system IMPORTANT tables. template please refer [`system database rename map`](./sys-db-rename-map.js)
+8. database connection config indicates the user, password, and other connection information for each database. data structure please check the type of `IDatabaseConnectionConfig` in code.
+
+9. due to `Tianyu-CSP` needs to consume some database table internally, and also to make a generic database implementation. database system rename map is to indicate the database name, table name and field names for system IMPORTANT tables. template please refer [`system database rename map`](./sys-db-rename-map.js)

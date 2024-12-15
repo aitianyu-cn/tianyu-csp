@@ -28,6 +28,7 @@ export * from "./fwk-def/contributor-protocol";
 
 export * from "./handler/dispatch-handler";
 export * from "./handler/request-handler";
+export * from "./handler/rest-handler";
 
 export * from "./service/http-service";
 export * from "./service/service";
@@ -40,3 +41,6 @@ export * from "./lib/monitor";
 export * from "./lib/schedule";
 
 export * from "./modules/feature";
+
+export * from "./csp-config";
+export * from "./database-config";

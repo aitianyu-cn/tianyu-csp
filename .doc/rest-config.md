@@ -14,6 +14,18 @@ The basic structure of rest config:
     }
 ```
 
+If javascript is used in your application to export the rest config, please use the export way following exampled:
+
+```
+    module.exports = {
+         "/": {
+            package: "$",
+            module: "default-loader",
+            method: "html"
+        }
+    }
+```
+
 - "/"
 
   this is the path of url. you can define multiple paths to handle different url.
@@ -35,9 +47,7 @@ The basic structure of rest config:
     if you would like to using a module from your application path, please use `#` as prefix or no-prefix of path. for example:
 
     ```
-        #.path1.path2
-        <=>
-        path1.path2
+        #.path1.path2 <=> path1.path2
     ```
 
 - module
@@ -46,12 +56,24 @@ The basic structure of rest config:
 
 - method
 
-  this is the execution function of imported module. for request execution function, there needs to be `async` function, no parameter and return type `NetworkServiceResponseData` type data. for example:
+  this is the execution function of imported module. for request execution function, there needs to be `async` function, no parameter and return type `NetworkServiceResponseData` type data.
+
+  #### NOTES: if method is not provided or provided with empty string, the `default` value will be applied.
+
+  for example:
 
   - ts
 
   ```
+    /* Normally define */
+
     export async function <name>(): Promise<NetworkServiceResponseData> {
+        // your implementation
+    }
+
+    /* Default define */
+
+    export default async function (): Promise<NetworkServiceResponseData> {
         // your implementation
     }
   ```
@@ -59,7 +81,15 @@ The basic structure of rest config:
   - js
 
   ```
+    /* Normally define */
+
     module.exports.<name> = async function() {
+        // your implementation
+    }
+
+    /* Default define */
+
+    module.exports.default = async function() {
         // your implementation
     }
   ```

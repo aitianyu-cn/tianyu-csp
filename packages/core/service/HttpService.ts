@@ -1,6 +1,8 @@
 /** @format */
 
 import { DEFAULT_HTTP_HOST, DEFAULT_HTTP_PORT, SERVICE_ERROR_CODES } from "#core/Constant";
+import { RestHandler } from "#core/handler/RestHandler";
+import { REST } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import {
     HTTP_STATUS_CODE,
@@ -24,12 +26,15 @@ export class HttpService implements IHttpService {
     private _port: number;
 
     private _server: Server;
+    private _rest: RestHandler | null;
 
     public constructor(options?: HttpServiceOption) {
         this._id = guid();
         this._host = options?.host || /* istanbul ignore next */ DEFAULT_HTTP_HOST;
         this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
 
+        this._rest =
+            options?.advanceRest === undefined || options?.advanceRest ? new RestHandler(REST, options?.enablefallback) : null;
         this._server = createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -154,7 +159,9 @@ export class HttpService implements IHttpService {
         setTimeout(() => {
             const dispatcher = TIANYU.fwk.contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             if (dispatcher) {
-                const rest = RestHelper.getRest(payload.url);
+                const rest = this._rest
+                    ? this._rest.mapping(payload.url)
+                    : /* istanbul ignore next */ RestHelper.getRest(payload.url);
                 if (rest) {
                     dispatcher({ rest, payload }).then(
                         (data) => this.onResponse(res, data),

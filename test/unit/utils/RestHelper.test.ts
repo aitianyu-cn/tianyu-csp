@@ -18,5 +18,11 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             expect(RestHelper.getRest("/test/invalid")).toBeNull();
             expect(RestHelper.getRest("test/no_prefix")).toEqual(rest);
         });
+
+        it("default case", () => {
+            const rest: RequestRestData = { package: "a", module: "b", method: "default" };
+
+            expect(RestHelper.getRest("/empty")).toEqual(rest);
+        });
     });
 });

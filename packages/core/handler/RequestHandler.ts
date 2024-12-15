@@ -12,7 +12,7 @@ import {
     RequestRestData,
 } from "#interface";
 import { ErrorHelper } from "#utils/ErrorHelper";
-import { REST_REQUEST_ITEM_MAP } from "../../Common";
+import { REST_REQUEST_ITEM_MAP } from "./RestHandlerConstant";
 
 export class RequestHandler {
     public constructor() {

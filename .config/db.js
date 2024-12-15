@@ -110,7 +110,7 @@ module.exports.SystemDBMap = {
     },
     team: {
         database: "csp_user",
-        table: "team_tb",
+        table: "teams_tb",
         field: {
             id: "id",
             name: "name",

@@ -1,5 +1,6 @@
 /** @format */
 
+import { REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { HttpService } from "#core/service/HttpService";
 import {
@@ -11,7 +12,6 @@ import {
     DefaultRequestItemTargetType,
     REQUEST_HANDLER_MODULE_ID,
 } from "#interface";
-import { REST_REQUEST_ITEM_MAP } from "packages/Common";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
 
@@ -275,4 +275,16 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             },
         );
     }, 50000);
+
+    describe("advanced reset", () => {
+        it("support advanced rest", () => {
+            const service = new HttpService({ advanceRest: true, host: SERVICE_HOST, port: SERVICE_PORT });
+            expect(service["_rest"]).toBeDefined();
+        });
+
+        it("not support advanced rest", () => {
+            const service = new HttpService({ advanceRest: false, host: SERVICE_HOST, port: SERVICE_PORT });
+            expect(service["_rest"]).toBeNull();
+        });
+    });
 });

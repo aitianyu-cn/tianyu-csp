@@ -1,26 +1,26 @@
 /** @format */
 
-import path from "path";
 import fs from "fs";
+import path from "path";
 import { AreaCode, guid, parseAreaString } from "@aitianyu.cn/types";
+import { TianyuCSPConfig, TianyuCSPDatabaseConfig, TianyuCSPDatabaseTypes, TianyuCSPSystemDBMap } from "#interface";
 
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
 export const PROJECT_ROOT_PATH: string = process.cwd();
 
-const DEFAULT_CSP_CONFIG_NAME = "csp.config.json";
-const DEFAULT_EXTERNAL_MODULE_PATH = "src";
-const DEFAULT_REST_CONFIG_NAME = "rest.config.json";
-const DEFAULT_DB_CONFIG_NAME = "db.config.js";
+const DEFAULT_CSP_CONFIG_NAME: string = "csp.config";
+const DEFAULT_EXTERNAL_MODULE_PATH: string = "src";
+const DEFAULT_DB_CONFIG_NAME: string = "db.config.js";
 
-const DEFAULT_DB_CONFIG_TYPES_ID = "databaseTypes";
-const DEFAULT_DB_CONFIG_CONFIG_ID = "databaseConfigs";
-const DEFAULT_DB_CONFIG_DBMAP_ID = "SystemDatabaseMap";
+const DEFAULT_DB_CONFIG_TYPES_ID: string = "databaseTypes";
+const DEFAULT_DB_CONFIG_CONFIG_ID: string = "databaseConfigs";
+const DEFAULT_DB_CONFIG_DBMAP_ID: string = "SystemDatabaseMap";
 
 const config_file_path = path.resolve(PROJECT_ROOT_PATH, DEFAULT_CSP_CONFIG_NAME);
-let raw_config = null;
-if (fs.existsSync(config_file_path)) {
+let raw_config: TianyuCSPConfig | null = null;
+if (fs.existsSync(`${config_file_path}.json`) || fs.existsSync(`${config_file_path}.js`)) {
     try {
-        raw_config = JSON.parse(fs.readFileSync(config_file_path, "utf-8"));
+        raw_config = require(config_file_path);
     } catch {
         /* istanbul ignore next */ raw_config = null;
     }
@@ -31,33 +31,12 @@ export const EXTERNAL_MODULE_ROOT_PATH: string = path.resolve(
     raw_config?.config?.src || /* istanbul ignore next */ DEFAULT_EXTERNAL_MODULE_PATH,
 );
 
-export const PROJECT_VERSION: string = raw_config?.config?.version || /* istanbul ignore next */ "1.0.0";
-export const PROJECT_ENVIRONMENT_MODE: string = raw_config?.config?.environment || /* istanbul ignore next */ "development";
-export const PROJECT_NAME: string = raw_config?.config?.name || /* istanbul ignore next */ guid();
-export const PROJECT_DEFAULT_LANGUAGE: AreaCode = parseAreaString(raw_config?.config?.language, true);
+export const PROJECT_VERSION = raw_config?.config?.version || /* istanbul ignore next */ "1.0.0";
+export const PROJECT_ENVIRONMENT_MODE = raw_config?.config?.environment || /* istanbul ignore next */ "development";
+export const PROJECT_NAME = raw_config?.config?.name || /* istanbul ignore next */ guid();
+export const PROJECT_DEFAULT_LANGUAGE = parseAreaString(raw_config?.config?.language, true);
 
-const rest_file_path = path.resolve(
-    PROJECT_ROOT_PATH,
-    raw_config?.rest?.file || /* istanbul ignore next */ DEFAULT_REST_CONFIG_NAME,
-);
-let raw_rest: any = {};
-if (fs.existsSync(rest_file_path)) {
-    try {
-        raw_rest = JSON.parse(fs.readFileSync(rest_file_path, "utf-8"));
-    } catch {
-        /* istanbul ignore next */ raw_rest = {};
-    }
-}
-
-export const REST = {
-    ...raw_rest,
-
-    // this is the default resets
-};
-export const REST_REQUEST_ITEM_MAP = raw_config?.rest?.["request-map"] || /* istanbul ignore next */ {};
-export const REST_LOADER_RES_PATH = raw_config?.rest?.["loader"]
-    ? path.resolve(EXTERNAL_MODULE_ROOT_PATH, raw_config?.rest?.["loader"])
-    : /* istanbul ignore next */ EXTERNAL_MODULE_ROOT_PATH;
+export const REST_CONFIG = raw_config?.rest;
 
 const dbconfig_file_path = path.resolve(
     PROJECT_ROOT_PATH,
@@ -84,9 +63,9 @@ try {
     };
 }
 
-export const DATABASE_TYPES_MAP = raw_db_config[dbconfig_types_id] || /* istanbul ignore next */ {};
-export const DATABASE_CONFIGS_MAP = raw_db_config[dbconfig_configs_id] || /* istanbul ignore next */ {};
-export const DATABASE_SYS_DB_MAP = raw_db_config[dbconfig_sys_map_id] || /* istanbul ignore next */ {};
+export const DATABASE_TYPES_MAP: TianyuCSPDatabaseTypes = raw_db_config[dbconfig_types_id] || /* istanbul ignore next */ {};
+export const DATABASE_CONFIGS_MAP: TianyuCSPDatabaseConfig = raw_db_config[dbconfig_configs_id] || /* istanbul ignore next */ {};
+export const DATABASE_SYS_DB_MAP: TianyuCSPSystemDBMap = raw_db_config[dbconfig_sys_map_id] || /* istanbul ignore next */ {};
 
 export const SESSION_LIFE_TIME = raw_config?.user?.session_life || /* istanbul ignore next */ 30;
 export const USER_LOGIN_LIFE_TIME = raw_config?.user?.login || /* istanbul ignore next */ 10;
