@@ -1,14 +1,14 @@
 phase2 - TODO:
 
-x   1. documentary for configurations and database.
+o   1. documentary for configurations and database.
     2. basic modules implementation like trace, logger.
     3. monitor implementation and integration.
-    4. filter supporting (simple filter and advance filter).
-    5. quick start api to run an application.
-x   6. html loader
-x   7. refine rest path processor and support condition mapping
+x   4. filter supporting (simple filter and advance filter).
+o   5. quick start api to run an application.
+o   6. html loader
+o   7. refine rest path processor and support condition mapping
     8. notes of all export modules
-x   9. support javascript in configuration file.
+o   9. support javascript in configuration file.
 
 phase2 - OPTIONAL:
 

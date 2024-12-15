@@ -2,17 +2,10 @@
 
 const { TianyuCSP } = require("../dist/lib/index");
 
-TianyuCSP.Infra.load();
-
-console.log(TIANYU.environment);
-
-const dispatcher = new TianyuCSP.Infra.DispatchHandler();
-dispatcher.initialize();
-const requestHandler = new TianyuCSP.Infra.RequestHandler();
-requestHandler.initialize();
-
-const http1 = new TianyuCSP.Infra.HttpService({
+const starter = TianyuCSP.app({
     host: "0.0.0.0",
     port: "8080",
+    enablefallback: true,
 });
-http1.listen();
+
+starter();

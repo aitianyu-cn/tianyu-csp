@@ -388,4 +388,27 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             worker.terminate().then(done, done.fail);
         });
     });
+
+    describe("run - console", () => {
+        it("success", (done) => {
+            jest.spyOn(TIANYU.logger, "debug");
+
+            const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/console.js");
+            const payload: JobWorkerPayload = {
+                options: {
+                    workerData: { inp: true },
+                },
+                package: "a",
+                module: "a",
+                method: "a",
+            };
+
+            const worker = new JobWorker();
+            worker.run(file, payload, "id").then(() => {
+                expect(TIANYU.logger.debug).toHaveBeenCalledTimes(2);
+
+                done();
+            }, done.fail);
+        });
+    });
 });

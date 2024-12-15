@@ -9,6 +9,7 @@ import { DataEncoding, IImporter } from "#interface";
 
 import * as MODULE_IMPORT from "#module/module-export";
 import { SUPPORTED_SUFFIX } from "./Constant";
+import { isMainThread, parentPort } from "worker_threads";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
 
@@ -20,16 +21,7 @@ export function importImpl(): IImporter {
             throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `import package and Object should not be empty`);
         }
 
-        const isInternal = packageName.startsWith("$");
-        const hasPrefix = isInternal || packageName.startsWith("#");
-        const processedPackageName = hasPrefix ? packageName.substring(1) : packageName;
-
-        const dir = path.resolve(
-            isInternal ? INTERNAL_PROJECT_ROOT : EXTERNAL_MODULE_ROOT_PATH,
-            processedPackageName.replace(/\./g, "/"),
-            objectName,
-        );
-
+        const dir = _handlePackage(packageName, objectName);
         const targetPath = findActualModule(dir);
         if (!targetPath) {
             throw ErrorHelper.getError(
@@ -46,7 +38,7 @@ export function importImpl(): IImporter {
             return "";
         }
 
-        const dir = path.resolve(EXTERNAL_MODULE_ROOT_PATH, file);
+        const dir = _handlePackage(file, "");
         const targetPath = _findFileWithSuffix(dir, SUPPORTED_HTML_SUFFIX);
         const result = targetPath ? fs.readFileSync(targetPath, encoding) : DEFAULT_EMPTY_HTML;
         return result;
@@ -57,6 +49,20 @@ export function importImpl(): IImporter {
 
 export function findActualModule(src: string): string {
     return _findFileWithSuffix(src, SUPPORTED_SUFFIX);
+}
+
+function _handlePackage(packageName: string, objectName: string): string {
+    const isInternal = packageName.startsWith("$");
+    const hasPrefix = isInternal || packageName.startsWith("#");
+    const processedPackageName = hasPrefix ? packageName.substring(1) : packageName;
+
+    const dir = path.join(
+        isInternal ? INTERNAL_PROJECT_ROOT : EXTERNAL_MODULE_ROOT_PATH,
+        processedPackageName.replace(/\./g, "/"),
+        objectName,
+    );
+
+    return dir;
 }
 
 function _findFileWithSuffix(src: string, suffixs: string[]): string {

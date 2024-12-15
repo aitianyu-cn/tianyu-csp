@@ -26,10 +26,9 @@ if (fs.existsSync(`${config_file_path}.json`) || fs.existsSync(`${config_file_pa
     }
 }
 
-export const EXTERNAL_MODULE_ROOT_PATH: string = path.resolve(
-    PROJECT_ROOT_PATH,
-    raw_config?.config?.src || /* istanbul ignore next */ DEFAULT_EXTERNAL_MODULE_PATH,
-);
+export const PROJECT_ROOT_RELATION_PATH = raw_config?.config?.src || /* istanbul ignore next */ DEFAULT_EXTERNAL_MODULE_PATH;
+
+export const EXTERNAL_MODULE_ROOT_PATH: string = path.resolve(PROJECT_ROOT_PATH, PROJECT_ROOT_RELATION_PATH);
 
 export const PROJECT_VERSION = raw_config?.config?.version || /* istanbul ignore next */ "1.0.0";
 export const PROJECT_ENVIRONMENT_MODE = raw_config?.config?.environment || /* istanbul ignore next */ "development";

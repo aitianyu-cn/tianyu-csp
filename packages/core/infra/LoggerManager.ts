@@ -2,7 +2,7 @@
 
 import { IDBConnection, ILogger, SupportedDatabaseType } from "#interface";
 import { Log, LogLevel, StringHelper } from "@aitianyu.cn/types";
-import { DATABASE_SYS_DB_MAP } from "../../Common";
+import { DATABASE_SYS_DB_MAP, PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
 
@@ -63,7 +63,9 @@ export class LoggerManager implements ILogger {
         return this.log(msg, LogLevel.WARNING);
     }
     public async debug(msg: string): Promise<void> {
-        return this.log(msg, LogLevel.DEBUG);
+        return PROJECT_ENVIRONMENT_MODE === "development"
+            ? this.log(msg, LogLevel.DEBUG)
+            : /* istanbul ignore next */ Promise.resolve();
     }
     public async error(msg: string): Promise<void> {
         return this.log(msg, LogLevel.ERROR);

@@ -27,7 +27,7 @@
         "copy": "npm run copy-lib && npm run copy-types && npm run copy-basic-res",
         "copy-lib": "copyfiles -u 2 \"build/packages/**/*.js\" dist/lib",
         "copy-types": "copyfiles -u 2 \"build/packages/**/*.d.ts\" dist/types",
-        "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
+        "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.html\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
         "test": "jest  --no-cache --verbose --passWithNoTests",
         "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",

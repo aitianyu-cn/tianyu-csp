@@ -4,7 +4,7 @@ import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessageValue, JobWorkerPayload } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
-import { INTERNAL_PROJECT_ROOT } from "../Common";
+import { INTERNAL_PROJECT_ROOT, PROJECT_ENVIRONMENT_MODE } from "../Common";
 import path from "path";
 
 const TS_PROXY_SCRIPT = path.resolve(INTERNAL_PROJECT_ROOT, "core/script/typescript-proxy.js");
@@ -79,6 +79,15 @@ export class JobWorker implements IJobWorker {
                     argv,
                     env,
                     workerData: workData,
+                    stdout: true,
+                    stderr: true,
+                });
+
+                this._worker.stdout.on("data", (data) => {
+                    TIANYU.logger.debug(`JOB ${this.id}: ${data}`);
+                });
+                this._worker.stderr.on("data", (data) => {
+                    TIANYU.logger.debug(`JOB ${this.id}: ${data}`);
                 });
 
                 this._worker.on("error", (error: Error) => {

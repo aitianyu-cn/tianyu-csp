@@ -17,11 +17,11 @@ module.exports = {
             },
             session: "SESSION_ID",
         },
-        fallback: {
-            package: "a",
-            module: "b",
-            method: "c",
-        },
+        // fallback: {
+        //     package: "a",
+        //     module: "b",
+        //     method: "c",
+        // },
         loader: "data",
     },
     database: {

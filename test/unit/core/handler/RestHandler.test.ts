@@ -38,7 +38,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RestHandler", () 
 
     it("no rest provides", () => {
         const handler = new RestHandler(undefined, true);
-        expect(handler.mapping("/")).toEqual({ package: "a", module: "b", method: "c" });
+        console.log(handler.mapping("/"));
+        expect(handler.mapping("/")).toEqual({ package: "$.default", module: "rest-fallback", method: "default" });
     });
 
     it("empty data test", () => {

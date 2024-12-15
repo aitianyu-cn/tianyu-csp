@@ -4,13 +4,13 @@ import fs from "fs";
 import path from "path";
 import { PROJECT_ROOT_PATH, EXTERNAL_MODULE_ROOT_PATH, REST_CONFIG } from "../../Common";
 import { MapOfType } from "@aitianyu.cn/types";
-import { DefaultRequestItemsMap, PathEntry, TianyuCSPRequestMapItem, TianyuCSPRestPathEntry } from "#interface";
+import { DefaultRequestItemsMap, PathEntry, TianyuCSPRestPathEntry } from "#interface";
 
 const DEFAULT_REST_CONFIG_NAME = "rest.config.json";
 const DEFAULT_REST_FALLBACK_CONFIG = {
     package: "$.default",
     module: "rest-fallback",
-    method: "",
+    method: "default",
 };
 const REST_CONFIG_FILE: string = REST_CONFIG?.file || /* istanbul ignore next */ "";
 const REST_CONFIG_FALLBACK: any = REST_CONFIG?.fallback;
@@ -35,6 +35,7 @@ export const REST = {
 
     // this is the default resets
 };
+/* istanbul ignore next */
 export const DEFAULT_REST_FALLBACK: PathEntry =
     REST_CONFIG_FALLBACK?.package && REST_CONFIG_FALLBACK?.module
         ? {
@@ -45,6 +46,4 @@ export const DEFAULT_REST_FALLBACK: PathEntry =
         : /* istanbul ignore next */ DEFAULT_REST_FALLBACK_CONFIG;
 
 export const REST_REQUEST_ITEM_MAP = REST_CONFIG?.["request-map"] || /* istanbul ignore next */ DEFAULT_REQUEST_ITEM_MAP;
-export const REST_LOADER_RES_PATH = REST_CONFIG?.["loader"]
-    ? path.resolve(EXTERNAL_MODULE_ROOT_PATH, REST_CONFIG?.["loader"] || /* istanbul ignore next */ "")
-    : /* istanbul ignore next */ EXTERNAL_MODULE_ROOT_PATH;
+export const REST_LOADER_RES_PATH = REST_CONFIG?.["loader"] || /* istanbul ignore next */ EXTERNAL_MODULE_ROOT_PATH;
