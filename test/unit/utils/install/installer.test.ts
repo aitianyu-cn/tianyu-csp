@@ -27,7 +27,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.installer", () =
         });
 
         it("installer run failed", (done) => {
-            const config = ConfigProcessor.process();
+            const config = ConfigProcessor.fromConfig();
 
             jest.spyOn(MysqlSchemaHandler, "exist").mockImplementation(() => Promise.resolve("failed"));
 

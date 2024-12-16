@@ -1,17 +1,11 @@
 /** @format */
 
 import { MysqlService } from "#core/infra/db/MysqlService";
-import {
-    IDatabaseConnectionConfig,
-    IDatabaseFieldDefine,
-    IDBConnection,
-    IDatabaseInstallConfig,
-    TableIndexType,
-} from "#interface";
+import { IDatabaseFieldDefine, IDBConnection, IDatabaseInstallConfig, TableIndexType } from "#interface";
 import { Table } from "./table";
 import { Schema } from "./schema";
 
-export async function mysqlProcessor(config: IDatabaseInstallConfig): Promise<boolean> {
+export async function mysqlCreator(config: IDatabaseInstallConfig): Promise<boolean> {
     for (const db of Object.keys(config)) {
         const databaseConfig = config[db];
 

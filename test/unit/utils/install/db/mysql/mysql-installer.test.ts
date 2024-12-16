@@ -3,7 +3,7 @@
 import { MysqlService } from "#core/infra/db/MysqlService";
 import { IDatabaseInstallConfig } from "#interface";
 import { ConfigProcessor } from "#utils/install/db/config-processor";
-import { mysqlProcessor } from "#utils/install/db/mysql/mysql-installer";
+import { mysqlCreator } from "#utils/install/db/mysql/mysql-installer";
 import { Schema } from "#utils/install/db/mysql/schema";
 import { Table } from "#utils/install/db/mysql/table";
 
@@ -13,7 +13,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
     let DB_CLOSE_SPYON: jest.SpyInstance;
 
     const filterForMysql = (): IDatabaseInstallConfig => {
-        const config = ConfigProcessor.process();
+        const config = ConfigProcessor.fromConfig();
         return config["mysql"] || {};
     };
 
@@ -32,7 +32,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
         jest.spyOn(Schema, "exist").mockImplementation(() => Promise.resolve("failed"));
         jest.spyOn(Schema, "create");
 
-        mysqlProcessor(config).then((value) => {
+        mysqlCreator(config).then((value) => {
             expect(value).toBeFalsy();
             expect(Schema.create).not.toHaveBeenCalled();
             done();
@@ -44,7 +44,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
         jest.spyOn(Schema, "drop").mockImplementation(() => Promise.resolve(false));
         jest.spyOn(Schema, "create");
 
-        mysqlProcessor(config).then((value) => {
+        mysqlCreator(config).then((value) => {
             expect(value).toBeFalsy();
             expect(Schema.create).not.toHaveBeenCalled();
             done();
@@ -57,7 +57,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
         jest.spyOn(Schema, "create").mockImplementation(() => Promise.resolve(false));
         jest.spyOn(Table, "create");
 
-        mysqlProcessor(config).then((value) => {
+        mysqlCreator(config).then((value) => {
             expect(value).toBeFalsy();
             expect(Table.create).not.toHaveBeenCalled();
             done();
@@ -70,7 +70,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
         jest.spyOn(Schema, "create").mockImplementation(() => Promise.resolve(true));
         jest.spyOn(Table, "create").mockImplementation(() => Promise.resolve(false));
 
-        mysqlProcessor(config).then((value) => {
+        mysqlCreator(config).then((value) => {
             expect(value).toBeFalsy();
             done();
         }, done.fail);
@@ -82,7 +82,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.mysql-i
         jest.spyOn(Schema, "create").mockImplementation(() => Promise.resolve(true));
         jest.spyOn(Table, "create").mockImplementation(() => Promise.resolve(true));
 
-        mysqlProcessor(config).then((value) => {
+        mysqlCreator(config).then((value) => {
             expect(value).toBeTruthy();
             done();
         }, done.fail);
