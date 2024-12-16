@@ -1,10 +1,11 @@
 /** @format */
 
 import { SupportedDatabaseType } from "#interface";
-import { getBoolean, MapOfBoolean, MapOfType, StringHelper } from "@aitianyu.cn/types";
+import { getBoolean, MapOfBoolean, MapOfType } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP } from "../../../Common";
 import { DEFAULT_SYS_DB_MAP } from "../Constant";
 import { IFeaturesConfig } from "#interface";
+import { DBHelper } from "#utils/DBHelper";
 
 const IsActiveSql: { [key in SupportedDatabaseType]: string } = {
     mysql: "SELECT `{2}` as enable FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
@@ -12,13 +13,13 @@ const IsActiveSql: { [key in SupportedDatabaseType]: string } = {
 
 export async function handleFeatureIsActive(feature: string): Promise<boolean> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = StringHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
 
-        dbInfo.field.enable,
+        dbInfo.field.enable.name,
 
-        dbInfo.field.id,
+        dbInfo.field.id.name,
         feature,
     ]);
     const connection = TIANYU.db.connect(dbInfo.database);
@@ -39,7 +40,7 @@ const GetCountSql: { [key in SupportedDatabaseType]: string } = {
 
 export async function handleFeatureGetCount(): Promise<number> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = StringHelper.format(GetCountSql[TIANYU.db.databaseType(dbInfo.database)], [dbInfo.database, dbInfo.table]);
+    const sql = DBHelper.format(GetCountSql[TIANYU.db.databaseType(dbInfo.database)], [dbInfo.database, dbInfo.table]);
     const connection = TIANYU.db.connect(dbInfo.database);
     const counter = await connection.query(sql).then(
         (result) => {
@@ -63,17 +64,17 @@ const GetFeatureListSql: { [key in SupportedDatabaseType]: string } = {
 
 export async function handleFeatureGetFeatures(start: number, count: number): Promise<MapOfType<IFeaturesConfig>> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = StringHelper.format(GetFeatureListSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(GetFeatureListSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
 
         count.toString(),
         start.toString(),
 
-        dbInfo.field.id,
-        dbInfo.field.enable,
-        dbInfo.field.desc,
-        dbInfo.field.deps,
+        dbInfo.field.id.name,
+        dbInfo.field.enable.name,
+        dbInfo.field.desc.name,
+        dbInfo.field.deps.name,
     ]);
     const connection = TIANYU.db.connect(dbInfo.database);
     const result = await connection.query(sql).catch((error) => {
@@ -95,14 +96,12 @@ export async function handleFeatureStateChange(changes: MapOfBoolean): Promise<v
     for (const key of Object.keys(changes)) {
         const status = changes[key];
         sqls.push(
-            StringHelper.format(template, [
+            DBHelper.format(template, [
                 dbInfo.database,
                 dbInfo.table,
-
-                dbInfo.field.id,
+                dbInfo.field.id.name,
                 key,
-
-                dbInfo.field.enable,
+                dbInfo.field.enable.name,
                 status ? 1 : 0,
             ]),
         );
@@ -121,16 +120,16 @@ const SearchFeatureSql: { [key in SupportedDatabaseType]: string } = {
 
 export async function handleFeatureSearchFeatures(search: string, start: number): Promise<MapOfType<IFeaturesConfig>> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = StringHelper.format(SearchFeatureSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(SearchFeatureSql[TIANYU.db.databaseType(dbInfo.database)], [
         dbInfo.database,
         dbInfo.table,
 
         start.toString(),
 
-        dbInfo.field.id,
-        dbInfo.field.enable,
-        dbInfo.field.desc,
-        dbInfo.field.deps,
+        dbInfo.field.id.name,
+        dbInfo.field.enable.name,
+        dbInfo.field.desc.name,
+        dbInfo.field.deps.name,
 
         search,
     ]);

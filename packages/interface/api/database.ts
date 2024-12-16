@@ -75,6 +75,57 @@ export interface IDatabaseConnectionConfig extends ConnectionOptions {
     ssl?: string | (SecureContextOptions & { rejectUnauthorized?: boolean | undefined }) | undefined;
 }
 
+export type DatabaseFieldType =
+    | "char"
+    | "varchar"
+    | "text"
+    | "longtext"
+    | "tinyint"
+    | "int"
+    | "float"
+    | "double"
+    | "decimal"
+    | "bigint"
+    | "boolean";
+
+export type TableIndexType = "btree" | "hash";
+
+export interface IDatabaseFieldDefine {
+    type: DatabaseFieldType;
+    size?: number;
+    decimal?: number;
+
+    zero?: boolean;
+    unsign?: boolean;
+
+    nullable?: boolean;
+    default?: string;
+
+    name: string;
+
+    primary?: boolean;
+    index?: TableIndexType;
+}
+
+export interface IDatabaseInstallConfig {
+    [key: string]: {
+        config: IDatabaseConnectionConfig;
+        tables: {
+            [table: string]: {
+                fields: IDatabaseFieldDefine[];
+                index?: TableIndexType;
+            };
+        };
+    };
+}
+
+export interface GenericDatabaseTable {
+    database: string;
+    table: string;
+    index?: TableIndexType;
+    field: MapOfType<IDatabaseFieldDefine>;
+}
+
 /** CSP database manager config */
 export interface DatabaseConfig {
     /** Map of database and its database type */

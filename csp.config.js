@@ -17,11 +17,6 @@ module.exports = {
             },
             session: "SESSION_ID",
         },
-        // fallback: {
-        //     package: "a",
-        //     module: "b",
-        //     method: "c",
-        // },
         loader: "data",
     },
     database: {
@@ -31,6 +26,7 @@ module.exports = {
             configs: "DatabaseConfigMap",
             sys: "SystemDBMap",
         },
+        custom: ".config/custom-db.js",
     },
     user: {
         login: 10,

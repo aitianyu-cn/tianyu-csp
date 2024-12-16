@@ -1,10 +1,11 @@
 /** @format */
 
 import { FunctionalityPrivilegeMap, SupportedDatabaseType } from "#interface";
-import { getBoolean, MapOfType, StringHelper } from "@aitianyu.cn/types";
+import { getBoolean, MapOfType } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP, SESSION_LIFE_TIME } from "../../../Common";
 import { DEFAULT_SYS_DB_MAP } from "../Constant";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { DBHelper } from "#utils/DBHelper";
 
 const TemplateSQL: { [id: string]: { [key in SupportedDatabaseType]: string } } = {
     session: {
@@ -26,12 +27,12 @@ export async function handleSession(sessionId: string): Promise<string> {
     const connection = TIANYU.db.connect(dbInfo.database);
     const sessionInfo = await connection
         .query(
-            StringHelper.format(TemplateSQL["session"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["session"][TIANYU.db.databaseType(connection.name)], [
                 dbInfo.database,
                 dbInfo.table,
 
-                dbInfo.field.user,
-                dbInfo.field.time,
+                dbInfo.field.user.name,
+                dbInfo.field.time.name,
 
                 sessionId,
             ]),
@@ -65,13 +66,13 @@ export async function handleSessionUser(user: string): Promise<{ name: string; l
     const connection = TIANYU.db.connect(dbInfo.database);
     const userInfo = await connection
         .query(
-            StringHelper.format(TemplateSQL["user"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["user"][TIANYU.db.databaseType(connection.name)], [
                 dbInfo.database,
                 dbInfo.table,
 
-                dbInfo.field.name,
-                dbInfo.field.license,
-                dbInfo.field.id,
+                dbInfo.field.name.name,
+                dbInfo.field.license.name,
+                dbInfo.field.id.name,
 
                 user,
             ]),
@@ -95,11 +96,11 @@ export async function handleSessionIsAdminMode(license: string): Promise<{ admin
     const connection = TIANYU.db.connect(dbInfo.database);
     const licenseInfo = await connection
         .query(
-            StringHelper.format(TemplateSQL["license"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["license"][TIANYU.db.databaseType(connection.name)], [
                 dbInfo.database,
                 dbInfo.table,
 
-                dbInfo.field.admin,
+                dbInfo.field.admin.name,
 
                 license,
             ]),
@@ -122,18 +123,18 @@ export async function handleSessionPrivileges(license: string): Promise<MapOfTyp
     const connection = TIANYU.db.connect(dbInfo.database);
     const roleInfos = await connection
         .query(
-            StringHelper.format(TemplateSQL["role"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["role"][TIANYU.db.databaseType(connection.name)], [
                 dbInfo.database,
                 dbInfo.table,
 
-                dbInfo.field.name,
-                dbInfo.field.read,
-                dbInfo.field.write,
-                dbInfo.field.delete,
-                dbInfo.field.change,
-                dbInfo.field.execute,
+                dbInfo.field.name.name,
+                dbInfo.field.read.name,
+                dbInfo.field.write.name,
+                dbInfo.field.delete.name,
+                dbInfo.field.change.name,
+                dbInfo.field.execute.name,
 
-                dbInfo.field.lid,
+                dbInfo.field.lid.name,
                 license,
             ]),
         )

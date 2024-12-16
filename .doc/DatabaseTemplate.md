@@ -69,13 +69,27 @@ Feature table is used to record all the feature activity status. It can be used 
     `id` CHAR(255) not null,
     `enable` TINYINT(3) not null default '0',
     `desc` TEXT,
-    `deps` TEXT not null default '',
+    `deps` TEXT,
 
     primary key (`id`) using BTREE,
 
 ```
 
 <i>NOTE: length of <u>desc</u> and <u>deps</u> field should not less than 65535 chars, different database will use different name of type, please follow the actual database setting.</i>
+
+### Monitor Table
+
+Monitor table is used to record the feature running status. Through Monitor manager, to record a status change ever interval time. The table definition please follow the following structure.
+
+```
+
+    `feature` CHAR(255) not null,
+    `time` BIGINT not null,
+    `data` TEXT not null,
+
+```
+
+<i>NOTE: length of <u>data</u> field should not less than 65535 chars, different database will use different name of type. <u>time</u> field will be used for time range searching, there needs to be number type to quick search. please follow the actual database setting.</i>
 
 ## Authorization Part
 

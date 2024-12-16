@@ -84,10 +84,10 @@ export class JobWorker implements IJobWorker {
                 });
 
                 this._worker.stdout.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB ${this.id}: ${data}`);
+                    TIANYU.logger.debug(`JOB info ${this.id}: ${data}`);
                 });
                 this._worker.stderr.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB ${this.id}: ${data}`);
+                    TIANYU.logger.debug(`JOB error ${this.id}: ${data}`);
                 });
 
                 this._worker.on("error", (error: Error) => {

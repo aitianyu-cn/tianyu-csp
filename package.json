@@ -2,8 +2,6 @@
     "name": "@aitianyu.cn/tianyu-csp",
     "version": "0.0.2",
     "description": "Project for Common Service Platform of Tianyu.",
-    "types": "./dist/types/index.d.ts",
-    "main": "./dist/lib/index.js",
     "exports": {
         ".": {
             "types": "./dist/types/index.d.ts",
@@ -11,6 +9,23 @@
             "require": "./dist/lib/index.js",
             "node": "./dist/lib/index.js",
             "default": "./dist/lib/index.js"
+        },
+        "./install": {
+            "types": "./dist/types/install.d.ts",
+            "import": "./dist/lib/install.js",
+            "require": "./dist/lib/install.js",
+            "node": "./dist/lib/install.js",
+            "default": "./dist/lib/install.js"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "*": [
+                "./dist/types/index.d.ts"
+            ],
+            "install": [
+                "./dist/types/install.d.ts"
+            ]
         }
     },
     "type": "commonjs",
@@ -31,7 +46,9 @@
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
         "test": "jest  --no-cache --verbose --passWithNoTests",
         "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
-        "test-coverage": "jest  --no-cache --coverage --passWithNoTests"
+        "test-coverage": "jest  --no-cache --coverage --passWithNoTests",
+        "deploy": "node \"./scripts/deploy.js\"",
+        "deploy-build": "npm run build && node \"./scripts/deploy.js\""
     },
     "repository": {
         "type": "git",

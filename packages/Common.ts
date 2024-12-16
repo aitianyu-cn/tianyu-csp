@@ -3,7 +3,13 @@
 import fs from "fs";
 import path from "path";
 import { AreaCode, guid, parseAreaString } from "@aitianyu.cn/types";
-import { TianyuCSPConfig, TianyuCSPDatabaseConfig, TianyuCSPDatabaseTypes, TianyuCSPSystemDBMap } from "#interface";
+import {
+    GenericDatabaseTable,
+    TianyuCSPConfig,
+    TianyuCSPDatabaseConfig,
+    TianyuCSPDatabaseTypes,
+    TianyuCSPSystemDBMap,
+} from "#interface";
 
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
 export const PROJECT_ROOT_PATH: string = process.cwd();
@@ -62,9 +68,18 @@ try {
     };
 }
 
+const custom_db_config_file = path.resolve(PROJECT_ROOT_PATH, raw_config?.database?.custom || /* istanbul ignore next */ "");
+let custom_db: any = [];
+try {
+    custom_db = fs.existsSync(custom_db_config_file) ? require(custom_db_config_file) : /* istanbul ignore next */ [];
+} catch {
+    /* istanbul ignore next */ custom_db = [];
+}
+
 export const DATABASE_TYPES_MAP: TianyuCSPDatabaseTypes = raw_db_config[dbconfig_types_id] || /* istanbul ignore next */ {};
 export const DATABASE_CONFIGS_MAP: TianyuCSPDatabaseConfig = raw_db_config[dbconfig_configs_id] || /* istanbul ignore next */ {};
 export const DATABASE_SYS_DB_MAP: TianyuCSPSystemDBMap = raw_db_config[dbconfig_sys_map_id] || /* istanbul ignore next */ {};
+export const DATABASE_CUSTOM_MAP: GenericDatabaseTable[] = custom_db;
 
 export const SESSION_LIFE_TIME = raw_config?.user?.session_life || /* istanbul ignore next */ 30;
 export const USER_LOGIN_LIFE_TIME = raw_config?.user?.login || /* istanbul ignore next */ 10;

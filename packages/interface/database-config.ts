@@ -1,6 +1,13 @@
 /** @format */
 
-import { IDatabaseConnectionConfig, SupportedDatabaseType } from "./api/database";
+import { MapOfType } from "@aitianyu.cn/types";
+import {
+    DatabaseFieldType,
+    IDatabaseConnectionConfig,
+    IDatabaseFieldDefine,
+    SupportedDatabaseType,
+    TableIndexType,
+} from "./api/database";
 
 export interface TianyuCSPDatabaseConfig {
     [key: string]: IDatabaseConnectionConfig;
@@ -14,99 +21,117 @@ export interface TianyuCSPSystemDBMap {
     logger: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            user: string;
-            level: string;
-            time: string;
-            msg: string;
+            user: IDatabaseFieldDefine;
+            level: IDatabaseFieldDefine;
+            time: IDatabaseFieldDefine;
+            msg: IDatabaseFieldDefine;
         };
     };
     usage: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            user: string;
-            func: string;
-            action: string;
-            time: string;
-            msg: string;
+            user: IDatabaseFieldDefine;
+            func: IDatabaseFieldDefine;
+            action: IDatabaseFieldDefine;
+            time: IDatabaseFieldDefine;
+            msg: IDatabaseFieldDefine;
         };
     };
     trace: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            user: string;
-            id: string;
-            time: string;
-            msg: string;
-            error: string;
-            area: string;
+            user: IDatabaseFieldDefine;
+            id: IDatabaseFieldDefine;
+            time: IDatabaseFieldDefine;
+            msg: IDatabaseFieldDefine;
+            error: IDatabaseFieldDefine;
+            area: IDatabaseFieldDefine;
         };
     };
     feature: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            id: string;
-            enable: string;
-            desc: string;
-            deps: string;
+            id: IDatabaseFieldDefine;
+            enable: IDatabaseFieldDefine;
+            desc: IDatabaseFieldDefine;
+            deps: IDatabaseFieldDefine;
         };
     };
+    // monitor: {
+    //     database: string;
+    //     table: string;
+    //     field: {
+    //         feature: IDatabaseFieldDefine;
+    //         time: IDatabaseFieldDefine;
+    //         data: IDatabaseFieldDefine;
+    //     };
+    // };
 
     session: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            id: string;
-            user: string;
-            time: string;
+            id: IDatabaseFieldDefine;
+            user: IDatabaseFieldDefine;
+            time: IDatabaseFieldDefine;
         };
     };
     user: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            id: string;
-            email: string;
-            skey: string;
-            name: string;
-            license: string;
-            team: string;
+            id: IDatabaseFieldDefine;
+            email: IDatabaseFieldDefine;
+            skey: IDatabaseFieldDefine;
+            name: IDatabaseFieldDefine;
+            license: IDatabaseFieldDefine;
+            team: IDatabaseFieldDefine;
         };
     };
     license: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            id: string;
-            name: string;
-            desc: string;
-            admin: string;
+            id: IDatabaseFieldDefine;
+            name: IDatabaseFieldDefine;
+            desc: IDatabaseFieldDefine;
+            admin: IDatabaseFieldDefine;
         };
     };
     role: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            lid: string;
-            name: string;
+            lid: IDatabaseFieldDefine;
+            name: IDatabaseFieldDefine;
 
-            read: string;
-            write: string;
-            delete: string;
-            change: string;
-            execute: string;
+            read: IDatabaseFieldDefine;
+            write: IDatabaseFieldDefine;
+            delete: IDatabaseFieldDefine;
+            change: IDatabaseFieldDefine;
+            execute: IDatabaseFieldDefine;
         };
     };
     team: {
         database: string;
         table: string;
+        index?: TableIndexType;
         field: {
-            id: string;
-            name: string;
-            desc: string;
+            id: IDatabaseFieldDefine;
+            name: IDatabaseFieldDefine;
+            desc: IDatabaseFieldDefine;
         };
     };
 }

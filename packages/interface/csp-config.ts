@@ -34,6 +34,7 @@ export interface TianyuCSPConfig {
             configs?: string;
             sys?: string;
         };
+        custom?: string;
     };
     user?: {
         login?: number;

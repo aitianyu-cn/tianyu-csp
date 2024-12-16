@@ -1,10 +1,10 @@
 /** @format */
 
 import { ITrace, SupportedDatabaseType, TraceArea } from "#interface";
-import { StringHelper } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
+import { DBHelper } from "#utils/DBHelper";
 
 const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
     mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`, '{7}') VALUES('{8}', '{9}', '{10}', '{11}', '{12}', '{13}');",
@@ -25,16 +25,16 @@ export class TraceManager implements ITrace {
     }
     public async trace(message: string, errorDetails?: string, area?: TraceArea): Promise<void> {
         const dbInfo = DATABASE_SYS_DB_MAP["trace"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["trace"];
-        const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
+        const sql = DBHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
             dbInfo.database,
             dbInfo.table,
 
-            dbInfo.field.user,
-            dbInfo.field.id,
-            dbInfo.field.time,
-            dbInfo.field.msg,
-            dbInfo.field.error,
-            dbInfo.field.area,
+            dbInfo.field.user.name,
+            dbInfo.field.id.name,
+            dbInfo.field.time.name,
+            dbInfo.field.msg.name,
+            dbInfo.field.error.name,
+            dbInfo.field.area.name,
 
             TIANYU.session.user.userId,
             this._traceId,

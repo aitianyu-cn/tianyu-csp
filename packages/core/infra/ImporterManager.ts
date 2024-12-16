@@ -9,7 +9,6 @@ import { DataEncoding, IImporter } from "#interface";
 
 import * as MODULE_IMPORT from "#module/module-export";
 import { SUPPORTED_SUFFIX } from "./Constant";
-import { isMainThread, parentPort } from "worker_threads";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
 

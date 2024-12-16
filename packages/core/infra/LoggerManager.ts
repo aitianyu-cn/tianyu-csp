@@ -1,10 +1,11 @@
 /** @format */
 
-import { IDBConnection, ILogger, SupportedDatabaseType } from "#interface";
-import { Log, LogLevel, StringHelper } from "@aitianyu.cn/types";
+import { ILogger, SupportedDatabaseType } from "#interface";
+import { Log, LogLevel } from "@aitianyu.cn/types";
 import { DATABASE_SYS_DB_MAP, PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
+import { DBHelper } from "#utils/DBHelper";
 
 const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
     mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`) VALUES('{6}', {7}, '{8}', '{9}');",
@@ -23,16 +24,16 @@ export class LoggerManager implements ILogger {
         this._db = dbinfo.database;
         this._tb = dbinfo.table;
 
-        this._field_user = dbinfo.field.user;
-        this._field_level = dbinfo.field.level;
-        this._field_time = dbinfo.field.time;
-        this._field_msg = dbinfo.field.msg;
+        this._field_user = dbinfo.field.user.name;
+        this._field_level = dbinfo.field.level.name;
+        this._field_time = dbinfo.field.time.name;
+        this._field_msg = dbinfo.field.msg.name;
     }
 
     public async log(msg: string, level?: LogLevel): Promise<void> {
         TIANYU.environment.development && Log.log(msg, level, true);
 
-        const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(this._db)], [
+        const sql = DBHelper.format(TemplateSQL[TIANYU.db.databaseType(this._db)], [
             this._db,
             this._tb,
 
@@ -49,9 +50,7 @@ export class LoggerManager implements ILogger {
         const connection = TIANYU.db.connect(this._db);
         await connection
             .execute(sql)
-            .catch(() => {
-                // for error, to ignore
-            })
+            .catch(() => {})
             .finally(() => {
                 connection.close();
             });

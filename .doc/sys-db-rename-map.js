@@ -31,7 +31,21 @@ module.exports.db_config = {
  * @description
  * the structure of db_map please DO NOT to change. you can change the database name,
  * table name and field item values to adapt your database.
- * @type {{[dbname: string]: {database: string; table: string; field: {[key: string]: string}}}}
+ * @type {TianyuCSPSystemDBMap}
+ * 
+ * field type 
+ *  IDatabaseFieldDefine {
+        type: DatabaseFieldType;
+        size?: number;
+
+        zero?: boolean;
+        sign?: boolean;
+
+        nullable?: boolean;
+        default?: boolean;
+
+        name?: string;
+    }
  *
  * @field logger
  * @field usage
@@ -49,43 +63,43 @@ module.exports.db_map = {
         database: "csp_sys",
         table: "logger",
         field: {
-            user: "user",
-            level: "level",
-            time: "time",
-            msg: "msg",
+            user: { name: "user", type: "char", size: 45 },
+            level: { name: "level", type: "tinyint", size: 3, default: "0" },
+            time: { name: "time", type: "char", size: 45 },
+            msg: { name: "msg", type: "text" },
         },
     },
     usage: {
         database: "csp_sys",
         table: "usage",
         field: {
-            user: "user_id",
-            func: "func_name",
-            action: "action",
-            time: "time",
-            msg: "msg",
+            user: { name: "user", type: "char", size: 45 },
+            func: { name: "func_name", type: "varchar", size: 255 },
+            action: { name: "action", type: "char", size: 10 },
+            time: { name: "time", type: "char", size: 45 },
+            msg: { name: "msg", type: "text" },
         },
     },
     trace: {
         database: "csp_sys",
         table: "trace",
         field: {
-            user: "user_id",
-            id: "trace_id",
-            time: "time",
-            msg: "msg",
-            error: "error_msg",
-            area: "area",
+            user: { name: "user", type: "char", size: 45 },
+            id: { name: "trace_id", type: "char", size: 45 },
+            time: { name: "time", type: "char", size: 45 },
+            msg: { name: "msg", type: "text" },
+            error: { name: "error_msg", type: "text" },
+            area: { name: "area", type: "char", size: 5, default: "edge" },
         },
     },
     feature: {
         database: "csp_sys",
         table: "feature",
         field: {
-            id: "id",
-            enable: "enable",
-            desc: "desc",
-            deps: "deps",
+            id: { name: "id", type: "char", size: 45 },
+            enable: { name: "enable", type: "tinyint", size: 3, default: "0" },
+            desc: { name: "desc", type: "text" },
+            deps: { name: "deps", type: "text" },
         },
     },
 
@@ -93,54 +107,54 @@ module.exports.db_map = {
         database: "csp_user",
         table: "session",
         field: {
-            id: "session_id",
-            user: "user_id",
-            time: "time",
+            id: { name: "session_id", type: "char", size: 45 },
+            user: { name: "user", type: "char", size: 45 },
+            time: { name: "time", type: "char", size: 45 },
         },
     },
     user: {
         database: "csp_user",
         table: "user_tb",
         field: {
-            id: "user_id",
-            email: "email",
-            skey: "sec_key",
-            name: "dsp_name",
-            license: "license",
-            team: "team",
+            id: { name: "user_id", type: "char", size: 45 },
+            email: { name: "email", type: "char", size: 255 },
+            skey: { name: "sec_key", type: "char", size: 400 },
+            name: { name: "dsp_name", type: "char", size: 255 },
+            license: { name: "license", type: "char", size: 45, default: "" },
+            team: { name: "team", type: "text" },
         },
     },
     license: {
         database: "csp_user",
         table: "license_tb",
         field: {
-            id: "license_id",
-            name: "dsp_name",
-            desc: "desc",
-            admin: "sys_mode",
+            id: { name: "license_id", type: "char", size: 45 },
+            name: { name: "dsp_name", type: "char", size: 255 },
+            desc: { name: "desc", type: "text" },
+            admin: { name: "sys_mode", type: "tinyint", size: 3, default: "0" },
         },
     },
     role: {
         database: "csp_user",
         table: "role_tb",
         field: {
-            lid: "license_id",
-            name: "fun_name",
+            lid: { name: "license_id", type: "char", size: 45 },
+            name: { name: "fun_name", type: "char", size: 255 },
 
-            read: "read",
-            write: "write",
-            delete: "delete",
-            change: "change",
-            execute: "execute",
+            read: { name: "read", type: "tinyint", size: 3, default: "0" },
+            write: { name: "write", type: "tinyint", size: 3, default: "0" },
+            delete: { name: "delete", type: "tinyint", size: 3, default: "0" },
+            change: { name: "change", type: "tinyint", size: 3, default: "0" },
+            execute: { name: "execute", type: "tinyint", size: 3, default: "0" },
         },
     },
     team: {
         database: "csp_user",
-        table: "team_tb",
+        table: "teams_tb",
         field: {
-            id: "id",
-            name: "name",
-            desc: "desc",
+            id: { name: "id", type: "char", size: 45 },
+            name: { name: "name", type: "char", size: 255 },
+            desc: { name: "desc", type: "text" },
         },
     },
 };

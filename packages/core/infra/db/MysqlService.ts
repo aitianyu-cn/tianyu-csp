@@ -11,7 +11,8 @@ export class MysqlService implements IDBConnection, IDBLifecycle {
 
     public constructor(databaseName: string, config: mysql.ConnectionConfig) {
         this._database = databaseName;
-        this._pool = mysql.createPool({ ...config, database: databaseName });
+        // this._pool = mysql.createPool({ ...config, database: databaseName });
+        this._pool = mysql.createPool({ ...config });
     }
 
     public get name(): string {

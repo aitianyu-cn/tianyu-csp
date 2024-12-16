@@ -1,0 +1,9 @@
+/** @format */
+
+export const CHECK_DB_EXIST = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}';";
+
+export const DROP_DATABASE = "DROP DATABASE {0};";
+
+export const CREATE_DATABASE = "CREATE DATABASE {0};";
+
+export const CREATE_TABLE = "CREATE TABLE `{0}`.`{1}` ({2});";
