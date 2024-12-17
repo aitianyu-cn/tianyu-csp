@@ -4,13 +4,12 @@ import { IDBConnection } from "#interface";
 import { DBHelper } from "#utils/DBHelper";
 import { Log } from "@aitianyu.cn/types";
 import { CHECK_DB_EXIST, CREATE_DATABASE, DROP_DATABASE } from "../sql/mysql";
-
-export type SchemaCheckStatus = "exist" | "failed" | "unexist";
+import { StructurCheckStatus } from "./interface";
 
 export class Schema {
-    public static async exist(connect: IDBConnection, database: string): Promise<SchemaCheckStatus> {
+    public static async exist(connect: IDBConnection, database: string): Promise<StructurCheckStatus> {
         const sql = DBHelper.format(CHECK_DB_EXIST, [database]);
-        const result: SchemaCheckStatus = await connect.query(sql).then(
+        const result: StructurCheckStatus = await connect.query(sql).then(
             (result) => {
                 return Array.isArray(result) && result.length ? "exist" : "unexist";
             },

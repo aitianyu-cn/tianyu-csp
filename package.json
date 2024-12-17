@@ -44,10 +44,11 @@
         "copy-types": "copyfiles -u 2 \"build/packages/**/*.d.ts\" dist/types",
         "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.html\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
-        "test": "jest  --no-cache --verbose --passWithNoTests",
-        "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
-        "test-coverage": "jest  --no-cache --coverage --passWithNoTests",
-        "deploy": "node \"./scripts/deploy.js\"",
+        "test": "jest --no-cache --verbose --passWithNoTests",
+        "test-all": "jest --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
+        "test-coverage": "jest --no-cache --coverage --passWithNoTests",
+        "test-env-load": "node \"./test/config/test-loader.mjs\"",
+        "test-auto": "npm run build && npm run test-env-load && npm run test-all",
         "deploy-build": "npm run build && node \"./scripts/deploy.js\""
     },
     "repository": {

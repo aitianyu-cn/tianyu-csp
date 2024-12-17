@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfType } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import {
     DatabaseFieldType,
     IDatabaseConnectionConfig,
@@ -22,6 +22,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             user: IDatabaseFieldDefine;
             level: IDatabaseFieldDefine;
@@ -33,6 +34,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             user: IDatabaseFieldDefine;
             func: IDatabaseFieldDefine;
@@ -45,6 +47,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             user: IDatabaseFieldDefine;
             id: IDatabaseFieldDefine;
@@ -58,6 +61,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             id: IDatabaseFieldDefine;
             enable: IDatabaseFieldDefine;
@@ -79,6 +83,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             id: IDatabaseFieldDefine;
             user: IDatabaseFieldDefine;
@@ -89,6 +94,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             id: IDatabaseFieldDefine;
             email: IDatabaseFieldDefine;
@@ -102,6 +108,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             id: IDatabaseFieldDefine;
             name: IDatabaseFieldDefine;
@@ -113,6 +120,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             lid: IDatabaseFieldDefine;
             name: IDatabaseFieldDefine;
@@ -128,6 +136,7 @@ export interface TianyuCSPSystemDBMap {
         database: string;
         table: string;
         index?: TableIndexType;
+        data?: MapOfString[] | string;
         field: {
             id: IDatabaseFieldDefine;
             name: IDatabaseFieldDefine;

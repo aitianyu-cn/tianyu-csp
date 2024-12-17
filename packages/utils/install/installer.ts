@@ -4,10 +4,10 @@ import { IDatabaseInstallConfig, SupportedDatabaseType } from "#interface";
 import { Log, MapOfType } from "@aitianyu.cn/types";
 import { ConfigProcessor } from "./db/config-processor";
 import { mysqlCreator } from "./db/mysql/mysql-installer";
-import { DatabaseCreator } from "./db/database-processor";
+import { DatabaseProcessor } from "./db/database-processor-export";
 
 /* istanbul ignore next */
-export async function createDatabases(): Promise<boolean> {
+export async function autoInstall(): Promise<boolean> {
     const config = ConfigProcessor.fromConfig();
     return handleConfig(config);
 }
@@ -30,5 +30,5 @@ export async function handleConfig(config: MapOfType<IDatabaseInstallConfig>): P
 }
 
 function getInstaller(type: SupportedDatabaseType): ((config: IDatabaseInstallConfig) => Promise<boolean>) | null {
-    return DatabaseCreator[type]?.creator || null;
+    return DatabaseProcessor[type]?.creator || null;
 }

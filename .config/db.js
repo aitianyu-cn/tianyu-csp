@@ -57,6 +57,7 @@ module.exports.SystemDBMap = {
         database: "csp_sys",
         table: "feature",
         index: "btree",
+        data: ".config/feature-data",
         field: {
             id: { name: "id", type: "char", size: 45, primary: true },
             enable: { name: "enable", type: "tinyint", size: 3, default: "0" },
@@ -79,6 +80,7 @@ module.exports.SystemDBMap = {
         database: "csp_user",
         table: "user_tb",
         index: "btree",
+        data: ".config/user-data",
         field: {
             id: { name: "user_id", type: "char", size: 45, primary: true },
             email: { name: "email", type: "char", size: 255, index: "btree" },

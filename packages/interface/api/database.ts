@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfType } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { SecureContextOptions } from "tls";
 
 /** Tianyu CSP supported database type */
@@ -114,6 +114,7 @@ export interface IDatabaseInstallConfig {
             [table: string]: {
                 fields: IDatabaseFieldDefine[];
                 index?: TableIndexType;
+                data: string[];
             };
         };
     };
@@ -123,6 +124,7 @@ export interface GenericDatabaseTable {
     database: string;
     table: string;
     index?: TableIndexType;
+    data?: MapOfString[] | string;
     field: MapOfType<IDatabaseFieldDefine>;
 }
 

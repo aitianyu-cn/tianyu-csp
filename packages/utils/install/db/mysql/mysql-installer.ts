@@ -1,16 +1,15 @@
 /** @format */
 
 import { MysqlService } from "#core/infra/db/MysqlService";
-import { IDatabaseFieldDefine, IDBConnection, IDatabaseInstallConfig, TableIndexType } from "#interface";
-import { Table } from "./table";
-import { Schema } from "./schema";
+import { IDatabaseInstallConfig } from "#interface";
+import { handleSchema, handleSchemaDrop, handleSchemaClean, handleSchemaInsert } from "./handler";
 
-export async function mysqlCreator(config: IDatabaseInstallConfig): Promise<boolean> {
+export async function mysqlCreator(config: IDatabaseInstallConfig, destroy?: boolean): Promise<boolean> {
     for (const db of Object.keys(config)) {
         const databaseConfig = config[db];
 
         const connection = new MysqlService(db, databaseConfig.config);
-        const schemaStatus = await handleSchema(connection, db, databaseConfig.tables);
+        const schemaStatus = await handleSchema(connection, db, databaseConfig.tables, destroy);
         connection.close();
 
         if (!schemaStatus) {
@@ -21,35 +20,47 @@ export async function mysqlCreator(config: IDatabaseInstallConfig): Promise<bool
     return true;
 }
 
-async function handleSchema(
-    connection: IDBConnection,
-    database: string,
-    tables: {
-        [table: string]: {
-            fields: IDatabaseFieldDefine[];
-            index?: TableIndexType;
-        };
-    },
-): Promise<boolean> {
-    const status = await Schema.exist(connection, database);
-    if (status === "failed") {
-        return false;
-    }
-    if (status === "exist") {
-        const dropped = await Schema.drop(connection, database);
-        if (!dropped) {
+export async function mysqlDestroyer(config: IDatabaseInstallConfig): Promise<boolean> {
+    for (const db of Object.keys(config)) {
+        const databaseConfig = config[db];
+
+        const connection = new MysqlService(db, databaseConfig.config);
+        const schemaStatus = await handleSchemaDrop(connection, db);
+        connection.close();
+
+        if (!schemaStatus) {
             return false;
         }
     }
 
-    const created = await Schema.create(connection, database);
-    if (!created) {
-        return false;
+    return true;
+}
+
+export async function mysqlCleaner(config: IDatabaseInstallConfig): Promise<boolean> {
+    for (const db of Object.keys(config)) {
+        const databaseConfig = config[db];
+
+        const connection = new MysqlService(db, databaseConfig.config);
+        const schemaStatus = await handleSchemaClean(connection, db, databaseConfig.tables);
+        connection.close();
+
+        if (!schemaStatus) {
+            return false;
+        }
     }
 
-    for (const table of Object.keys(tables)) {
-        const tableResult = await Table.create(connection, database, table, tables[table]);
-        if (!tableResult) {
+    return true;
+}
+
+export async function mysqlInserter(config: IDatabaseInstallConfig): Promise<boolean> {
+    for (const db of Object.keys(config)) {
+        const databaseConfig = config[db];
+
+        const connection = new MysqlService(db, databaseConfig.config);
+        const schemaStatus = await handleSchemaInsert(connection, db, databaseConfig.tables);
+        connection.close();
+
+        if (!schemaStatus) {
             return false;
         }
     }
