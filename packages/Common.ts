@@ -80,6 +80,7 @@ export const DATABASE_TYPES_MAP: TianyuCSPDatabaseTypes = raw_db_config[dbconfig
 export const DATABASE_CONFIGS_MAP: TianyuCSPDatabaseConfig = raw_db_config[dbconfig_configs_id] || /* istanbul ignore next */ {};
 export const DATABASE_SYS_DB_MAP: TianyuCSPSystemDBMap = raw_db_config[dbconfig_sys_map_id] || /* istanbul ignore next */ {};
 export const DATABASE_CUSTOM_MAP: GenericDatabaseTable[] = custom_db;
+export const DATABASE_TABLES_MAP: GenericDatabaseTable[] = [...custom_db, ...Object.values(DATABASE_SYS_DB_MAP)];
 
 export const SESSION_LIFE_TIME = raw_config?.user?.session_life || /* istanbul ignore next */ 30;
 export const USER_LOGIN_LIFE_TIME = raw_config?.user?.login || /* istanbul ignore next */ 10;

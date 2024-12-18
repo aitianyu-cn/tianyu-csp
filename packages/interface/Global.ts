@@ -1,6 +1,6 @@
 /** @format */
 
-import { IDatabaseManager } from "./api/database";
+import { IDatabaseManager } from "./api/db/database";
 import { IEnvironment } from "./api/environment";
 import { ICSPFramework } from "./api/fwk";
 import { IImporter } from "./api/importer";

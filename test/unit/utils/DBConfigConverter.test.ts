@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDatabaseConnectionConfig } from "#interface";
-import { DBConfigConverter } from "#utils/DBConfigConverter";
+import { DBConfigConverter } from "#utils/db/DBConfigConverter";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.DBConfigConverter", () => {
     describe("toMysql", () => {
