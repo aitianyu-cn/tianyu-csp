@@ -6,19 +6,25 @@ import { DATABASE_SYS_DB_MAP, SESSION_LIFE_TIME } from "../../../Common";
 import { DEFAULT_SYS_DB_MAP } from "../Constant";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DBHelper } from "#utils/DBHelper";
+import { InternalSqlTemplate } from "../interface";
 
-const TemplateSQL: { [id: string]: { [key in SupportedDatabaseType]: string } } = {
+const TemplateSQL: { [id: string]: InternalSqlTemplate } = {
     session: {
         mysql: "SELECT `{2}` as userId, `{3}` as time FROM `{0}`.`{1}` WHERE `{2}` = '{4}';",
+        default: "SELECT `{2}` as userId, `{3}` as time FROM `{0}`.`{1}` WHERE `{2}` = '{4}';",
     },
     user: {
         mysql: "SELECT `{2}` as name, `{3}` as license FROM `{0}`.`{1}` WHERE `{4}` = '{5}';",
+        default: "SELECT `{2}` as name, `{3}` as license FROM `{0}`.`{1}` WHERE `{4}` = '{5}';",
     },
     license: {
         mysql: "SELECT `{2}` as admin FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
+        default: "SELECT `{2}` as admin FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
     },
     role: {
         mysql: "SELECT `{2}` as name, `{3}` as read, `{4}` as write, `{5}` as delete, `{6}` as change, `{7}` as execute FROM `{0}`.`{1}` WHERE `{8}` = '{9}';",
+        default:
+            "SELECT `{2}` as name, `{3}` as read, `{4}` as write, `{5}` as delete, `{6}` as change, `{7}` as execute FROM `{0}`.`{1}` WHERE `{8}` = '{9}';",
     },
 };
 
@@ -27,15 +33,10 @@ export async function handleSession(sessionId: string): Promise<string> {
     const connection = TIANYU.db.connect(dbInfo.database);
     const sessionInfo = await connection
         .query(
-            DBHelper.format(TemplateSQL["session"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
-
-                dbInfo.field.user.name,
-                dbInfo.field.time.name,
-
-                sessionId,
-            ]),
+            DBHelper.format(
+                TemplateSQL["session"][TIANYU.db.databaseType(connection.name)] || TemplateSQL["session"]["default"],
+                [dbInfo.database, dbInfo.table, dbInfo.field.user.name, dbInfo.field.time.name, sessionId],
+            ),
         )
         .finally(() => {
             connection.close();
@@ -66,7 +67,7 @@ export async function handleSessionUser(user: string): Promise<{ name: string; l
     const connection = TIANYU.db.connect(dbInfo.database);
     const userInfo = await connection
         .query(
-            DBHelper.format(TemplateSQL["user"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["user"][TIANYU.db.databaseType(connection.name)] || TemplateSQL["user"]["default"], [
                 dbInfo.database,
                 dbInfo.table,
 
@@ -96,14 +97,10 @@ export async function handleSessionIsAdminMode(license: string): Promise<{ admin
     const connection = TIANYU.db.connect(dbInfo.database);
     const licenseInfo = await connection
         .query(
-            DBHelper.format(TemplateSQL["license"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
-
-                dbInfo.field.admin.name,
-
-                license,
-            ]),
+            DBHelper.format(
+                TemplateSQL["license"][TIANYU.db.databaseType(connection.name)] || TemplateSQL["license"]["default"],
+                [dbInfo.database, dbInfo.table, dbInfo.field.admin.name, license],
+            ),
         )
         .finally(() => {
             connection.close();
@@ -123,7 +120,7 @@ export async function handleSessionPrivileges(license: string): Promise<MapOfTyp
     const connection = TIANYU.db.connect(dbInfo.database);
     const roleInfos = await connection
         .query(
-            DBHelper.format(TemplateSQL["role"][TIANYU.db.databaseType(connection.name)], [
+            DBHelper.format(TemplateSQL["role"][TIANYU.db.databaseType(connection.name)] || TemplateSQL["role"]["default"], [
                 dbInfo.database,
                 dbInfo.table,
 

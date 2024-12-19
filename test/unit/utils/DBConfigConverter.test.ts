@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDatabaseConnectionConfig } from "#interface";
-import { DBConfigConverter } from "#utils/DBConfigConverter";
+import { DBConfigConverter } from "#utils/db/DBConfigConverter";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.DBConfigConverter", () => {
     describe("toMysql", () => {
@@ -13,7 +13,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.DBConfigConverter", () =
                 password: "test",
                 timeout: 3000,
             };
-            const configForMysql = DBConfigConverter.toMysql(config);
+            const configForMysql = DBConfigConverter.mysql(config);
 
             expect(configForMysql).toEqual(config);
         });

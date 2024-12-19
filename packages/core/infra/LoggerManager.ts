@@ -6,9 +6,11 @@ import { DATABASE_SYS_DB_MAP, PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
 import { DBHelper } from "#utils/DBHelper";
+import { InternalSqlTemplate } from "./interface";
 
-const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
+const TemplateSQL: InternalSqlTemplate = {
     mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`) VALUES('{6}', {7}, '{8}', '{9}');",
+    default: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`) VALUES('{6}', {7}, '{8}', '{9}');",
 };
 
 export class LoggerManager implements ILogger {
@@ -33,7 +35,7 @@ export class LoggerManager implements ILogger {
     public async log(msg: string, level?: LogLevel): Promise<void> {
         TIANYU.environment.development && Log.log(msg, level, true);
 
-        const sql = DBHelper.format(TemplateSQL[TIANYU.db.databaseType(this._db)], [
+        const sql = DBHelper.format(TemplateSQL[TIANYU.db.databaseType(this._db)] || TemplateSQL["default"], [
             this._db,
             this._tb,
 

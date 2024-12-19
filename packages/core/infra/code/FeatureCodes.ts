@@ -6,14 +6,16 @@ import { DATABASE_SYS_DB_MAP } from "../../../Common";
 import { DEFAULT_SYS_DB_MAP } from "../Constant";
 import { IFeaturesConfig } from "#interface";
 import { DBHelper } from "#utils/DBHelper";
+import { InternalSqlTemplate } from "../interface";
 
-const IsActiveSql: { [key in SupportedDatabaseType]: string } = {
+const IsActiveSql: InternalSqlTemplate = {
     mysql: "SELECT `{2}` as enable FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
+    default: "SELECT `{2}` as enable FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
 };
 
 export async function handleFeatureIsActive(feature: string): Promise<boolean> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = DBHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(IsActiveSql[TIANYU.db.databaseType(dbInfo.database)] || IsActiveSql["default"], [
         dbInfo.database,
         dbInfo.table,
 
@@ -34,13 +36,17 @@ export async function handleFeatureIsActive(feature: string): Promise<boolean> {
     return false;
 }
 
-const GetCountSql: { [key in SupportedDatabaseType]: string } = {
+const GetCountSql: InternalSqlTemplate = {
     mysql: "SELECT COUNT(*) as counter FROM `{0}`.`{1}`;",
+    default: "SELECT COUNT(*) as counter FROM `{0}`.`{1}`;",
 };
 
 export async function handleFeatureGetCount(): Promise<number> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = DBHelper.format(GetCountSql[TIANYU.db.databaseType(dbInfo.database)], [dbInfo.database, dbInfo.table]);
+    const sql = DBHelper.format(GetCountSql[TIANYU.db.databaseType(dbInfo.database)] || GetCountSql["default"], [
+        dbInfo.database,
+        dbInfo.table,
+    ]);
     const connection = TIANYU.db.connect(dbInfo.database);
     const counter = await connection.query(sql).then(
         (result) => {
@@ -58,13 +64,14 @@ export async function handleFeatureGetCount(): Promise<number> {
     return counter;
 }
 
-const GetFeatureListSql: { [key in SupportedDatabaseType]: string } = {
+const GetFeatureListSql: InternalSqlTemplate = {
     mysql: "SELECT `{4}` as id, `{5}` as enable, `{6}` as desc, `{7}` as deps FROM `{0}`.`{1}` LIMIT {2} OFFSET {3};",
+    default: "SELECT `{4}` as id, `{5}` as enable, `{6}` as desc, `{7}` as deps FROM `{0}`.`{1}` LIMIT {2} OFFSET {3};",
 };
 
 export async function handleFeatureGetFeatures(start: number, count: number): Promise<MapOfType<IFeaturesConfig>> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = DBHelper.format(GetFeatureListSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(GetFeatureListSql[TIANYU.db.databaseType(dbInfo.database)] || GetFeatureListSql["default"], [
         dbInfo.database,
         dbInfo.table,
 
@@ -85,13 +92,14 @@ export async function handleFeatureGetFeatures(start: number, count: number): Pr
     return processFeatureConfigFromDBResult(result);
 }
 
-const EnableOrDisableFeatureSql: { [key in SupportedDatabaseType]: string } = {
+const EnableOrDisableFeatureSql: InternalSqlTemplate = {
     mysql: "UPDATE `{0}`.`{1}` SET `{4}` = {5} WHERE `{2}` = '{3}';",
+    default: "UPDATE `{0}`.`{1}` SET `{4}` = {5} WHERE `{2}` = '{3}';",
 };
 
 export async function handleFeatureStateChange(changes: MapOfBoolean): Promise<void> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const template = EnableOrDisableFeatureSql[TIANYU.db.databaseType(dbInfo.database)];
+    const template = EnableOrDisableFeatureSql[TIANYU.db.databaseType(dbInfo.database)] || EnableOrDisableFeatureSql["default"];
     const sqls: string[] = [];
     for (const key of Object.keys(changes)) {
         const status = changes[key];
@@ -114,13 +122,15 @@ export async function handleFeatureStateChange(changes: MapOfBoolean): Promise<v
     });
 }
 
-const SearchFeatureSql: { [key in SupportedDatabaseType]: string } = {
+const SearchFeatureSql: InternalSqlTemplate = {
     mysql: "SELECT `{3}` as id, `{4}` as enable, `{5}` as desc, `{6}` as deps FROM `{0}`.`{1}` WHERE `{3}` like '%{7}%' LIMIT 50 OFFSET {2};",
+    default:
+        "SELECT `{3}` as id, `{4}` as enable, `{5}` as desc, `{6}` as deps FROM `{0}`.`{1}` WHERE `{3}` like '%{7}%' LIMIT 50 OFFSET {2};",
 };
 
 export async function handleFeatureSearchFeatures(search: string, start: number): Promise<MapOfType<IFeaturesConfig>> {
     const dbInfo = DATABASE_SYS_DB_MAP["feature"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["feature"];
-    const sql = DBHelper.format(SearchFeatureSql[TIANYU.db.databaseType(dbInfo.database)], [
+    const sql = DBHelper.format(SearchFeatureSql[TIANYU.db.databaseType(dbInfo.database)] || SearchFeatureSql["default"], [
         dbInfo.database,
         dbInfo.table,
 

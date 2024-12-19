@@ -2,13 +2,13 @@
 
 import { DatabaseConfig, IDatabaseConnectionConfig, IDatabaseManager, IDBConnection, SupportedDatabaseType } from "#interface";
 import { MysqlService } from "./db/MysqlService";
-import { DBConfigConverter } from "#utils/DBConfigConverter";
+import { DBHelper } from "#utils/DBHelper";
 
 function createConnection(databaseName: string, config: IDatabaseConnectionConfig, type: SupportedDatabaseType): IDBConnection {
     switch (type) {
         case "mysql":
         default:
-            return new MysqlService(databaseName, DBConfigConverter.toMysql(config));
+            return new MysqlService(databaseName, DBHelper.converter.mysql(config));
     }
 }
 

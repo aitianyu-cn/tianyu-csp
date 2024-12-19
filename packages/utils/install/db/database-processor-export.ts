@@ -19,6 +19,20 @@ export const DatabaseProcessor: {
         cleaner: mysqlCleaner,
         inserter: mysqlInserter,
     },
+    redis: {
+        creator: function (config: IDatabaseInstallConfig, destroy?: boolean): Promise<boolean> {
+            throw new Error("Function not implemented.");
+        },
+        destroyer: function (config: IDatabaseInstallConfig): Promise<boolean> {
+            throw new Error("Function not implemented.");
+        },
+        cleaner: function (config: IDatabaseInstallConfig): Promise<boolean> {
+            throw new Error("Function not implemented.");
+        },
+        inserter: function (config: IDatabaseInstallConfig): Promise<boolean> {
+            throw new Error("Function not implemented.");
+        },
+    },
 };
 
 export const configProcessor = ConfigProcessor.process;

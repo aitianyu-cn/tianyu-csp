@@ -64,7 +64,9 @@ export class DataProcessor {
         const resultSqls: string[] = [];
         for (const data of datas) {
             const valueToStr = DataProcessor.handleDataItem(data, fields);
-            resultSqls.push(StringHelper.format(INSERT_SQL[dbType], [database, table, fieldForSql, valueToStr]));
+            resultSqls.push(
+                StringHelper.format(INSERT_SQL[dbType] || INSERT_SQL["default"], [database, table, fieldForSql, valueToStr]),
+            );
         }
 
         return resultSqls;
