@@ -1,8 +1,6 @@
 /** @format */
 
 import { StringHelper } from "@aitianyu.cn/types";
-import { DBConfigConverter } from "./db/DBConfigConverter";
-import { RedisHelper } from "./db/Redis";
 
 const replaceMap: any = {
     '"': "{d_q}",
@@ -47,7 +45,4 @@ export class DBHelper {
         );
         return StringHelper.format(src, processedArgs);
     }
-
-    public static converter = DBConfigConverter;
-    public static redis = RedisHelper;
 }

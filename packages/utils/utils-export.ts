@@ -1,6 +1,6 @@
 /** @format */
 
-export * from "./DBHelper";
+export * from "./DBConfigConverter";
 export * from "./ErrorHelper";
 export * from "./HttpHelper";
 export * from "./RestHelper";

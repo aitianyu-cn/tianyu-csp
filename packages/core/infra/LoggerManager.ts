@@ -6,16 +6,9 @@ import { DATABASE_SYS_DB_MAP, PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
 import { DBHelper } from "#utils/DBHelper";
-import { ObjectHelper } from "#utils/ObjectHelper";
 
 const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
     mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`) VALUES('{6}', {7}, '{8}', '{9}');",
-    redis: DBHelper.redis.format(
-        "lpush",
-        "{0}",
-        "{1}",
-        ObjectHelper.stringify({ "{2}": "{6}", "{3}": "{7}", "{4}": "{8}", "{5}": "{9}" }),
-    ),
 };
 
 export class LoggerManager implements ILogger {

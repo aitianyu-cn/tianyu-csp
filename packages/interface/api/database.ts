@@ -3,10 +3,8 @@
 import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { SecureContextOptions } from "tls";
 
-export * from "./redis";
-
 /** Tianyu CSP supported database type */
-export type SupportedDatabaseType = "mysql" | "redis";
+export type SupportedDatabaseType = "mysql";
 
 /** CSP database connection basic options */
 export interface ConnectionOptions {

@@ -7,7 +7,7 @@ import {
     IDatabaseFieldDefine,
     SupportedDatabaseType,
     TableIndexType,
-} from "./api/db/database";
+} from "./api/database";
 
 export interface TianyuCSPDatabaseConfig {
     [key: string]: IDatabaseConnectionConfig;

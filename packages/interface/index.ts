@@ -6,7 +6,7 @@ export type { IGlobalDefinition };
 
 export * from "./Error";
 
-export * from "./api/db/database";
+export * from "./api/database";
 export * from "./api/environment";
 export * from "./api/fwk";
 export * from "./api/logger";

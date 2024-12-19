@@ -5,16 +5,9 @@ import { DATABASE_SYS_DB_MAP } from "../../Common";
 import { DEFAULT_SYS_DB_MAP } from "./Constant";
 import { TraceHelper } from "#utils/TraceHelper";
 import { DBHelper } from "#utils/DBHelper";
-import { ObjectHelper } from "#utils/ObjectHelper";
 
 const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
     mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`, '{7}') VALUES('{8}', '{9}', '{10}', '{11}', '{12}', '{13}');",
-    redis: DBHelper.redis.format(
-        "lpush",
-        "{0}",
-        "{1}",
-        ObjectHelper.stringify({ "{2}": "{8}", "{3}": "{9}", "{4}": "{10}", "{5}": "{11}", "{6}": "{12}", "{7}": "{13}" }),
-    ),
 };
 
 export class TraceManager implements ITrace {
