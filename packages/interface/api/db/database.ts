@@ -1,6 +1,7 @@
 /** @format */
 
 import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import Redis from "ioredis";
 import { SecureContextOptions } from "tls";
 
 /** Tianyu CSP supported database type */
@@ -171,6 +172,10 @@ export interface IDBConnection extends IDBLifecycle {
     query(sql: string): Promise<any>;
 }
 
+export interface INosqlDBManager {
+    redis(database: string, config: IDatabaseConnectionConfig): Redis;
+}
+
 /** CSP Database manager for Global */
 export interface IDatabaseManager {
     /**
@@ -189,4 +194,6 @@ export interface IDatabaseManager {
      * @returns return the type of given database name
      */
     databaseType(databaseName: string): SupportedDatabaseType;
+    /** Manager for nosql database */
+    nosql: INosqlDBManager;
 }
