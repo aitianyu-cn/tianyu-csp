@@ -1,16 +1,23 @@
 /** @format */
 
+import { MapOfType } from "@aitianyu.cn/types";
+import { ImportPackage } from "./api/importer";
 import { DefaultRequestItemsMap } from "./fwk-def/contributor/requests";
-
-export interface TianyuCSPRestPathEntry {
-    package?: string;
-    module?: string;
-    method?: string;
-}
 
 export interface TianyuCSPRequestMapItem {
     cookie: string;
     search: string;
+}
+
+export interface TianyuCSPXcall extends Record<string, MapOfType<ImportPackage> | undefined> {
+    logger?: { log: ImportPackage };
+    usage?: { record: ImportPackage };
+    trace?: { trace: ImportPackage };
+    feature?: { "is-active": ImportPackage };
+    session?: { get: ImportPackage };
+    user?: { get: ImportPackage };
+    license?: { get: ImportPackage };
+    role?: { get: ImportPackage };
 }
 
 export interface TianyuCSPConfig {
@@ -20,24 +27,37 @@ export interface TianyuCSPConfig {
         environment?: "development" | "production";
         src?: string;
         language?: string;
+        roles?: string;
+        monitor?: {
+            modules?: string;
+        };
     };
     rest?: {
         file: string;
-        "request-map"?: DefaultRequestItemsMap;
-        fallback?: TianyuCSPRestPathEntry;
         loader?: string;
+        fallback?: ImportPackage;
+        "request-map"?: DefaultRequestItemsMap;
     };
-    database?: {
-        file?: string;
-        rename?: {
-            types?: string;
-            configs?: string;
-            sys?: string;
-        };
-        custom?: string;
-    };
+    xcall?: TianyuCSPXcall;
     user?: {
         login?: number;
         session_life?: number;
+    };
+}
+
+/**
+ * Type of supported opertion actions
+ *
+ * read: access a resource
+ * write: open a resource and to do a data write operation
+ * delete: remove a resource
+ * change: to update a resource
+ * execute: to start a job
+ */
+export type OperationActions = "read" | "write" | "delete" | "change" | "execute";
+
+export interface TianyuCSPPrivilegeMap {
+    [key: string]: {
+        [action in OperationActions]?: boolean;
     };
 }

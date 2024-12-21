@@ -3,9 +3,6 @@
 import { REST, REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { AreaCode } from "@aitianyu.cn/types";
 import {
-    DATABASE_CONFIGS_MAP,
-    DATABASE_SYS_DB_MAP,
-    DATABASE_TYPES_MAP,
     EXTERNAL_MODULE_ROOT_PATH,
     INTERNAL_PROJECT_ROOT,
     PROJECT_DEFAULT_LANGUAGE,
@@ -14,13 +11,14 @@ import {
     PROJECT_ROOT_PATH,
     PROJECT_VERSION,
     SESSION_LIFE_TIME,
+    SYSTEM_EXTERNAL_CALL,
+    SYSTEM_PRIVILEGE_MAP,
     USER_LOGIN_LIFE_TIME,
 } from "packages/Common";
 import path from "path";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
     const CONFIG = require(path.resolve(process.cwd(), "csp.config"));
-    const DB_CONFIG = require(path.resolve(process.cwd(), ".config/db.js"));
 
     it("global defines test", () => {
         expect(INTERNAL_PROJECT_ROOT).toEqual(path.resolve(process.cwd(), "packages"));
@@ -40,9 +38,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
         const custom_request_map = CONFIG.rest["request-map"];
         expect(REST_REQUEST_ITEM_MAP).toEqual(custom_request_map);
 
-        expect(DATABASE_TYPES_MAP).toEqual(DB_CONFIG.DatabaseTypesMap);
-        expect(DATABASE_CONFIGS_MAP).toEqual(DB_CONFIG.DatabaseConfigMap);
-        expect(DATABASE_SYS_DB_MAP).toEqual(DB_CONFIG.SystemDBMap);
+        expect(Object.keys(SYSTEM_EXTERNAL_CALL).length).toEqual(8);
+        expect(SYSTEM_PRIVILEGE_MAP).toEqual({});
 
         expect(SESSION_LIFE_TIME).toEqual(30);
         expect(USER_LOGIN_LIFE_TIME).toEqual(10);

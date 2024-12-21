@@ -2,7 +2,7 @@
 
 import { guid, MapOfString, MapOfType, ObjectHelper } from "@aitianyu.cn/types";
 import { DEFAULT_REST_FALLBACK } from "./RestHandlerConstant";
-import { PathEntry, Subitem, SubitemType, TianyuCSPRestPathEntry } from "#interface";
+import { ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
 
 /**
  *
@@ -46,9 +46,9 @@ const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
 export class RestHandler {
     private _fallback: PathEntry | null;
     private _resttree: Subitem;
-    private _rest: MapOfType<{ path: string; level: number; entry: TianyuCSPRestPathEntry }>;
+    private _rest: MapOfType<{ path: string; level: number; entry: ImportPackage }>;
 
-    public constructor(rest?: MapOfType<TianyuCSPRestPathEntry>, enableFallback?: boolean) {
+    public constructor(rest?: MapOfType<ImportPackage>, enableFallback?: boolean) {
         this._resttree = {
             id: null,
             actual: {},
@@ -61,7 +61,7 @@ export class RestHandler {
         this._processRest(rest || {});
     }
 
-    private _processRest(rest: MapOfType<TianyuCSPRestPathEntry>): void {
+    private _processRest(rest: MapOfType<ImportPackage>): void {
         const raw_rest = rest;
 
         for (const key of Object.keys(raw_rest)) {
@@ -71,7 +71,7 @@ export class RestHandler {
         }
     }
 
-    private _processTree(rest: string, path: string[], entry: TianyuCSPRestPathEntry): void {
+    private _processTree(rest: string, path: string[], entry: ImportPackage): void {
         let tree = this._resttree;
         for (const item of path) {
             const type = this._convertItemType(item);

@@ -1,7 +1,7 @@
 /** @format */
 
 import { AreaCode } from "@aitianyu.cn/types";
-import { OperationActions } from "./privilege";
+import { OperationActions } from "../csp-config";
 
 /** CSP session user info */
 export interface ISessionUser {

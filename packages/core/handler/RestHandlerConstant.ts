@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { PROJECT_ROOT_PATH, EXTERNAL_MODULE_ROOT_PATH, REST_CONFIG } from "../../Common";
 import { MapOfType } from "@aitianyu.cn/types";
-import { DefaultRequestItemsMap, PathEntry, TianyuCSPRestPathEntry } from "#interface";
+import { DefaultRequestItemsMap, PathEntry, ImportPackage } from "#interface";
 
 const DEFAULT_REST_CONFIG_NAME = "rest.config.json";
 const DEFAULT_REST_FALLBACK_CONFIG = {
@@ -20,7 +20,7 @@ const DEFAULT_REQUEST_ITEM_MAP: DefaultRequestItemsMap = {
 };
 
 const rest_file_path = path.resolve(PROJECT_ROOT_PATH, REST_CONFIG_FILE || /* istanbul ignore next */ DEFAULT_REST_CONFIG_NAME);
-let raw_rest: MapOfType<TianyuCSPRestPathEntry> = {};
+let raw_rest: MapOfType<ImportPackage> = {};
 if (fs.existsSync(rest_file_path)) {
     try {
         // raw_rest = JSON.parse(fs.readFileSync(rest_file_path, "utf-8"));

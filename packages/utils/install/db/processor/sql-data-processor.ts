@@ -6,10 +6,10 @@ import { findActualModule } from "#core/infra/ImporterManager";
 import { SupportedDatabaseType, IDatabaseFieldDefine } from "#interface";
 import { DBHelper } from "#utils/DBHelper";
 import { MapOfString, StringHelper } from "@aitianyu.cn/types";
-import { PROJECT_ROOT_PATH } from "../../../Common";
-import { INSERT_SQL } from "./sql/common";
+import { PROJECT_ROOT_PATH } from "../../../../Common";
+import { INSERT_SQL } from "../sql/common";
 
-export class DataProcessor {
+export class SqlDataProcessor {
     public static process(
         database: string,
         table: string,
@@ -23,8 +23,8 @@ export class DataProcessor {
         }
 
         return isSrcFile
-            ? DataProcessor.handleDataFile(database, table, dbType, dataSrc, fields)
-            : DataProcessor.handleDataArray(database, table, dbType, dataSrc, fields);
+            ? SqlDataProcessor.handleDataFile(database, table, dbType, dataSrc, fields)
+            : SqlDataProcessor.handleDataArray(database, table, dbType, dataSrc, fields);
     }
 
     public static handleDataFile(
@@ -36,7 +36,7 @@ export class DataProcessor {
     ): string[] {
         const fullPath = path.resolve(PROJECT_ROOT_PATH, file);
         if (fullPath.toLocaleLowerCase().endsWith(".sql")) {
-            return DataProcessor.handleDataSqlFile(fullPath); // this is a sql file
+            return SqlDataProcessor.handleDataSqlFile(fullPath); // this is a sql file
         }
 
         const actulFile = findActualModule(fullPath);
@@ -49,7 +49,7 @@ export class DataProcessor {
             return [];
         }
 
-        return DataProcessor.handleDataArray(database, table, dbType, datas, fields);
+        return SqlDataProcessor.handleDataArray(database, table, dbType, datas, fields);
     }
 
     public static handleDataArray(
@@ -63,7 +63,7 @@ export class DataProcessor {
 
         const resultSqls: string[] = [];
         for (const data of datas) {
-            const valueToStr = DataProcessor.handleDataItem(data, fields);
+            const valueToStr = SqlDataProcessor.handleDataItem(data, fields);
             resultSqls.push(
                 StringHelper.format(INSERT_SQL[dbType] || INSERT_SQL["default"], [database, table, fieldForSql, valueToStr]),
             );
@@ -75,7 +75,7 @@ export class DataProcessor {
     public static handleDataItem(data: MapOfString, fields: IDatabaseFieldDefine[]): string {
         const valuesList: string[] = [];
         for (const field of fields) {
-            valuesList.push(DataProcessor.formatFieldValue(data[field.name], field));
+            valuesList.push(SqlDataProcessor.formatFieldValue(data[field.name], field));
         }
         return valuesList.join(",");
     }

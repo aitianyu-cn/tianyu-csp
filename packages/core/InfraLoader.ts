@@ -1,14 +1,7 @@
 /** @format */
 
 import { IGlobalDefinition, IServerRequest, ISession } from "#interface";
-import {
-    DATABASE_CONFIGS_MAP,
-    DATABASE_TYPES_MAP,
-    PROJECT_ENVIRONMENT_MODE,
-    PROJECT_NAME,
-    PROJECT_ROOT_PATH,
-    PROJECT_VERSION,
-} from "../Common";
+import { PROJECT_ENVIRONMENT_MODE, PROJECT_NAME, PROJECT_ROOT_PATH, PROJECT_VERSION } from "../Common";
 import { ContributorManager } from "./infra/ContributorManager";
 import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
@@ -31,10 +24,7 @@ export function loadInfra(): void {
 
 export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
-        db: new DatabaseManager({
-            dbTypes: DATABASE_TYPES_MAP,
-            configMap: DATABASE_CONFIGS_MAP,
-        }),
+        db: new DatabaseManager(),
         fwk: {
             contributor: new ContributorManager(),
         },

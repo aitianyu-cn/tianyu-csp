@@ -1,6 +1,6 @@
 /** @format */
 
-import { OperationActions } from "./privilege";
+import { OperationActions } from "../csp-config";
 
 /** CSP usage record API for global */
 export interface IUsage {

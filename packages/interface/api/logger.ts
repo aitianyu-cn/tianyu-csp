@@ -2,6 +2,15 @@
 
 import { LogLevel } from "@aitianyu.cn/types";
 
+export const LogLevelMap: { [key in LogLevel]: string } = {
+    [LogLevel.DEBUG]: "DEBUG",
+    [LogLevel.ERROR]: "ERROR",
+    [LogLevel.FATAL]: "FATAL",
+    [LogLevel.INFO]: "INFO",
+    [LogLevel.LOG]: "LOG",
+    [LogLevel.WARNING]: "WARNING",
+};
+
 /** CSP Log API for global */
 export interface ILogger {
     /**

@@ -1,8 +1,8 @@
 /** @format */
 
 import { IDatabaseInstallConfig, SupportedDatabaseType } from "#interface";
-import { ConfigProcessor } from "./config-processor";
-import { DataProcessor } from "./data-processor";
+import { SqlConfigProcessor } from "./processor/sql-config-processor";
+import { SqlDataProcessor } from "./processor/sql-data-processor";
 import { mysqlCleaner, mysqlCreator, mysqlDestroyer, mysqlInserter } from "./mysql/mysql-installer";
 
 export const DatabaseProcessor: {
@@ -35,5 +35,9 @@ export const DatabaseProcessor: {
     },
 };
 
-export const configProcessor = ConfigProcessor.process;
-export const dataProcessor = DataProcessor.process;
+export const ConfigProcessor = {
+    sql: SqlConfigProcessor.process,
+};
+export const DataConverter = {
+    sql: SqlDataProcessor.process,
+};

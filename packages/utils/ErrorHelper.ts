@@ -7,9 +7,18 @@ export class ErrorHelper {
         return {
             code,
             message,
-            traceId: TIANYU.trace.getId() || undefined,
+            traceId: TIANYU?.trace?.getId() || undefined,
             error: errorDetails,
         };
+    }
+
+    public static getErrorString(code: string, message: string, errorDetails?: string): string {
+        return JSON.stringify({
+            code,
+            message,
+            traceId: TIANYU?.trace?.getId() || undefined,
+            error: errorDetails,
+        });
     }
 
     public static getHttpStatusByJobStatus(status: JobExecutionStatus): number {

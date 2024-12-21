@@ -43,4 +43,3 @@ export * from "./lib/schedule";
 export * from "./modules/feature";
 
 export * from "./csp-config";
-export * from "./database-config";

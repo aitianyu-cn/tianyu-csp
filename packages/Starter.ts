@@ -2,7 +2,6 @@
 
 import { loadInfra } from "#core/InfraLoader";
 import { DispatchHandlerOption, HttpServiceOption } from "#interface";
-import { CallbackAction } from "@aitianyu.cn/types";
 import { DispatchHandler, HttpService, RequestHandler } from "./core";
 
 export interface IStarterApp {

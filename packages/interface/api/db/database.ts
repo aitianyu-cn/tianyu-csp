@@ -4,8 +4,12 @@ import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import Redis from "ioredis";
 import { SecureContextOptions } from "tls";
 
+export type SupportedNosqlDBType = "redis";
+
+export type SupportedSqlDBType = "mysql";
+
 /** Tianyu CSP supported database type */
-export type SupportedDatabaseType = "mysql" | "redis";
+export type SupportedDatabaseType = SupportedNosqlDBType | SupportedSqlDBType;
 
 /** CSP database connection basic options */
 export interface ConnectionOptions {
@@ -173,7 +177,7 @@ export interface IDBConnection extends IDBLifecycle {
 }
 
 export interface INosqlDBManager {
-    redis(database: string, config: IDatabaseConnectionConfig): Redis;
+    redis(type: SupportedNosqlDBType, database: string, config: IDatabaseConnectionConfig): Redis;
 }
 
 /** CSP Database manager for Global */
@@ -185,15 +189,7 @@ export interface IDatabaseManager {
      *
      * @returns return a connection instance
      */
-    connect(databaseName: string): IDBConnection;
-    /**
-     * Get which the database is used of given database name. This flag will be used for adapting different database sqls.
-     *
-     * @param databaseName database name
-     *
-     * @returns return the type of given database name
-     */
-    databaseType(databaseName: string): SupportedDatabaseType;
+    connect(type: SupportedSqlDBType, databaseName: string, config: IDatabaseConnectionConfig): IDBConnection;
     /** Manager for nosql database */
     nosql: INosqlDBManager;
 }

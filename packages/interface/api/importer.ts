@@ -1,5 +1,7 @@
 /** @format */
 
+export type ImportPackage = { package?: string; module?: string; method?: string };
+
 /** CSP Import API for global, to import a object module from specified package */
 export interface IImporter {
     /**

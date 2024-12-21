@@ -1,17 +1,8 @@
 /** @format */
 
-import { ITrace, SupportedDatabaseType, TraceArea } from "#interface";
-import { DATABASE_SYS_DB_MAP } from "../../Common";
-import { DEFAULT_SYS_DB_MAP } from "./Constant";
+import { ITrace, TraceArea } from "#interface";
 import { TraceHelper } from "#utils/TraceHelper";
-import { DBHelper } from "#utils/DBHelper";
-import { InternalSqlTemplate } from "./interface";
-
-const TemplateSQL: InternalSqlTemplate = {
-    mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`, '{7}') VALUES('{8}', '{9}', '{10}', '{11}', '{12}', '{13}');",
-    default:
-        "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`, '{7}') VALUES('{8}', '{9}', '{10}', '{11}', '{12}', '{13}');",
-};
+import { doXcall } from "./code/GenericXcall";
 
 export class TraceManager implements ITrace {
     private _traceId: string;
@@ -27,33 +18,18 @@ export class TraceManager implements ITrace {
         this._traceId = id;
     }
     public async trace(message: string, errorDetails?: string, area?: TraceArea): Promise<void> {
-        const dbInfo = DATABASE_SYS_DB_MAP["trace"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["trace"];
-        const sql = DBHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)] || TemplateSQL["default"], [
-            dbInfo.database,
-            dbInfo.table,
-
-            dbInfo.field.user.name,
-            dbInfo.field.id.name,
-            dbInfo.field.time.name,
-            dbInfo.field.msg.name,
-            dbInfo.field.error.name,
-            dbInfo.field.area.name,
-
-            TIANYU.session.user.userId,
-            this._traceId,
-            TraceHelper.generateTime(),
-            message,
-            errorDetails || "",
-            area || "edge",
-        ]);
-        const connection = TIANYU.db.connect(dbInfo.database);
-        await connection
-            .execute(sql)
-            .catch((error) => {
-                TIANYU.logger.error(JSON.stringify(error));
-            })
-            .finally(() => {
-                connection.close();
-            });
+        await doXcall(
+            {
+                user: TIANYU.session.user.userId,
+                traceId: this._traceId,
+                time: TraceHelper.generateTime(),
+                message: message,
+                details: errorDetails || "",
+                area: area || "edge",
+            },
+            "trace",
+            "trace",
+            `Could not to record the trace for '${message.substring(0, message.length > 20 ? 20 : message.length)}'.`,
+        );
     }
 }

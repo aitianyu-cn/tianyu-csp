@@ -7,6 +7,7 @@ import {
     IDBConnection,
     INosqlDBManager,
     SupportedDatabaseType,
+    SupportedSqlDBType,
 } from "#interface";
 import { MysqlService } from "./db/MysqlService";
 import { DBHelper } from "#utils/DBHelper";
@@ -36,24 +37,17 @@ function createConnection(databaseName: string, config: IDatabaseConnectionConfi
 }
 
 export class DatabaseManager implements IDatabaseManager {
-    private _config: DatabaseConfig;
     private _nosqlMgr: NosqlDatabaseManager;
 
-    public constructor(config: DatabaseConfig) {
-        this._config = config;
-        this._nosqlMgr = new NosqlDatabaseManager(this._config.configMap);
+    public constructor() {
+        this._nosqlMgr = new NosqlDatabaseManager();
     }
 
     public get nosql(): INosqlDBManager {
         return this._nosqlMgr;
     }
 
-    public connect(databaseName: string): IDBConnection {
-        const type = this.databaseType(databaseName);
-        return createConnection(databaseName, this._config.configMap[databaseName] || {}, type);
-    }
-
-    public databaseType(databaseName: string): SupportedDatabaseType {
-        return this._config.dbTypes[databaseName] || "mysql";
+    public connect(type: SupportedSqlDBType, databaseName: string, config: IDatabaseConnectionConfig): IDBConnection {
+        return createConnection(databaseName, config, type);
     }
 }
