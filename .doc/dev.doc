@@ -11,7 +11,7 @@ o   6. html loader
 o   7. refine rest path processor and support condition mapping
     8. notes of all export modules
 o   9. support javascript in configuration file.
-o   10.support postgre or tidb or redis(at least a kv database) ==> supported 'redis'
+o   10.support postgre or tidb or redis(at least a kv database) ===> supported 'redis'
 
 phase2 - OPTIONAL:
 

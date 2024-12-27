@@ -18,6 +18,7 @@ export interface TianyuCSPXcall extends Record<string, MapOfType<ImportPackage> 
     user?: { get: ImportPackage };
     license?: { get: ImportPackage };
     role?: { get: ImportPackage };
+    monitor?: { record: ImportPackage };
 }
 
 export interface TianyuCSPConfig {

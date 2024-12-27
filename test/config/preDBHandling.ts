@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDatabaseConnectionConfig, SupportedDatabaseType } from "#interface";
-import { DBProcessor } from "packages/install";
+// import { DBProcessor } from "packages/install";
 
 export async function testDBHandling(): Promise<void> {
     // const configs: { [database: string]: { type: SupportedDatabaseType; config: IDatabaseConnectionConfig } } = {};

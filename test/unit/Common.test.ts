@@ -39,7 +39,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
         const custom_request_map = CONFIG.rest["request-map"];
         expect(REST_REQUEST_ITEM_MAP).toEqual(custom_request_map);
 
-        expect(Object.keys(SYSTEM_EXTERNAL_CALL).length).toEqual(9);
+        expect(Object.keys(SYSTEM_EXTERNAL_CALL).length).toEqual(10);
         expect(SYSTEM_PRIVILEGE_MAP).toEqual(PRIVILEGE);
 
         expect(SESSION_LIFE_TIME).toEqual(30);

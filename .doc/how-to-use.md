@@ -16,11 +16,11 @@
 
   - rest config: [`<name>.json or <name>.js`](./rest-config.md)
 
-  - database config
+  - [`infra xcall`](./XCall.md)
 
-    - database system table creation template: [`Database Template`](./DatabaseTemplate.md)
+  - [`privilege config`](./privilege-config.md)
 
-    - database system database rename template: [`Template.js`](./sys-db-rename-map.js)
+  - [`monitor config`](./monitor-config.md)
 
 ### START
 

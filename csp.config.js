@@ -27,6 +27,7 @@ module.exports = {
         logger: { log: { package: "db", module: "runtime", method: "log" } },
         usage: { record: { package: "db", module: "runtime", method: "recordUsage" } },
         trace: { trace: { package: "db", module: "runtime", method: "trace" } },
+        monitor: { record: { package: "db", module: "runtime", method: "recordMonitor" } },
 
         feature: { "is-active": { package: "db", module: "feature", method: "isActive" } },
 

@@ -116,6 +116,8 @@ All of components under this folder, based on the database accessment. In this p
 
   8. **environment**: this is a constant object to provide some application data, includes `version`, `developmentMode`, `application name` and etc...
 
+  9. **feature**: this is a feature tool to get a specified feature is enabled or not.
+
 - **_Handler & Service_**
 
   **Handler**

@@ -1,5 +1,5 @@
 {
-    "include": ["packages", "test"],
+    "include": ["packages"],
     "exclude": [],
     "compilerOptions": {
         "composite": true,
