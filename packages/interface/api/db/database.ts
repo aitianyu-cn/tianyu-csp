@@ -177,7 +177,7 @@ export interface IDBConnection extends IDBLifecycle {
 }
 
 export interface INosqlDBManager {
-    redis(type: SupportedNosqlDBType, database: string, config: IDatabaseConnectionConfig): Redis;
+    redis(database: string, config: IDatabaseConnectionConfig): Redis;
 }
 
 /** CSP Database manager for Global */

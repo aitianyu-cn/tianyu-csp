@@ -18,7 +18,7 @@ import { INFRA_ERROR_CODES } from "#core/Constant";
 const NOSQL_DATABASE_TYPES: SupportedDatabaseType[] = ["redis"];
 
 function checkSqlBasedConnection(databaseName: string, type: SupportedDatabaseType): void {
-    if (type in NOSQL_DATABASE_TYPES) {
+    if (NOSQL_DATABASE_TYPES.includes(type)) {
         throw ErrorHelper.getError(
             INFRA_ERROR_CODES.DATABASE_CONNECTION_CREATION_ERROR,
             `Try to create a connection on database '${databaseName}' failed.`,

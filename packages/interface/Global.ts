@@ -2,6 +2,7 @@
 
 import { IDatabaseManager } from "./api/db/database";
 import { IEnvironment } from "./api/environment";
+import { IFeature } from "./api/feature";
 import { ICSPFramework } from "./api/fwk";
 import { IImporter } from "./api/importer";
 import { ILogger } from "./api/logger";
@@ -29,6 +30,8 @@ export interface IGlobalDefinition {
     // monitor: IMonitor;
     /** Framework utils */
     fwk: ICSPFramework;
+    /** Feature Manager instance to get a feature is active only */
+    feature: IFeature;
 
     /** Network request data */
     request: IServerRequest;

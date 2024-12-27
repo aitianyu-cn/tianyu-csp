@@ -1,11 +1,11 @@
 /** @format */
 
-import { SqlConfigProcessor } from "#utils/install/db/processor/sql-config-processor";
+import { SqlConfigProcessor } from "#install/db/processor/sql-config-processor";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.ConfigProcessor", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.ConfigProcessor", () => {
     describe("process", () => {
         it("all tests", () => {
-            const TEST_CONFIG = require("../../../../content/db/db-config-test");
+            const TEST_CONFIG = require("../../../content/db/db-config-test");
 
             const result = SqlConfigProcessor.process(TEST_CONFIG.DBConfigs, TEST_CONFIG.DBTables);
 

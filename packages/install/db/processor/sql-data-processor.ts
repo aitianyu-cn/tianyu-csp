@@ -6,7 +6,7 @@ import { findActualModule } from "#core/infra/ImporterManager";
 import { SupportedDatabaseType, IDatabaseFieldDefine } from "#interface";
 import { DBHelper } from "#utils/DBHelper";
 import { MapOfString, StringHelper } from "@aitianyu.cn/types";
-import { PROJECT_ROOT_PATH } from "../../../../Common";
+import { PROJECT_ROOT_PATH } from "../../../Common";
 import { INSERT_SQL } from "../sql/common";
 
 export class SqlDataProcessor {
@@ -65,7 +65,12 @@ export class SqlDataProcessor {
         for (const data of datas) {
             const valueToStr = SqlDataProcessor.handleDataItem(data, fields);
             resultSqls.push(
-                StringHelper.format(INSERT_SQL[dbType] || INSERT_SQL["default"], [database, table, fieldForSql, valueToStr]),
+                StringHelper.format(INSERT_SQL[dbType] || /* istanbul ignore next */ INSERT_SQL["default"], [
+                    database,
+                    table,
+                    fieldForSql,
+                    valueToStr,
+                ]),
             );
         }
 

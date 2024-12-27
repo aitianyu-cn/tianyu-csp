@@ -19,7 +19,8 @@ export async function doXcall(data: MapOfString, func: string, method: string, m
     }
 
     try {
-        const xcall = TIANYU.import(externalCall.package || "", externalCall.module || "")?.[externalCall.method || ""];
+        const xmodule = TIANYU.import(externalCall.package || "", externalCall.module || "");
+        const xcall = externalCall.method ? xmodule?.[externalCall.method] : xmodule;
         if (typeof xcall === "function") {
             return (await xcall(data)) || null;
         } else {

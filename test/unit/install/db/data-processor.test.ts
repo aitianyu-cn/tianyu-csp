@@ -2,10 +2,10 @@
 
 import { IDatabaseFieldDefine } from "#interface";
 import { DBHelper } from "#utils/DBHelper";
-import { SqlDataProcessor } from "#utils/install/db/processor/sql-data-processor";
+import { SqlDataProcessor } from "#install/db/processor/sql-data-processor";
 import { MapOfString } from "@aitianyu.cn/types";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.DataProcessor", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.DataProcessor", () => {
     describe("handleDatas", () => {
         it("src is file and empty", () => {
             jest.spyOn(SqlDataProcessor, "handleDataFile");

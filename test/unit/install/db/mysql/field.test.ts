@@ -1,8 +1,8 @@
 /** @format */
 
-import { Field } from "#utils/install/db/mysql/field";
+import { Field } from "#install/db/mysql/field";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.Field", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.mysql.Field", () => {
     it("handleType", () => {
         expect(
             Field.handleType({

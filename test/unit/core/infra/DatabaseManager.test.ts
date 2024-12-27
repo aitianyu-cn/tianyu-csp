@@ -19,5 +19,15 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.DatabaseManager", (
                 connection.close();
             }).not.toThrow();
         });
+
+        it("invalid type", () => {
+            expect(() => {
+                databaseMgr.connect("redis" as any, "", {});
+            }).toThrow();
+        });
+    });
+
+    it("nosql", () => {
+        expect(databaseMgr.nosql).toBeDefined();
     });
 });

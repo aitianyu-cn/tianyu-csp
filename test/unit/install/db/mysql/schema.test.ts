@@ -1,8 +1,8 @@
 /** @format */
 
-import { Schema } from "#utils/install/db/mysql/schema";
+import { Schema } from "#install/db/mysql/schema";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.Schema", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.mysql.Schema", () => {
     describe("exist", () => {
         it("query error", (done) => {
             const connect: any = {

@@ -10,6 +10,7 @@ import { GlobalSessionManager } from "./infra/SessionManager";
 import { LoggerManager } from "./infra/LoggerManager";
 import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
+import { FeatureManager } from "./infra/FeatureManager";
 
 export function loadInfra(): void {
     /* istanbul ignore if */
@@ -35,6 +36,7 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
         session: sessionMgr,
         usage: new UsageManager(),
         trace: new TraceManager(),
+        feature: new FeatureManager(),
 
         environment: {
             baseUrl: PROJECT_ROOT_PATH,

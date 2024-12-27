@@ -391,7 +391,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
 
     describe("run - console", () => {
         it("success", (done) => {
-            jest.spyOn(TIANYU.logger, "debug");
+            jest.spyOn(TIANYU.logger, "debug").mockImplementation(() => Promise.resolve());
 
             const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/console.js");
             const payload: JobWorkerPayload = {

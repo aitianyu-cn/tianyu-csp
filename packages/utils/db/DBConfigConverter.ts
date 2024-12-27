@@ -3,6 +3,7 @@
 import { IDatabaseConnectionConfig } from "#interface";
 import { RedisOptions } from "ioredis";
 import * as mysql from "mysql";
+import { RedisConverter } from "./RedisConverter";
 
 export const DBConfigConverter = {
     mysql: function (config: IDatabaseConnectionConfig): mysql.ConnectionConfig {
@@ -15,10 +16,11 @@ export const DBConfigConverter = {
         options.port = config.port || 6379;
         options.username = config.user || "default";
         options.password = config.password;
+        options.commandTimeout = config.timeout;
 
         {
-            const database2Index = Number(database.match(/[0-9]+/)?.[0]);
-            options.db = Number.isNaN(database2Index) ? 0 : database2Index > 15 || database2Index < 0 ? 0 : database2Index;
+            options.db = RedisConverter.getDatabase(database);
+
             // for more configs will be supported in the feature
         }
 

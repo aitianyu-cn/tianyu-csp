@@ -1,8 +1,8 @@
 /** @format */
 
-import { Table } from "#utils/install/db/mysql/table";
+import { Table } from "#install/db/mysql/table";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.Table", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.mysql.Table", () => {
     describe("create", () => {
         it("empty table", (done) => {
             const connect: any = {

@@ -25,9 +25,9 @@
             "#module/*": ["packages/modules/*"],
             "#utils/*": ["packages/utils/*"],
             "#loader/*": ["packages/loader/*"],
+            "#install/*": ["packages/install/*"],
             "#interface": ["packages/interface/index.ts"],
             "#job/*": ["packages/job/*"],
-            "install/*": ["install/*"],
             "scripts/*": ["scripts/*"],
             "test/*": ["test/*"],
             "OUT": ["dist/lib/index.js"]

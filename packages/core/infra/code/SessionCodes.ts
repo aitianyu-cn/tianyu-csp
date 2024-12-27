@@ -94,11 +94,11 @@ export async function handleSessionPrivileges(license: string): Promise<MapOfTyp
             const privilegeDef = SYSTEM_PRIVILEGE_MAP[item["name"]];
             if (privilegeDef) {
                 privileges[item["name"]] = {
-                    read: privilegeDef.read ? (getBoolean(item["read"]) ? "allow" : "aviod") : "non",
-                    write: privilegeDef.read ? (getBoolean(item["write"]) ? "allow" : "aviod") : "non",
-                    delete: privilegeDef.read ? (getBoolean(item["delete"]) ? "allow" : "aviod") : "non",
-                    change: privilegeDef.read ? (getBoolean(item["change"]) ? "allow" : "aviod") : "non",
-                    execute: privilegeDef.read ? (getBoolean(item["execute"]) ? "allow" : "aviod") : "non",
+                    read: privilegeDef.read ? (getBoolean(item["read"]) ? "allow" : "avoid") : "non",
+                    write: privilegeDef.write ? (getBoolean(item["write"]) ? "allow" : "avoid") : "non",
+                    delete: privilegeDef.delete ? (getBoolean(item["delete"]) ? "allow" : "avoid") : "non",
+                    change: privilegeDef.change ? (getBoolean(item["change"]) ? "allow" : "avoid") : "non",
+                    execute: privilegeDef.execute ? (getBoolean(item["execute"]) ? "allow" : "avoid") : "non",
                 };
             }
         }

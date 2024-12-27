@@ -18,8 +18,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
         jest.spyOn(SESSION_HANDLER, "handleSessionIsAdminMode").mockReturnValue(Promise.resolve({ admin: true }));
         jest.spyOn(SESSION_HANDLER, "handleSessionPrivileges").mockReturnValue(
             Promise.resolve({
-                p1: { read: "allow", write: "allow", delete: "aviod", change: "allow", execute: "allow" },
-                p2: { read: "allow", write: "allow", delete: "aviod", change: "allow", execute: "non" },
+                p1: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "allow" },
+                p2: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "non" },
             }),
         );
     });

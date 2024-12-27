@@ -1,15 +1,17 @@
 phase2 - TODO:
 
-o   1. documentary for configurations and database.
-x   2. basic modules implementation like trace, logger.
--   3. monitor implementation and integration.
+    1. documentary for configurations and database.
+    2. basic modules implementation like trace, logger.
+    3. monitor implementation and integration.
 x   4. filter supporting (simple filter and advance filter).
-o   5. quick start api to run an application.
+        - reason: the filter supporting move to phase3
+
+o   5. quick start api to run an application  =====================> only for sql database.
 o   6. html loader
 o   7. refine rest path processor and support condition mapping
     8. notes of all export modules
 o   9. support javascript in configuration file.
-    10.support postgre or tidb or redis(at least a kv database)
+o   10.support postgre or tidb or redis(at least a kv database) ==> supported 'redis'
 
 phase2 - OPTIONAL:
 

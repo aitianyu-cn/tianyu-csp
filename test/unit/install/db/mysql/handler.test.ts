@@ -1,10 +1,10 @@
 /** @format */
 
-import { handleSchema, handleSchemaClean, handleSchemaDrop, handleSchemaInsert } from "#utils/install/db/mysql/handler";
-import { Schema } from "#utils/install/db/mysql/schema";
-import { Table } from "#utils/install/db/mysql/table";
+import { handleSchema, handleSchemaClean, handleSchemaDrop, handleSchemaInsert } from "#install/db/mysql/handler";
+import { Schema } from "#install/db/mysql/schema";
+import { Table } from "#install/db/mysql/table";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.install.db.mysql.handler", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.install.db.mysql.handler", () => {
     describe("handleSchema", () => {
         it("status query failed", (done) => {
             jest.spyOn(Schema, "exist").mockImplementation(() => Promise.resolve("failed"));

@@ -32,6 +32,29 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.ErrorHelper", () => {
         });
     });
 
+    describe("getErrorString", () => {
+        it("no trace id", () => {
+            const error = JSON.parse(ErrorHelper.getErrorString("10000", "this is a test string", "error details"));
+
+            expect(error.code).toEqual("10000");
+            expect(error.message).toEqual("this is a test string");
+            expect(error.error).toEqual("error details");
+            expect(error.traceId).toEqual(undefined);
+        });
+
+        it("has trace id", () => {
+            const traceId = guid();
+            TIANYU.trace.setId(traceId);
+
+            const error = JSON.parse(ErrorHelper.getErrorString("10000", "this is a test string", "error details"));
+
+            expect(error.code).toEqual("10000");
+            expect(error.message).toEqual("this is a test string");
+            expect(error.error).toEqual("error details");
+            expect(error.traceId).toEqual(traceId);
+        });
+    });
+
     it("getHttpStatusByJobStatus", () => {
         expect(ErrorHelper.getHttpStatusByJobStatus("active")).toEqual(HTTP_STATUS_CODE.NO_CONTENT);
         expect(ErrorHelper.getHttpStatusByJobStatus("invalid")).toEqual(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);

@@ -59,6 +59,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", (
         it("success", (done) => {
             (service as any)._getConnection().then((connection: mysql.PoolConnection) => {
                 expect(!!connection.threadId).toBeTruthy();
+                connection.destroy();
                 done();
             }, done.fail);
         }, 50000);

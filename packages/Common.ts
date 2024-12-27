@@ -32,9 +32,9 @@ export const PROJECT_DEFAULT_LANGUAGE = parseAreaString(raw_config?.config?.lang
 
 export const REST_CONFIG = raw_config?.rest;
 
-export const SYSTEM_EXTERNAL_CALL = raw_config?.xcall || {};
+export const SYSTEM_EXTERNAL_CALL = raw_config?.xcall || /* istanbul ignore next */ {};
 
-const privilege_map_path = path.resolve(PROJECT_ROOT_PATH, raw_config?.config?.roles || "");
+const privilege_map_path = path.resolve(PROJECT_ROOT_PATH, raw_config?.config?.roles || /* istanbul ignore next */ "");
 let raw_privileges = {};
 if (fs.existsSync(privilege_map_path)) {
     try {

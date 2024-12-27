@@ -24,4 +24,11 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.TraceHelper", () => {
             expect(DBHelper.decode(DBHelper.encode("'1\"2`3;abc4'5\"6`7;"))).toEqual("'1\"2`3;abc4'5\"6`7;");
         });
     });
+
+    describe("format", () => {
+        it("-", () => {
+            const formatedValue = DBHelper.format("{0},{1}", ["test", 100]);
+            expect(formatedValue).toEqual("test,100");
+        });
+    });
 });

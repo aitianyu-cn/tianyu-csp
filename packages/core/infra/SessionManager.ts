@@ -1,6 +1,13 @@
 /** @format */
 
-import { FunctionalityPrivilegeMap, IServerRequest, ISession, ISessionUser, OperationActions } from "#interface";
+import {
+    FunctionalityPrivilegeMap,
+    IServerRequest,
+    ISession,
+    ISessionUser,
+    OperationActions,
+    TianyuCSPPrivilegeType,
+} from "#interface";
 import { AreaCode, getBoolean, MapOfType } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE } from "../../Common";
 import { handleSession, handleSessionIsAdminMode, handleSessionPrivileges, handleSessionUser } from "./code/SessionCodes";
@@ -56,8 +63,8 @@ export class SessionManager implements ISession {
             displayName: this._userDpname,
         };
     }
-    public checkPrivilege(functionality: string, action: OperationActions): boolean {
-        return getBoolean(this._privileges[functionality]?.[action]);
+    public checkPrivilege(functionality: string, action: OperationActions): TianyuCSPPrivilegeType {
+        return this._privileges[functionality]?.[action] || "non";
     }
 }
 
@@ -82,7 +89,7 @@ export class GlobalSessionManager implements ISession {
             displayName: "BACKEND",
         };
     }
-    public checkPrivilege(_functionality: string, _action: OperationActions): boolean {
-        return true;
+    public checkPrivilege(_functionality: string, _action: OperationActions): TianyuCSPPrivilegeType {
+        return "allow";
     }
 }
