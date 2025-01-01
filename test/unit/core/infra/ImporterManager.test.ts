@@ -55,17 +55,17 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ImporterManager", (
         });
 
         it("file not exist", () => {
-            const html = TIANYU.import.html("data/noexist");
+            const html = TIANYU.import.html("scripts/data/noexist");
             expect(html).toEqual(`<!DOCTYPE html><html lang="en"><head></head><body></body></html>`);
         });
 
         it("get file with file name", () => {
-            const html = TIANYU.import.html("data/index");
+            const html = TIANYU.import.html("scripts/data/index");
             expect(html.includes("tianyu_shell_root")).toBeTruthy();
         });
 
         it("get file by path - get default index file", () => {
-            const html = TIANYU.import.html("data");
+            const html = TIANYU.import.html("scripts/data");
             expect(html.includes("tianyu_shell_root")).toBeTruthy();
         });
     });

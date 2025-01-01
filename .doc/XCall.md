@@ -88,7 +88,7 @@ The return values can contain other value items not shown in the below list.
     ```
     valid: {
         userId: string;     // the user id of provided session
-        time: string;       // the session online time that used to check session overtime
+        valid: boolean;     // the session is valid or not (like session is out of time)
     }
 
     invalid: null           // if the session is invalid, null value can be returned

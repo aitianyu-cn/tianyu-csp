@@ -1,6 +1,10 @@
 /** @format */
 
-/** Operation Failed Structure */
+/**
+ * @public
+ *
+ * Operation Failed Structure
+ */
 export interface OperationError {
     /** Error code */
     code: string;

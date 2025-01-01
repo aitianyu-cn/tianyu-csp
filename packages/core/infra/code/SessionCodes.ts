@@ -2,7 +2,7 @@
 
 import { FunctionalityPrivilegeMap } from "#interface";
 import { getBoolean, MapOfType } from "@aitianyu.cn/types";
-import { SESSION_LIFE_TIME, SYSTEM_PRIVILEGE_MAP } from "../../../Common";
+import { SYSTEM_PRIVILEGE_MAP } from "../../../Common";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { doXcall } from "./GenericXcall";
 
@@ -17,16 +17,14 @@ export async function handleSession(sessionId: string): Promise<string> {
     );
 
     const userId = xcallResult?.userId || "";
-    const time = xcallResult?.time || "";
+    const valid = xcallResult?.valid || false;
     if (!userId) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID,
             message: "Session not valid.",
         });
     }
-    const dateTime = new Date(time);
-    const timespan = (Date.now() - dateTime.getTime()) / 1000 / 60;
-    if (timespan > SESSION_LIFE_TIME) {
+    if (!valid) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME,
             message: "Session not valid.",

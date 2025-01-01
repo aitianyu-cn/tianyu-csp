@@ -20,7 +20,7 @@
 
   - [`privilege config`](./privilege-config.md)
 
-  - [`monitor config`](./monitor-config.md)
+  <!-- - [`monitor config`](./monitor-config.md) -->
 
 ### START
 

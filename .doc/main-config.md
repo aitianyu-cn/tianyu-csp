@@ -19,7 +19,8 @@ Base structure in `csp.config.json` file:
             "version": "",      // application version
             "environment": "",  // application running mode(1)
             "src": "",          // application execution files root path
-            "language": ""      // default language(2)
+            "language": "",     // default language(2)
+            "roles": "",        // application license roles config file path(7)
         },
         "rest": {
             "file": "",         // file of rest setting(3)
@@ -31,17 +32,15 @@ Base structure in `csp.config.json` file:
                 "method": ""
             }
         },
-        "database": {
-            "file": "",         // file of database configuration
-            "rename": {
-                "types": "",    // custom name of database types in config file(7)
-                "configs": "",  // custom name of db connection config in config file(8)
-                "sys": ""       // custom name of db system rename map in config file(9)
-            }
-        },
-        "user": {
-            "login": 10,        // indicates a number to set the user login overtime (day granularity)
-            "session_life": 30  // indicates a number to set the session overtime (minute granularity)
+        "xcall": {              // external call define(8)
+            "logger": { "log": {"package": "", "module": "", "method": ""} };
+            "usage": { "record": {"package": "", "module": "", "method": ""} };
+            "trace": { "trace": {"package": "", "module": "", "method": ""} };
+            "feature": { "is-active": {"package": "", "module": "", "method": ""} };
+            "session": { "get": {"package": "", "module": "", "method": ""} };
+            "user": { "get": {"package": "", "module": "", "method": ""} };
+            "license": { "get": {"package": "", "module": "", "method": ""} };
+            "role": { "get": {"package": "", "module": "", "method": ""} };
         }
     }
 ```
@@ -83,8 +82,6 @@ If javascript (`csp.config.js`) is used in your application instead of json file
 
 6. fallback config is used for when the url is not mapped any path in rest file, to return a default call. fallback config please take a reference from [rest config file](./rest-config.md).
 
-7. database types indicates the remote dasebase type of each database. this will be used for creating a currect db connection automatically. supporting value: `mysql`
+7. license roles define for csp application. the details configuration please see [`privilege config`](./privilege-config.md).
 
-8. database connection config indicates the user, password, and other connection information for each database. data structure please check the type of `IDatabaseConnectionConfig` in code.
-
-9. due to `Tianyu-CSP` needs to consume some database table internally, and also to make a generic database implementation. database system rename map is to indicate the database name, table name and field names for system IMPORTANT tables. template please refer [`system database rename map`](./sys-db-rename-map.js)
+8. csp external call is named `XCall` in code. this provides an external module to handle infra database access logic to make flexible application implementation. to see the detailed information, please to [`XCall`](./XCall.md)

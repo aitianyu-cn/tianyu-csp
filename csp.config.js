@@ -21,13 +21,12 @@ module.exports = {
             },
             session: "SESSION_ID",
         },
-        loader: "data",
+        loader: "scripts/data",
     },
     xcall: {
         logger: { log: { package: "db", module: "runtime", method: "log" } },
         usage: { record: { package: "db", module: "runtime", method: "recordUsage" } },
         trace: { trace: { package: "db", module: "runtime", method: "trace" } },
-        monitor: { record: { package: "db", module: "runtime", method: "recordMonitor" } },
 
         feature: { "is-active": { package: "db", module: "feature", method: "isActive" } },
 
@@ -63,9 +62,5 @@ module.exports = {
                 method: "isdata",
             },
         },
-    },
-    user: {
-        login: 10,
-        session_life: 30,
     },
 };

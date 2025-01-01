@@ -35,7 +35,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
             XCALL_SPYON.mockReturnValue(
                 Promise.resolve({
                     userId: USER_ID,
-                    time: "2024-07-20 10:10:10:000",
+                    valid: false,
                 }),
             );
 
@@ -50,7 +50,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
             XCALL_SPYON.mockReturnValue(
                 Promise.resolve({
                     userId: USER_ID,
-                    time: Date.now(),
+                    valid: true,
                 }),
             );
 

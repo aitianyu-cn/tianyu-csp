@@ -1,4 +1,9 @@
-/** @format */
+/**
+ * @format
+ * @internal
+ *
+ * Tianyu CSP interface exporter
+ */
 
 import { IGlobalDefinition } from "./Global";
 

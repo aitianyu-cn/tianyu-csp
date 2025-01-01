@@ -1,5 +1,15 @@
 /** @format */
 
+/**
+ * @public
+ *
+ * Tianyu CSP Generic Exporter
+ *
+ * To export all Tianyu CSP public functions, classes, interfaces
+ * and tools.
+ */
+
+/** export all interfaces */
 export * from "./interface/index";
 
 import * as UtilsExport from "./utils/utils-export";
@@ -8,10 +18,14 @@ import * as InfraExport from "./core/index";
 
 import * as STARTER from "./Starter";
 
+/** namespace for Tianyu CSP */
 export namespace TianyuCSP {
+    /** CSP utils */
     export import Utils = UtilsExport;
+    /** CSP Common Data */
     export import Common = CommonExport;
+    /** CSP Infra components */
     export import Infra = InfraExport;
 
-    export import app = STARTER.start;
+    export import app = STARTER.start; // tobe replaced later
 }

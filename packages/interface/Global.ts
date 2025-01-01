@@ -11,7 +11,11 @@ import { ISession } from "./api/session";
 import { ITrace } from "./api/trace";
 import { IUsage } from "./api/usage";
 
-/** CSP core components definition for global calling */
+/**
+ * @public
+ *
+ * CSP core components definition for global calling
+ */
 export interface IGlobalDefinition {
     /** Core Trace instance */
     trace: ITrace;
@@ -26,8 +30,6 @@ export interface IGlobalDefinition {
     db: IDatabaseManager;
     /** Import Manager */
     import: IImporter;
-    /** Monitor Manager */
-    // monitor: IMonitor;
     /** Framework utils */
     fwk: ICSPFramework;
     /** Feature Manager instance to get a feature is active only */

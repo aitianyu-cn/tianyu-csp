@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import { EXTERNAL_MODULE_ROOT_PATH, INTERNAL_PROJECT_ROOT } from "../../Common";
+import { INTERNAL_PROJECT_ROOT, PROJECT_ROOT_PATH, PROJECT_ROOT_RELATION_PATH } from "../../Common";
 import { ErrorHelper } from "#utils/ErrorHelper";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DataEncoding, IImporter } from "#interface";
@@ -20,7 +20,7 @@ export function importImpl(): IImporter {
             throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `import package and Object should not be empty`);
         }
 
-        const dir = _handlePackage(packageName, objectName);
+        const dir = _handlePackage(packageName, objectName, PROJECT_ROOT_RELATION_PATH);
         const targetPath = findActualModule(dir);
         if (!targetPath) {
             throw ErrorHelper.getError(
@@ -50,13 +50,14 @@ export function findActualModule(src: string): string {
     return _findFileWithSuffix(src, SUPPORTED_SUFFIX);
 }
 
-function _handlePackage(packageName: string, objectName: string): string {
+function _handlePackage(packageName: string, objectName: string, externalPath?: string): string {
     const isInternal = packageName.startsWith("$");
     const hasPrefix = isInternal || packageName.startsWith("#");
     const processedPackageName = hasPrefix ? packageName.substring(1) : packageName;
 
     const dir = path.join(
-        isInternal ? INTERNAL_PROJECT_ROOT : EXTERNAL_MODULE_ROOT_PATH,
+        isInternal ? INTERNAL_PROJECT_ROOT : PROJECT_ROOT_PATH,
+        (!isInternal && externalPath) || "",
         processedPackageName.replace(/\./g, "/"),
         objectName,
     );
