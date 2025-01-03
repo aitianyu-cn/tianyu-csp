@@ -4,6 +4,11 @@ import { HTTP_STATUS_CODE, IServerRequest, RequestPayloadData, RequestType } fro
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
 
+/**
+ * CSP Generic Request Manager for global definition
+ *
+ * This is only used in job worker thread
+ */
 export class GlobalRequestManager implements IServerRequest {
     public get id(): string {
         return PROJECT_NAME;
@@ -41,6 +46,11 @@ export class GlobalRequestManager implements IServerRequest {
     }
 }
 
+/**
+ * CSP System Request Manager for global definition
+ *
+ * This is only used in main thread.
+ */
 export class GenericRequestManager implements IServerRequest {
     private _id: string;
     private _url: string;

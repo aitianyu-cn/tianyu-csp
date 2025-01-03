@@ -19,6 +19,7 @@ import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { guid, MapOfString } from "@aitianyu.cn/types";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
+/** Http 1.0 service */
 export class HttpService implements IHttpService {
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
 
@@ -69,6 +70,12 @@ export class HttpService implements IHttpService {
         this._server.close(callback);
     }
 
+    /**
+     * handle http request if it is in get method
+     *
+     * @param req http request
+     * @param res http response
+     */
     private onGet(req: IncomingMessage, res: ServerResponse): void {
         const param = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
         const cookie = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
@@ -105,8 +112,14 @@ export class HttpService implements IHttpService {
             traceId: TraceHelper.generateTraceId(),
         };
 
-        this._handleDispatch(payload, headers, req, res);
+        this._handleDispatch(payload, req, res);
     }
+    /**
+     * handle http request if it is in post method
+     *
+     * @param req http request
+     * @param res http response
+     */
     private onPost(req: IncomingMessage, res: ServerResponse): void {
         let data: string = "";
 
@@ -155,55 +168,65 @@ export class HttpService implements IHttpService {
                 type: "http",
                 traceId: TraceHelper.generateTraceId(),
             };
-            this._handleDispatch(payload, headers, req, res);
+            this._handleDispatch(payload, req, res);
         });
     }
-    private _handleDispatch(payload: RequestPayloadData, headers: MapOfString, req: IncomingMessage, res: ServerResponse): void {
-        setTimeout(() => {
+    /**
+     * to process a request
+     *
+     * @param payload request info payload
+     * @param headers request headers
+     * @param req http request
+     * @param res http response
+     */
+    private _handleDispatch(payload: RequestPayloadData, req: IncomingMessage, res: ServerResponse): void {
+        setTimeout(async () => {
             const dispatcher = this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             if (dispatcher) {
                 const rest = this._rest
                     ? this._rest.mapping(payload.url)
                     : /* istanbul ignore next */ RestHelper.getRest(payload.url);
-                if (rest) {
-                    dispatcher({ rest, payload }).then(
-                        (data) => this.onResponse(res, data),
-                        (error) => {
-                            const responseData: NetworkServiceResponseData = {
-                                statusCode: ErrorHelper.getHttpStatusByJobStatus(error?.status),
-                                headers,
-                                body: {
-                                    error: [
-                                        {
-                                            code: error?.error.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                            message: error?.error.message || "Technical error occurs when processing request.",
-                                            error: error?.error.error,
-                                        },
-                                    ],
-                                },
-                            };
-                            this.onResponse(res, responseData);
-                        },
-                    );
-                } else {
-                    this.onResponse(res, {
-                        statusCode: HTTP_STATUS_CODE.NOT_FOUND,
-                        headers,
-                        body: {
-                            error: [
-                                {
-                                    code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
-                                    message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
-                                },
-                            ],
-                        },
-                    });
-                }
+                let response = rest
+                    ? await dispatcher({ rest, payload }).catch((error) => {
+                          const responseData: NetworkServiceResponseData = {
+                              statusCode: ErrorHelper.getHttpStatusByJobStatus(error?.status),
+                              headers: payload.headers,
+                              body: {
+                                  error: [
+                                      {
+                                          code: error?.error.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                                          message: error?.error.message || "Technical error occurs when processing request.",
+                                          error: error?.error.error,
+                                      },
+                                  ],
+                              },
+                          };
+                          return responseData;
+                      })
+                    : {
+                          statusCode: HTTP_STATUS_CODE.NOT_FOUND,
+                          headers: payload.headers,
+                          body: {
+                              error: [
+                                  {
+                                      code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
+                                      message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
+                                  },
+                              ],
+                          },
+                      };
+                this.onResponse(res, response);
             } else {
                 this.onDispatcherInvalid(req, res);
             }
         }, 0);
     }
+    /**
+     * to response a invalid call if the request method is not supported
+     *
+     * @param _req http request
+     * @param res http response
+     */
     private onInvalidCall(_req: IncomingMessage, res: ServerResponse): void {
         setTimeout(() => {
             const resBody = {
@@ -218,6 +241,12 @@ export class HttpService implements IHttpService {
             res.end(JSON.stringify(resBody));
         }, 0);
     }
+    /**
+     * to response a invalid call if the request path is not found
+     *
+     * @param _req http request
+     * @param res http response
+     */
     private onDispatcherInvalid(_req: IncomingMessage, res: ServerResponse): void {
         setTimeout(() => {
             const resBody = {
@@ -232,6 +261,12 @@ export class HttpService implements IHttpService {
             res.end(JSON.stringify(resBody));
         }, 0);
     }
+    /**
+     * to set a response from giving response data
+     *
+     * @param response http response
+     * @param data response data
+     */
     private onResponse(response: ServerResponse, data: NetworkServiceResponseData): void {
         response.statusCode = data.statusCode;
 

@@ -5,6 +5,7 @@ import { ErrorHelper } from "#utils";
 import * as mysql from "mysql";
 import { INFRA_ERROR_CODES } from "../../Constant";
 
+/** Mysql connection manager and service */
 export class MysqlService implements IDBConnection, IDBLifecycle {
     private _database: string;
     private _pool: mysql.Pool;

@@ -5,6 +5,7 @@ import { IDatabaseConnectionConfig, INosqlDBManager } from "#interface";
 import { ErrorHelper, DBHelper } from "#utils";
 import Redis from "ioredis";
 
+/** no-sql database manager */
 export class NosqlDatabaseManager implements INosqlDBManager {
     public constructor() {}
 

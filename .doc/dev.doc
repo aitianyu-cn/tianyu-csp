@@ -17,7 +17,7 @@ x   4. filter supporting (simple filter and advance filter).
 o   5. quick start api to run an application  =====================> only for sql database.
 o   6. html loader
 o   7. refine rest path processor and support condition mapping
-    8. notes of all export modules
+o   8. notes of all export modules
 o   9. support javascript in configuration file.
 o   10.support postgre or tidb or redis(at least a kv database) ===> supported 'redis'
     11.support remote procedure call

@@ -1,6 +1,6 @@
 /** @format */
 
-import { ContributorProtocolWithReturn } from "./contributor/basic";
+import { ContributorProtocolWithReturn } from "@aitianyu.cn/tianyu-app-fwk";
 import { JobWorkerExecutionResult, JobWorkerPayload } from "./contributor/job";
 import {
     DefaultRequestItemsMap,

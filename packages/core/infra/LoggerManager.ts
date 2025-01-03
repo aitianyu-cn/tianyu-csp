@@ -6,6 +6,7 @@ import { PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
 
+/** CSP Log Manager for global definition */
 export class LoggerManager implements ILogger {
     public constructor() {}
 

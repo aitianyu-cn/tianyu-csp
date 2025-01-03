@@ -14,6 +14,7 @@ const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"]
 
 const DEFAULT_EMPTY_HTML = `<!DOCTYPE html><html lang="en"><head></head><body></body></html>`;
 
+/** CSP Import Manager Implementation for global definition */
 export function importImpl(): IImporter {
     const importer = ((packageName: string, objectName: string) => {
         if (!packageName || !objectName) {
@@ -46,6 +47,13 @@ export function importImpl(): IImporter {
     return importer;
 }
 
+/**
+ * To find an actual module full path from src.
+ * function will add suffix at the end of src path and to filter the module which is valid.
+ *
+ * @param src source module path
+ * @returns return module full path with suffix, empty string value will be returned if the module could not be found
+ */
 export function findActualModule(src: string): string {
     return _findFileWithSuffix(src, SUPPORTED_SUFFIX);
 }

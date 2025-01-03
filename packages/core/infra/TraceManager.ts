@@ -4,6 +4,7 @@ import { ITrace, TraceArea } from "#interface";
 import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
 
+/** CSP Trace Manager for global definition */
 export class TraceManager implements ITrace {
     private _traceId: string;
 

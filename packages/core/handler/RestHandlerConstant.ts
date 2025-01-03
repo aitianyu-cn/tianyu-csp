@@ -30,11 +30,13 @@ if (fs.existsSync(rest_file_path)) {
     }
 }
 
+/** CSP default defined rest map */
 export const REST = {
     ...raw_rest,
 
     // this is the default resets
 };
+/** Default rest fallback package */
 /* istanbul ignore next */
 export const DEFAULT_REST_FALLBACK: PathEntry =
     REST_CONFIG_FALLBACK?.package && REST_CONFIG_FALLBACK?.module
@@ -45,5 +47,7 @@ export const DEFAULT_REST_FALLBACK: PathEntry =
           }
         : /* istanbul ignore next */ DEFAULT_REST_FALLBACK_CONFIG;
 
+/** Request item key name map */
 export const REST_REQUEST_ITEM_MAP = REST_CONFIG?.["request-map"] || /* istanbul ignore next */ DEFAULT_REQUEST_ITEM_MAP;
+/** resources path of rest default loader */
 export const REST_LOADER_RES_PATH = REST_CONFIG?.["loader"] || /* istanbul ignore next */ EXTERNAL_MODULE_ROOT_PATH;

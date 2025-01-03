@@ -24,7 +24,17 @@ export interface IServerRequest {
     /** request body */
     body: any;
 
+    /**
+     * to set a response code
+     *
+     * @param code new response code
+     */
     setResponseCode(code: number): void;
+    /**
+     * get current response code
+     *
+     * @returns return current code
+     */
     getResponseCode(): number;
 
     /**

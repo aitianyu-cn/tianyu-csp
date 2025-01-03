@@ -18,6 +18,11 @@ import { ErrorHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk/dist/types/interface/contributor";
 import path from "path";
 
+/**
+ * Tianyu CSP Job Dispatch handler
+ *
+ * to dispatch network requests and schedule jobs in different threads
+ */
 export class DispatchHandler {
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
     private _options?: DispatchHandlerOption;
@@ -25,6 +30,12 @@ export class DispatchHandler {
     private _requestJobPool: string;
     private _scheduleJobPool: string;
 
+    /**
+     * Create a dispatch handler instance from options and contributor
+     *
+     * @param options dispatch handler option
+     * @param contributor app framework contributor for registering some external apis
+     */
     public constructor(options?: DispatchHandlerOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         this._options = options;
         this._contributor = contributor;
@@ -48,11 +59,18 @@ export class DispatchHandler {
         );
     }
 
+    /** To initialize the dispath handler */
     public initialize(): void {
         this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers }, this._contributor);
         this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers }, this._contributor);
     }
 
+    /**
+     * to handle a network request
+     *
+     * @param data request payload data
+     * @returns return a network service response
+     */
     private async _networkDispatch(data: {
         rest: RequestRestData;
         payload: RequestPayloadData;
@@ -101,6 +119,12 @@ export class DispatchHandler {
         }
     }
 
+    /**
+     * to handle a schedule job
+     *
+     * @param data job payload data
+     * @returns return a job execution result
+     */
     private async _jobDispatch(payload: JobWorkerPayload): Promise<JobWorkerExecutionResult> {
         const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._scheduleJobPool);
         if (!dispatcher) {

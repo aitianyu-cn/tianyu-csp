@@ -1,6 +1,5 @@
 /** @format */
 
-import { IDatabaseInstallConfig, SupportedDatabaseType } from "#interface";
 import { SqlConfigProcessor } from "./processor/sql-config-processor";
 import { SqlDataProcessor } from "./processor/sql-data-processor";
 import { mysqlCleaner, mysqlCreator, mysqlDestroyer, mysqlInserter } from "./mysql/mysql-installer";

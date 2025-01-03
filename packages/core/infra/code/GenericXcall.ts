@@ -5,6 +5,15 @@ import { ErrorHelper } from "#utils";
 import { MapOfString } from "@aitianyu.cn/types";
 import { SYSTEM_EXTERNAL_CALL } from "packages/Common";
 
+/**
+ * To execute an external system procedure
+ *
+ * @param data external system execution data
+ * @param func function name of system functionality
+ * @param method method name of system function
+ * @param message error message template
+ * @returns return the external call execution response, null value will be return if error occurs when running
+ */
 export async function doXcall(data: MapOfString, func: string, method: string, message: string): Promise<any> {
     const externalCall = SYSTEM_EXTERNAL_CALL[func]?.[method];
     if (!externalCall) {

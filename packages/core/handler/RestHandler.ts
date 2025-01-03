@@ -4,30 +4,23 @@ import { guid, MapOfString, MapOfType, ObjectHelper } from "@aitianyu.cn/types";
 import { DEFAULT_REST_FALLBACK } from "./RestHandlerConstant";
 import { ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
 
+const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
+
 /**
  *
  * Rest handler used to process rest url mapping and generic a target map to do the execution call
  *
+ * @description
  * Rest support the following types of structures:
  *  1. full path: /a/b/c
  *      this path will map to /a/b/c directly
  *
  *  2. param path: /a/{b}/c
- *      this path will map to /a/{param url}/c, the {param url} will be the input argument which can
+ *
+ *      (a) this path will map to /a/{param url}/c, the {param url} will be the input argument which can
  *      be used in the package, module and method item.
  *
- *      @example
- *      "/a/{b}/c": {
- *          "package": "P1.P2.{b}.P3",
- *          "module": "{b}Handler",
- *          "method": "{b}"
- *      }
- *      if the request url is "/a/test/c", the target rest data will be:
- *      {
- *          "package": "P1.P2.test.P3",
- *          "module": "testHandler",
- *          "method": "test"
- *      }
+ *      (b) if the request url is "/a/test/c", the target rest data will be.
  *
  *  3. pre-map path: /a/b/*
  *      this path will map any url which is start with "/a/b".
@@ -39,10 +32,22 @@ import { ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
  * if path structure 1 is not mapped, to map path structure 2.
  * if path structure 2 is not mapped, to map path strucutre 3.
  *
+ * @example (a)
+ *
+ * "/a/{b}/c": {
+ *      "package": "P1.P2.{b}.P3",
+ *      "module": "{b}Handler",
+ *      "method": "{b}"
+ * }
+ *
+ * @example (b)
+ * {
+ *      "package": "P1.P2.test.P3",
+ *      "module": "testHandler",
+ *      "method": "test"
+ * }
+ *
  */
-
-const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
-
 export class RestHandler {
     private _fallback: PathEntry | null;
     private _resttree: Subitem;
@@ -61,6 +66,11 @@ export class RestHandler {
         this._processRest(rest || {});
     }
 
+    /**
+     * To process a source rest definition to be rest tree
+     *
+     * @param rest source rest map
+     */
     private _processRest(rest: MapOfType<ImportPackage>): void {
         const raw_rest = rest;
 
@@ -71,6 +81,13 @@ export class RestHandler {
         }
     }
 
+    /**
+     * To process rest tree
+     *
+     * @param rest rest name - request path
+     * @param path response path items array
+     * @param entry path entry package
+     */
     private _processTree(rest: string, path: string[], entry: ImportPackage): void {
         let tree = this._resttree;
         for (const item of path) {
@@ -107,6 +124,12 @@ export class RestHandler {
         };
     }
 
+    /**
+     * To split path to be directories array
+     *
+     * @param path source path
+     * @returns directories array
+     */
     private _processPath(path: string): string[] {
         const raw_path = path.trim();
         if (!raw_path || raw_path === "/") {
@@ -121,10 +144,23 @@ export class RestHandler {
         return result;
     }
 
+    /**
+     * To get the type of a directory
+     *
+     * @param item directory name
+     * @returns return the directory type
+     */
     private _convertItemType(item: string): SubitemType {
         return item === "*" ? "generic" : PARAM_REGEX.test(item) ? "param" : "actual";
     }
 
+    /**
+     * To format the path module package from request url path
+     *
+     * @param source source package string
+     * @param args request url path matched items map
+     * @returns return a formatted string
+     */
     private _format(source: string, args: MapOfString): string {
         /* istanbul ignore if */
         if (!args) {
@@ -139,6 +175,12 @@ export class RestHandler {
         });
     }
 
+    /**
+     * To get a request execution module package by request url
+     *
+     * @param url request url
+     * @returns return a package path, return null if the path is not found
+     */
     public mapping(url: string): PathEntry | null {
         const path = this._processPath(url.split("?")[0]);
 
@@ -149,6 +191,16 @@ export class RestHandler {
         return this._filter(mappeds);
     }
 
+    /**
+     * To found a nearest rest from url
+     *
+     * @param url source url
+     * @param index search url index
+     * @param subitem rest tree
+     * @param type current searched rest item type
+     * @param params parameter map
+     * @param mappeds mapped rests list
+     */
     private _map(
         url: string[],
         index: number,
@@ -182,6 +234,12 @@ export class RestHandler {
         }
     }
 
+    /**
+     * to filter a best rest package of url
+     *
+     * @param maps mapped rest list
+     * @returns return a best rest package, return null if no rest package mapped
+     */
     private _filter(maps: { id: string; type: SubitemType; params: MapOfString }[]): PathEntry | null {
         if (!maps.length) {
             return this._fallback;

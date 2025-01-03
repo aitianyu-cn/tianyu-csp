@@ -1,5 +1,6 @@
 /** @format */
 
+import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { ICSPContributorFactorProtocolMap, IGlobalDefinition, IServerRequest, ISession } from "#interface";
 import { PROJECT_ENVIRONMENT_MODE, PROJECT_NAME, PROJECT_ROOT_PATH, PROJECT_VERSION } from "../Common";
 import { DatabaseManager } from "./infra/DatabaseManager";
@@ -10,8 +11,8 @@ import { LoggerManager } from "./infra/LoggerManager";
 import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
 import { FeatureManager } from "./infra/FeatureManager";
-import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
 
+/** To init infra of global scope */
 export function loadInfra(): void {
     /* istanbul ignore if */
     if ((global as any).TIANYU) {
@@ -23,10 +24,18 @@ export function loadInfra(): void {
     (global as any).TIANYU = generateInfra(sessionMgr, requestMgr);
 }
 
+/** to create a default contributor */
 export function createContributor(): IContributor<ICSPContributorFactorProtocolMap> {
     return new Contributor.Object<ICSPContributorFactorProtocolMap>();
 }
 
+/**
+ * To generate an infra for job worker
+ *
+ * @param sessionMgr session manager instance
+ * @param request request instance
+ * @returns return a global definition
+ */
 export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
         db: new DatabaseManager(),

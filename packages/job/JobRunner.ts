@@ -3,14 +3,29 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobWorkerExecutionResult, JobWorkerPayload } from "#interface";
 
+/**
+ * @internal
+ *
+ * Job Runner Payload data
+ */
 export interface JobRunnerPayload {
+    /** job running script */
     script: string;
+    /** job worker payload data */
     payload: JobWorkerPayload;
+    /** job execution id */
     executionId: string;
+    /** job execution overtime */
     overtime: number;
+    /** job execution promise resolve function */
     resolve: (value: JobWorkerExecutionResult) => void;
 }
 
+/**
+ * @internal
+ *
+ * Job Runner
+ */
 export class JobRunner {
     private _worker: IJobWorker;
     private _queue: JobRunnerPayload;
@@ -29,13 +44,14 @@ export class JobRunner {
         this._result = { exitCode: 0, value: undefined, error: [], status: "active" };
     }
 
+    /** To start a worker thread and execute script */
     public async run(): Promise<void> {
         this._timer = setTimeout(this.timeoutHandler.bind(this), this._queue.overtime);
         await this._worker.run(this._queue.script, this._queue.payload, this._queue.executionId).catch((error) => {
             TIANYU.logger.error(error?.message || "Technical error occurs.");
         });
 
-        if (this._timer) {
+        if (this._timer /** clean timer if timer is running */) {
             clearTimeout(this._timer); // clean timer
             this._timer = null;
         }
@@ -48,6 +64,7 @@ export class JobRunner {
         }
     }
 
+    /** Watcher dog for checking job running timeout */
     public async timeoutHandler(): Promise<void> {
         if (this._released) {
             return;
@@ -68,6 +85,7 @@ export class JobRunner {
             traceId: this._queue.payload.traceId,
         });
 
+        // if timeout, to resolve the outer promise
         this._queue.resolve(this._result); // return value by timer
     }
 

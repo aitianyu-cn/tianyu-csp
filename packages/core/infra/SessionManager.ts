@@ -12,6 +12,11 @@ import { AreaCode, getBoolean, MapOfType } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE } from "../../Common";
 import { handleSession, handleSessionIsAdminMode, handleSessionPrivileges, handleSessionUser } from "./code/SessionCodes";
 
+/**
+ * CSP Generic Session Manager for global definition
+ *
+ * This is only used in job worker thread
+ */
 export class SessionManager implements ISession {
     private _sessionId: string;
     private _adminMode: boolean;
@@ -31,6 +36,7 @@ export class SessionManager implements ISession {
         this._privileges = {};
     }
 
+    /** To load data from database */
     public async loadData(): Promise<void> {
         const userId = await handleSession(this.sessionId);
         const { name, license } = await handleSessionUser(userId);
@@ -70,6 +76,11 @@ export class SessionManager implements ISession {
 
 export const BACKEND_SESSION_USER = "00000000-0000-0000-0000-000000000000";
 
+/**
+ * CSP System Session Manager for global definition
+ *
+ * This is only used in main thread, and job worker will not use this manager
+ */
 export class GlobalSessionManager implements ISession {
     public get sessionId(): string {
         return "";

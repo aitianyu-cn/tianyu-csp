@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-    DatabaseConfig,
     IDatabaseConnectionConfig,
     IDatabaseManager,
     IDBConnection,
@@ -35,6 +34,7 @@ function createConnection(databaseName: string, config: IDatabaseConnectionConfi
     }
 }
 
+/** CSP Database Manager for global definition */
 export class DatabaseManager implements IDatabaseManager {
     private _nosqlMgr: NosqlDatabaseManager;
 

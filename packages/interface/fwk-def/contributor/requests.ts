@@ -4,6 +4,13 @@ import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
 import { JobWorkerExecutionEntry } from "./job";
 
+/**
+ * Request items target type
+ *
+ * @example
+ * cookie   // indicates the item name is for cookie
+ * search   // indicates the item name is for url parameter search
+ */
 export type DefaultRequestItemTargetType = "cookie" | "search";
 
 /**
@@ -14,7 +21,10 @@ export type DefaultRequestItemTargetType = "cookie" | "search";
  */
 export interface DefaultRequestItemsMap {
     /** key of language in cookie and search */
+
+    /** default language define */
     language?: string | { [key in DefaultRequestItemTargetType]: string };
+    /** default session define */
     session?: string | { [key in DefaultRequestItemTargetType]: string };
 }
 
@@ -49,8 +59,10 @@ export interface RequestPayloadData {
     headers: MapOfString;
 }
 
+/** Request url script package */
 export interface RequestRestData extends JobWorkerExecutionEntry {}
 
+/** Request response payload data */
 export interface ResponsePayloadData extends NetworkServiceResponseData {
     /** Network service id */
     serviceId: string;

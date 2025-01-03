@@ -24,7 +24,6 @@ export * from "./api/usage";
 
 export * from "./declares/global-declare";
 
-export * from "./fwk-def/contributor/basic";
 export * from "./fwk-def/contributor/dispatcher";
 export * from "./fwk-def/contributor/job";
 export * from "./fwk-def/contributor/requests";

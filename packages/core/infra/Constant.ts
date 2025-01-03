@@ -1,5 +1,6 @@
 /** @format */
 
+/** CSP default defined request item name map */
 export const DEFAULT_REST_REQUEST_ITEM_MAP = {
     language: {
         cookie: "LANGUAGE",
@@ -8,4 +9,5 @@ export const DEFAULT_REST_REQUEST_ITEM_MAP = {
     session: "SESSION_ID",
 };
 
+/** CSP supported module suffix */
 export const SUPPORTED_SUFFIX = ["", ".ts", ".js", ".json"];

@@ -1,8 +1,18 @@
 /** @format */
 
-import { JobWorkerExecutionResult, JobWorkerMessageValue, JobWorkerPayload } from "../fwk-def/contributor/job";
+import { JobWorkerMessageValue, JobWorkerPayload } from "../fwk-def/contributor/job";
 
-/** Job Execution Status */
+/**
+ * Job Execution Status
+ *
+ * @example
+ * active   // job is created and not started
+ * invalid  // job is created but validation is failed
+ * running  // job is running
+ * done     // job execution done without error
+ * error    // job execution has error
+ * timeout  // job execution timeout
+ */
 export type JobExecutionStatus = "active" | "invalid" | "running" | "done" | "error" | "timeout";
 
 /** Job Execution Result */
@@ -32,5 +42,6 @@ export interface IJobWorker extends JobExecutionResult {
      * @param executionId specified execution id
      */
     run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<void>;
+    /** To end script execution and destroy current thread */
     terminate(): Promise<void>;
 }

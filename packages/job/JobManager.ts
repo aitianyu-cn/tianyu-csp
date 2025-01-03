@@ -20,6 +20,7 @@ import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
  * Tianyu CSP Job manager
  */
 export class JobManager {
+    /** csp framework extension contributor */
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
 
     /** execution job threads limit count, default is 1024 */
