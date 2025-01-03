@@ -1,4 +1,9 @@
-/** @format */
+/**
+ * @format
+ * @internal
+ *
+ * exporter for utils
+ */
 
 export * from "./DBHelper";
 export * from "./ErrorHelper";

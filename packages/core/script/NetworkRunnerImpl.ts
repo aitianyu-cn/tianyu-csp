@@ -5,7 +5,7 @@ import { GenericRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
 import { generateInfra } from "#core/InfraLoader";
 import { HTTP_STATUS_CODE, JobWorkerExecutionEntry, JobWorkerMessageValue, OperationError, RequestPayloadData } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { MessagePort } from "worker_threads";
 
 export async function run_network_request(workerData: any, parentPort: MessagePort | null): Promise<void> {

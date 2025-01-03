@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDBConnection, IDBLifecycle } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import * as mysql from "mysql";
 import { INFRA_ERROR_CODES } from "../../Constant";
 

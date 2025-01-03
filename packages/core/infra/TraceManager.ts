@@ -1,7 +1,7 @@
 /** @format */
 
 import { ITrace, TraceArea } from "#interface";
-import { TraceHelper } from "#utils/TraceHelper";
+import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
 
 export class TraceManager implements ITrace {

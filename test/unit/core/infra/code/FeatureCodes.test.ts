@@ -1,6 +1,5 @@
 /** @format */
 
-import { IDBConnection } from "#interface";
 import * as XCALL from "#core/infra/code/GenericXcall";
 import { handleFeatureIsActive } from "#core/infra/code/FeatureCodes";
 

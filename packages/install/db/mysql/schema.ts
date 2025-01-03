@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDBConnection } from "#interface";
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 import { Log } from "@aitianyu.cn/types";
 import { CHECK_DB_EXIST, CREATE_DATABASE, DROP_DATABASE } from "../sql/mysql";
 import { StructurCheckStatus } from "./interface";

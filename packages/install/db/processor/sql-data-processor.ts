@@ -4,7 +4,7 @@ import * as fs from "fs";
 import path from "path";
 import { findActualModule } from "#core/infra/ImporterManager";
 import { SupportedDatabaseType, IDatabaseFieldDefine } from "#interface";
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 import { MapOfString, StringHelper } from "@aitianyu.cn/types";
 import { PROJECT_ROOT_PATH } from "../../../Common";
 import { INSERT_SQL } from "../sql/common";

@@ -1,10 +1,8 @@
 /** @format */
 
 import { INFRA_ERROR_CODES } from "#core/Constant";
-import { IDatabaseConnectionConfig, INosqlDBManager, SupportedNosqlDBType } from "#interface";
-import { DBHelper } from "#utils/DBHelper";
-import { ErrorHelper } from "#utils/ErrorHelper";
-import { MapOfType } from "@aitianyu.cn/types";
+import { IDatabaseConnectionConfig, INosqlDBManager } from "#interface";
+import { ErrorHelper, DBHelper } from "#utils";
 import Redis from "ioredis";
 
 export class NosqlDatabaseManager implements INosqlDBManager {

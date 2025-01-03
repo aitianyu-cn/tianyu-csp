@@ -1,7 +1,7 @@
 /** @format */
 
 import { RequestRestData } from "#interface";
-import { RestHelper } from "#utils/RestHelper";
+import { RestHelper } from "#utils";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
     describe("getRest", () => {

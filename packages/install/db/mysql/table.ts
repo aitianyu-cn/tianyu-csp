@@ -4,7 +4,7 @@ import { IDatabaseFieldDefine, IDBConnection, TableIndexType } from "#interface"
 import { StringHelper, Log } from "@aitianyu.cn/types";
 import { CHECK_TABLE_EXIST, CLEAN_TABLE, CREATE_TABLE } from "../sql/mysql";
 import { Field } from "./field";
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 import { StructurCheckStatus } from "./interface";
 
 export class Table {

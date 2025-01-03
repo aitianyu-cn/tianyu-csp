@@ -2,7 +2,7 @@
 
 import { INFRA_ERROR_CODES } from "#core/Constant";
 import { NosqlDatabaseManager } from "#core/infra/db/NosqlDatabaseManager";
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.NosqlDatabaseManager", () => {
     const mgr = new NosqlDatabaseManager();

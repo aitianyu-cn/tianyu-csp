@@ -1,7 +1,7 @@
 /** @format */
 
 import { INFRA_ERROR_CODES } from "#core/Constant";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { MapOfString } from "@aitianyu.cn/types";
 import { SYSTEM_EXTERNAL_CALL } from "packages/Common";
 

@@ -1,7 +1,7 @@
 /** @format */
 
 import { IDatabaseFieldDefine } from "#interface";
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 import { SqlDataProcessor } from "#install/db/processor/sql-data-processor";
 import { MapOfString } from "@aitianyu.cn/types";
 

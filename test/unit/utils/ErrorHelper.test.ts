@@ -1,7 +1,7 @@
 /** @format */
 
 import { HTTP_STATUS_CODE } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { guid } from "@aitianyu.cn/types";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.ErrorHelper", () => {

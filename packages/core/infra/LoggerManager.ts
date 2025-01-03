@@ -3,7 +3,7 @@
 import { ILogger, LogLevelMap } from "#interface";
 import { LogLevel } from "@aitianyu.cn/types";
 import { PROJECT_ENVIRONMENT_MODE } from "../../Common";
-import { TraceHelper } from "#utils/TraceHelper";
+import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
 
 export class LoggerManager implements ILogger {

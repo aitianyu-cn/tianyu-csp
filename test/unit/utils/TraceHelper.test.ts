@@ -1,6 +1,6 @@
 /** @format */
 
-import { TraceHelper } from "#utils/TraceHelper";
+import { TraceHelper } from "#utils";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.TraceHelper", () => {
     describe("generateTraceId", () => {

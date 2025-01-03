@@ -1,6 +1,6 @@
 /** @format */
 
-import { JobManager } from "#job/JobManager";
+import { JobManager } from "#job";
 import { guid } from "@aitianyu.cn/types";
 import { PROJECT_ROOT_PATH } from "packages/Common";
 import path from "path";

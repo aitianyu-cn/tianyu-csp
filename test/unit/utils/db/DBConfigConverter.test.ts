@@ -1,9 +1,9 @@
 /** @format */
 
 import { IDatabaseConnectionConfig } from "#interface";
-import { DBConfigConverter } from "#utils/db/DBConfigConverter";
+import { DBHelper } from "#utils";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.db.DBConfigConverter", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.db.DBHelper.converter", () => {
     describe("toMysql", () => {
         it("-", () => {
             const config: IDatabaseConnectionConfig = {
@@ -13,7 +13,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.db.DBConfigConverter", (
                 password: "test",
                 timeout: 3000,
             };
-            const configForMysql = DBConfigConverter.mysql(config);
+            const configForMysql = DBHelper.converter.mysql(config);
 
             expect(configForMysql).toEqual(config);
         });
@@ -28,7 +28,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.db.DBConfigConverter", (
                 password: "test",
                 timeout: 3000,
             };
-            const configForRedis = DBConfigConverter.redis(config, "test_1");
+            const configForRedis = DBHelper.converter.redis(config, "test_1");
 
             expect(configForRedis.host).toEqual("server");
             expect(configForRedis.port).toEqual(3306);
@@ -40,7 +40,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.db.DBConfigConverter", (
 
         it("default setting", () => {
             const config: IDatabaseConnectionConfig = {};
-            const configForRedis = DBConfigConverter.redis(config, "test_1");
+            const configForRedis = DBHelper.converter.redis(config, "test_1");
 
             expect(configForRedis.host).toEqual("localhost");
             expect(configForRedis.port).toEqual(6379);

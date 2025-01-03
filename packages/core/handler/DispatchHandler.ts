@@ -12,8 +12,8 @@ import {
     RequestPayloadData,
     RequestRestData,
 } from "#interface";
-import { createJobManager } from "#job/index";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { createJobManager } from "#job";
+import { ErrorHelper } from "#utils";
 import path from "path";
 
 export class DispatchHandler {

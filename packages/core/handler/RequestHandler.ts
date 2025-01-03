@@ -11,7 +11,7 @@ import {
     RequestPayloadData,
     RequestRestData,
 } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { REST_REQUEST_ITEM_MAP } from "./RestHandlerConstant";
 
 export class RequestHandler {

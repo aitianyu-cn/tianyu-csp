@@ -1,6 +1,6 @@
 /** @format */
 
-import { HttpHelper } from "#utils/HttpHelper";
+import { HttpHelper } from "#utils";
 import { AreaCode, MapOfString, parseAreaCode } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 

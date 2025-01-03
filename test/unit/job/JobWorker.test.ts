@@ -2,7 +2,7 @@
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { JobWorkerPayload } from "#interface";
-import { JobWorker } from "#job/JobWorker";
+import { JobWorker } from "#job";
 import { PROJECT_ROOT_PATH } from "packages/Common";
 import path from "path";
 import * as TYPES from "@aitianyu.cn/types";

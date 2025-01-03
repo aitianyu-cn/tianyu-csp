@@ -16,7 +16,7 @@ export interface IImporter {
      */
     (packageName: string, objectName: string): any;
 
-    MODULE: typeof import("#module/module-export");
+    MODULE: typeof import("#module");
     html(file: string): string;
 }
 

@@ -3,11 +3,11 @@
 import fs from "fs";
 import path from "path";
 import { INTERNAL_PROJECT_ROOT, PROJECT_ROOT_PATH, PROJECT_ROOT_RELATION_PATH } from "../../Common";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DataEncoding, IImporter } from "#interface";
 
-import * as MODULE_IMPORT from "#module/module-export";
+import * as MODULE_IMPORT from "#module";
 import { SUPPORTED_SUFFIX } from "./Constant";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];

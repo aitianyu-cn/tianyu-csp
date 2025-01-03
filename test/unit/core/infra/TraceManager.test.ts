@@ -1,7 +1,6 @@
 /** @format */
 
 import { TraceManager } from "#core/infra/TraceManager";
-import { IDBConnection } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import * as XCALL from "#core/infra/code/GenericXcall";
 

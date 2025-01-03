@@ -1,6 +1,6 @@
 /** @format */
 
-import { DBHelper } from "#utils/DBHelper";
+import { DBHelper } from "#utils";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.TraceHelper", () => {
     describe("encode", () => {

@@ -2,7 +2,7 @@
 
 import { ContributorManager } from "#core/infra/ContributorManager";
 import { ContributorFactor, JobWorkerExecutionResult, JobWorkerPayload } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { getBoolean, guid } from "@aitianyu.cn/types";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ContributorManager", () => {
