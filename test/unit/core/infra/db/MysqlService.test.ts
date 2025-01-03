@@ -5,7 +5,7 @@ import { INFRA_ERROR_CODES } from "#core/Constant";
 import { MysqlService } from "#core/infra/db/MysqlService";
 import { OperationError } from "#interface";
 
-xdescribe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.db.MysqlService", () => {
     const databaseConfig = {
         host: "server.tencent.backend.aitianyu.cn",
         port: 3306,

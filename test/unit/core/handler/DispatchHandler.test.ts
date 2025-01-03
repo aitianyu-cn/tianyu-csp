@@ -2,6 +2,7 @@
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DispatchHandler } from "#core/handler/DispatchHandler";
+import { createContributor } from "#core/InfraLoader";
 import {
     DISPATCH_HANDLER_MODULE_ID,
     HTTP_STATUS_CODE,
@@ -12,19 +13,21 @@ import {
 import { AreaCode, guid } from "@aitianyu.cn/types";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler", () => {
-    let DSP_HANDLER: any = null;
+    const contributor = createContributor();
     const REQ_JOB_POOL = guid();
     const SEC_JOB_POOL = guid();
 
+    let DSP_HANDLER: any = null;
+
     beforeAll(() => {
-        DSP_HANDLER = new DispatchHandler();
+        DSP_HANDLER = new DispatchHandler(undefined, contributor);
 
         DSP_HANDLER["_requestJobPool"] = REQ_JOB_POOL;
         DSP_HANDLER["_scheduleJobPool"] = SEC_JOB_POOL;
     });
 
     afterEach(() => {
-        TIANYU.fwk.contributor.unregisterEndpoint("job-manager.dispatch");
+        contributor.unregisterEndpoint("job-manager.dispatch");
     });
 
     describe("dispatch-handler.network-dispatcher", () => {
@@ -51,16 +54,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
             },
         };
         it("execute witch error", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule(
-                "dispatch-handler.network-dispatcher",
-                DISPATCH_HANDLER_MODULE_ID,
-            );
+            const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
             if (!dispatcher) {
                 return;
             }
 
-            TIANYU.fwk.contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 1000,
                     value: undefined,
@@ -88,16 +88,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
         });
 
         it("execute success - no content", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule(
-                "dispatch-handler.network-dispatcher",
-                DISPATCH_HANDLER_MODULE_ID,
-            );
+            const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
             if (!dispatcher) {
                 return;
             }
 
-            TIANYU.fwk.contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 0,
                     value: undefined,
@@ -114,16 +111,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
         });
 
         it("execute success - ok", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule(
-                "dispatch-handler.network-dispatcher",
-                DISPATCH_HANDLER_MODULE_ID,
-            );
+            const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
             if (!dispatcher) {
                 return;
             }
 
-            TIANYU.fwk.contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 0,
                     value: { statusCode: 0 },
@@ -140,16 +134,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
         });
 
         it("execute success - exit code", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule(
-                "dispatch-handler.network-dispatcher",
-                DISPATCH_HANDLER_MODULE_ID,
-            );
+            const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
             if (!dispatcher) {
                 return;
             }
 
-            TIANYU.fwk.contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 100,
                     value: undefined,
@@ -166,16 +157,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
         });
 
         it("execute success - status code", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule(
-                "dispatch-handler.network-dispatcher",
-                DISPATCH_HANDLER_MODULE_ID,
-            );
+            const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
             if (!dispatcher) {
                 return;
             }
 
-            TIANYU.fwk.contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 100,
                     value: { statusCode: 100 },
@@ -193,13 +181,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
     });
 
     it("execute witch error", (done) => {
-        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.job-dispatcher", DISPATCH_HANDLER_MODULE_ID);
+        const dispatcher = contributor.findModule("dispatch-handler.job-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         expect(dispatcher).toBeDefined();
         if (!dispatcher) {
             return;
         }
 
-        TIANYU.fwk.contributor.exportModule("job-manager.dispatch", SEC_JOB_POOL, function () {
+        contributor.exportModule("job-manager.dispatch", SEC_JOB_POOL, function () {
             const result: JobWorkerExecutionResult = {
                 exitCode: 1000,
                 value: undefined,
@@ -223,13 +211,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
     });
 
     it("initialize", () => {
-        const handler = new DispatchHandler();
+        const contributor = createContributor();
+        const handler = new DispatchHandler(undefined, contributor);
         handler.initialize();
 
         expect(handler["_requestJobPool"]).not.toEqual("");
         expect(handler["_scheduleJobPool"]).not.toEqual("");
 
-        expect(TIANYU.fwk.contributor.findModule("job-manager.dispatch", handler["_requestJobPool"])).toBeDefined();
-        expect(TIANYU.fwk.contributor.findModule("job-manager.dispatch", handler["_scheduleJobPool"])).toBeDefined();
+        expect(contributor.findModule("job-manager.dispatch", handler["_requestJobPool"])).toBeDefined();
+        expect(contributor.findModule("job-manager.dispatch", handler["_scheduleJobPool"])).toBeDefined();
     });
 });

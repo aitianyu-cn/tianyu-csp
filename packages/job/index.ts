@@ -5,11 +5,13 @@
  * Export for job apis
  */
 
-import { JobManagerOptions } from "#interface";
+import { ICSPContributorFactorProtocolMap, JobManagerOptions } from "#interface";
+import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { guid } from "@aitianyu.cn/types";
 import { JobManager } from "./JobManager";
 
 export * from "./JobManager";
+export * from "./JobRunner";
 export * from "./JobWorker";
 
 /**
@@ -18,13 +20,19 @@ export * from "./JobWorker";
  * @param options job manager option
  * @returns return a job manager instance
  */
-export function createJobManager(options?: JobManagerOptions): string {
+export function createJobManager(
+    options?: JobManagerOptions,
+    contributor?: IContributor<ICSPContributorFactorProtocolMap>,
+): string {
     const id = options?.id || guid();
-    new JobManager({
-        limitWorkers: options?.limitWorkers,
-        overtime: options?.overtime,
-        id,
-    });
+    new JobManager(
+        {
+            limitWorkers: options?.limitWorkers,
+            overtime: options?.overtime,
+            id,
+        },
+        contributor,
+    );
 
     return id;
 }

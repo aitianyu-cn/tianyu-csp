@@ -11,33 +11,37 @@ import {
     NetworkServiceResponseData,
     RequestPayloadData,
     RequestRestData,
+    ICSPContributorFactorProtocolMap,
 } from "#interface";
 import { createJobManager } from "#job";
 import { ErrorHelper } from "#utils";
+import { IContributor } from "@aitianyu.cn/tianyu-app-fwk/dist/types/interface/contributor";
 import path from "path";
 
 export class DispatchHandler {
+    private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
     private _options?: DispatchHandlerOption;
 
     private _requestJobPool: string;
     private _scheduleJobPool: string;
 
-    public constructor(options?: DispatchHandlerOption) {
+    public constructor(options?: DispatchHandlerOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         this._options = options;
+        this._contributor = contributor;
         this._requestJobPool = "";
         this._scheduleJobPool = "";
 
         // create endpoints
-        TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.network-dispatcher");
-        TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.job-dispatcher");
+        this._contributor?.registerEndpoint("dispatch-handler.network-dispatcher");
+        this._contributor?.registerEndpoint("dispatch-handler.job-dispatcher");
 
         // export execution module
-        TIANYU.fwk.contributor.exportModule(
+        this._contributor?.exportModule(
             "dispatch-handler.network-dispatcher",
             DISPATCH_HANDLER_MODULE_ID,
             this._networkDispatch.bind(this),
         );
-        TIANYU.fwk.contributor.exportModule(
+        this._contributor?.exportModule(
             "dispatch-handler.job-dispatcher",
             DISPATCH_HANDLER_MODULE_ID,
             this._jobDispatch.bind(this),
@@ -45,15 +49,15 @@ export class DispatchHandler {
     }
 
     public initialize(): void {
-        this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers });
-        this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers });
+        this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers }, this._contributor);
+        this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers }, this._contributor);
     }
 
     private async _networkDispatch(data: {
         rest: RequestRestData;
         payload: RequestPayloadData;
     }): Promise<NetworkServiceResponseData> {
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._requestJobPool);
+        const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._requestJobPool);
         if (!dispatcher) {
             return Promise.reject({
                 status: "error",
@@ -98,7 +102,7 @@ export class DispatchHandler {
     }
 
     private async _jobDispatch(payload: JobWorkerPayload): Promise<JobWorkerExecutionResult> {
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._scheduleJobPool);
+        const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._scheduleJobPool);
         if (!dispatcher) {
             const errorRes: JobWorkerExecutionResult = {
                 exitCode: Number(SERVICE_ERROR_CODES.INTERNAL_ERROR),

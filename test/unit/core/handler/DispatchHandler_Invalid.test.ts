@@ -2,17 +2,20 @@
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DispatchHandler } from "#core/handler/DispatchHandler";
+import { createContributor } from "#core/InfraLoader";
 import { DISPATCH_HANDLER_MODULE_ID, HTTP_STATUS_CODE } from "#interface";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler_Invalid", () => {
-    beforeAll(() => {
-        new DispatchHandler();
+    const contributor = createContributor();
 
-        TIANYU.fwk.contributor.unregisterEndpoint("job-manager.dispatch");
+    beforeAll(() => {
+        new DispatchHandler(undefined, contributor);
+
+        contributor.unregisterEndpoint("job-manager.dispatch");
     });
 
     it("dispatch-handler.network-dispatcher", (done) => {
-        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
+        const dispatcher = contributor.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         expect(dispatcher).toBeDefined();
 
         if (dispatcher) {
@@ -35,7 +38,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler_I
     });
 
     it("dispatch-handler.job-dispatcher", (done) => {
-        const dispatcher = TIANYU.fwk.contributor.findModule("dispatch-handler.job-dispatcher", DISPATCH_HANDLER_MODULE_ID);
+        const dispatcher = contributor.findModule("dispatch-handler.job-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         expect(dispatcher).toBeDefined();
 
         if (dispatcher) {

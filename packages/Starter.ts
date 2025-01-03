@@ -1,6 +1,6 @@
 /** @format */
 
-import { loadInfra } from "#core/InfraLoader";
+import { createContributor, loadInfra } from "#core/InfraLoader";
 import { DispatchHandlerOption, HttpServiceOption } from "#interface";
 import { DispatchHandler, HttpService, RequestHandler } from "./core";
 
@@ -18,12 +18,14 @@ export interface IStarterAppOption {
 export function start(option?: IStarterAppOption): IStarterApp {
     loadInfra();
 
-    const dispatcher = new DispatchHandler(option?.handler);
+    const contributor = createContributor();
+
+    const dispatcher = new DispatchHandler(option?.handler, contributor);
     dispatcher.initialize();
-    const requestHandler = new RequestHandler();
+    const requestHandler = new RequestHandler(contributor);
     requestHandler.initialize();
 
-    const http1 = new HttpService(option?.http1);
+    const http1 = new HttpService(option?.http1, contributor);
 
     let _http1_started = false;
 

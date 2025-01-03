@@ -2,6 +2,7 @@
 
 import { REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
+import { createContributor } from "#core/InfraLoader";
 import { HttpService } from "#core/service/HttpService";
 import {
     RequestRestData,
@@ -16,6 +17,7 @@ import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () => {
+    const contributor = createContributor();
     const Mock_RequestHandler = {
         item: (payload: { name: keyof DefaultRequestItemsMap; type: DefaultRequestItemTargetType }): string => {
             const c_item = REST_REQUEST_ITEM_MAP[payload.name];
@@ -44,10 +46,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
     let SERVICE: any = null;
 
     beforeAll(() => {
-        SERVICE = new HttpService({
-            host: SERVICE_HOST,
-            port: SERVICE_PORT,
-        });
+        SERVICE = new HttpService(
+            {
+                host: SERVICE_HOST,
+                port: SERVICE_PORT,
+            },
+            contributor,
+        );
 
         SERVICE.listen();
 
@@ -67,17 +72,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
     beforeEach(() => {
         DISPATCH_SPY = jest.spyOn(Mock_RequestHandler, "dispatch");
 
-        TIANYU.fwk.contributor.exportModule(
-            "request-handler.dispatcher",
-            REQUEST_HANDLER_MODULE_ID,
-            Mock_RequestHandler.dispatch,
-        );
-        TIANYU.fwk.contributor.exportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID, Mock_RequestHandler.item);
+        contributor.exportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID, Mock_RequestHandler.dispatch);
+        contributor.exportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID, Mock_RequestHandler.item);
     });
 
     afterEach(() => {
-        TIANYU.fwk.contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
-        TIANYU.fwk.contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+        contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+        contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
     });
 
     it("id", () => {
@@ -159,8 +160,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         }, 50000);
 
         it("service invalid", (done) => {
-            TIANYU.fwk.contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
-            TIANYU.fwk.contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+            contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+            contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.get().then(
@@ -246,8 +247,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         }, 50000);
 
         it("service invalid", (done) => {
-            TIANYU.fwk.contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
-            TIANYU.fwk.contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+            contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+            contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.post({ data: "test-data" }).then(

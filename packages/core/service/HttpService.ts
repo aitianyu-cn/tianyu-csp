@@ -12,12 +12,16 @@ import {
     RequestType,
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
+    ICSPContributorFactorProtocolMap,
 } from "#interface";
 import { HttpHelper, TraceHelper, RestHelper, ErrorHelper } from "#utils";
+import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { guid, MapOfString } from "@aitianyu.cn/types";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 export class HttpService implements IHttpService {
+    private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
+
     private _id: string;
     private _host: string;
     private _port: number;
@@ -25,7 +29,9 @@ export class HttpService implements IHttpService {
     private _server: Server;
     private _rest: RestHandler | null;
 
-    public constructor(options?: HttpServiceOption) {
+    public constructor(options?: HttpServiceOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
+        this._contributor = contributor;
+
         this._id = guid();
         this._host = options?.host || /* istanbul ignore next */ DEFAULT_HTTP_HOST;
         this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
@@ -67,7 +73,7 @@ export class HttpService implements IHttpService {
         const param = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
         const cookie = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
         const headers = HttpHelper.processHeader(req.headers);
-        const itemsGetter = TIANYU.fwk.contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+        const itemsGetter = this._contributor?.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
         const language = HttpHelper.processLanguage(
             cookie,
             param,
@@ -76,7 +82,7 @@ export class HttpService implements IHttpService {
             itemsGetter?.({ name: "language", type: "search" }),
         );
         const sessionIdKey =
-            TIANYU.fwk.contributor.findModule(
+            this._contributor?.findModule(
                 "request-handler.items-getter",
                 REQUEST_HANDLER_MODULE_ID,
             )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
@@ -118,7 +124,7 @@ export class HttpService implements IHttpService {
             const cookie: MapOfString = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
             const headers = HttpHelper.processHeader(req.headers);
 
-            const itemsGetter = TIANYU.fwk.contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+            const itemsGetter = this._contributor?.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
             const language = HttpHelper.processLanguage(
                 cookie,
                 param,
@@ -127,7 +133,7 @@ export class HttpService implements IHttpService {
                 itemsGetter?.({ name: "language", type: "search" }),
             );
             const sessionIdKey =
-                TIANYU.fwk.contributor.findModule(
+                this._contributor?.findModule(
                     "request-handler.items-getter",
                     REQUEST_HANDLER_MODULE_ID,
                 )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
@@ -154,7 +160,7 @@ export class HttpService implements IHttpService {
     }
     private _handleDispatch(payload: RequestPayloadData, headers: MapOfString, req: IncomingMessage, res: ServerResponse): void {
         setTimeout(() => {
-            const dispatcher = TIANYU.fwk.contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+            const dispatcher = this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             if (dispatcher) {
                 const rest = this._rest
                     ? this._rest.mapping(payload.url)

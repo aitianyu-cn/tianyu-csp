@@ -11,7 +11,7 @@ import {
 import { NetworkServiceResponseData } from "./contributor/service";
 
 /** Extendable by user. */
-export interface IContributorFactorProtocolMap {
+export interface ICSPContributorFactorProtocolMap {
     // =======================================================================
     // This is default definitions for core using
     // =======================================================================
