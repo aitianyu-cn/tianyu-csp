@@ -45,5 +45,7 @@ export * from "./lib/monitor";
 export * from "./lib/schedule";
 
 export * from "./modules/feature";
+export * from "./modules/http-client";
+export * from "./modules/remote-precdure";
 
 export * from "./csp-config";

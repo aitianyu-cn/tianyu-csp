@@ -29,3 +29,6 @@ o   1. installation api to quick deployment.
 o       a. mysql deployment tool to create database
 o       b. mysql data importer to initialize database data
 x   2. http2.0 supporting.
+        - reason: the updates of http2.0 which different between http1.0 is the batch requests,
+                  but currently, the project core implementation will not use this feature,
+                  consider to support http2.0 as an optional module in the phase 3.
