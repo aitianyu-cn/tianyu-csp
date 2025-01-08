@@ -16,8 +16,6 @@ import * as UtilsExport from "./utils/utils-export";
 import * as CommonExport from "./core/Constant";
 import * as InfraExport from "./core/index";
 
-import * as STARTER from "./Starter";
-
 /** namespace for Tianyu CSP */
 export namespace TianyuCSP {
     /** CSP utils */
@@ -26,6 +24,4 @@ export namespace TianyuCSP {
     export import Common = CommonExport;
     /** CSP Infra components */
     export import Infra = InfraExport;
-
-    export import app = STARTER.start; // tobe replaced later
 }
