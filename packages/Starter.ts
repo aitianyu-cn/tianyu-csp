@@ -8,6 +8,7 @@ export interface IStarterApp {
     (): void;
 
     http1(): void;
+    close(): void;
 }
 
 export interface IStarterAppOption {
@@ -40,6 +41,9 @@ export function start(option?: IStarterAppOption): IStarterApp {
         startHttp1();
     }) as IStarterApp;
     app.http1 = startHttp1;
+    app.close = () => {
+        http1.close();
+    };
 
     return app;
 }

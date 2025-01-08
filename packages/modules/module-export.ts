@@ -7,4 +7,5 @@
  * All the modules only can be used by infra->importer.MODULE
  */
 
-export {};
+export * from "./HttpClient";
+export * from "./HttpsClient";

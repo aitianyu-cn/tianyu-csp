@@ -130,4 +130,32 @@ export class HttpHelper {
 
         return language ? parseAreaString(language, true) : AreaCode.unknown;
     }
+
+    /**
+     * To convert cookies map as a string
+     *
+     * @param cookies source cookie map
+     * @returns return a string of cookie map
+     */
+    public static stringifyCookie(cookies: MapOfString): string {
+        const cookiePair: string[] = [];
+        for (const key of Object.keys(cookies)) {
+            cookies[key] && cookiePair.push(`${key}=${cookies[key]}`);
+        }
+        return `${cookiePair.join(";")};`;
+    }
+
+    /**
+     * To convert parameters map as a url search string
+     *
+     * @param param source parameters map
+     * @returns return a search string of parameters map
+     */
+    public static stringifyParam(param: MapOfString): string {
+        const paramPair: string[] = [];
+        for (const key of Object.keys(param)) {
+            param[key] && paramPair.push(`${key}=${param[key]}`);
+        }
+        return paramPair.length ? `?${paramPair.join("&")}` : "";
+    }
 }

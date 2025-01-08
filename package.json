@@ -74,6 +74,7 @@
         "core-js": "^3.36.0",
         "cross-env": "^7.0.3",
         "fs": "^0.0.1-security",
+        "https": "^1.0.0",
         "ioredis": "^5.4.1",
         "mysql": "^2.18.1",
         "path": "^0.12.7",
@@ -81,6 +82,7 @@
         "typescript": "^5.4.2"
     },
     "devDependencies": {
+        "@aitianyu.cn/server-base": "^1.0.5",
         "@types/jest": "^29.5.14",
         "@types/mysql": "^2.15.26",
         "@types/node": "^20.11.28",
