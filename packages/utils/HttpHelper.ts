@@ -140,9 +140,9 @@ export class HttpHelper {
     public static stringifyCookie(cookies: MapOfString): string {
         const cookiePair: string[] = [];
         for (const key of Object.keys(cookies)) {
-            cookies[key] && cookiePair.push(`${key}=${cookies[key]}`);
+            cookies[key] !== undefined && cookiePair.push(`${key}=${cookies[key]}`);
         }
-        return `${cookiePair.join(";")};`;
+        return cookiePair.length ? `${cookiePair.join(";")};` : "";
     }
 
     /**
@@ -154,7 +154,7 @@ export class HttpHelper {
     public static stringifyParam(param: MapOfString): string {
         const paramPair: string[] = [];
         for (const key of Object.keys(param)) {
-            param[key] && paramPair.push(`${key}=${param[key]}`);
+            paramPair.push(`${key}=${param[key]}`);
         }
         return paramPair.length ? `?${paramPair.join("&")}` : "";
     }

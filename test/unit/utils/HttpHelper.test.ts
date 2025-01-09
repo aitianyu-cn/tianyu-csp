@@ -89,4 +89,16 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
             expect(HttpHelper.processLanguage({}, {}, {})).toEqual(AreaCode.unknown);
         });
     });
+
+    it("stringifyCookie", () => {
+        expect(HttpHelper.stringifyCookie({})).toEqual("");
+        expect(HttpHelper.stringifyCookie({ test: undefined } as any)).toEqual("");
+        expect(HttpHelper.stringifyCookie({ test: "1", test2: "2" })).toEqual("test=1;test2=2;");
+    });
+
+    it("stringifyParam", () => {
+        expect(HttpHelper.stringifyParam({})).toEqual("");
+        expect(HttpHelper.stringifyParam({ test: undefined } as any)).toEqual("?test=undefined");
+        expect(HttpHelper.stringifyParam({ test: "1", test2: "2" })).toEqual("?test=1&test2=2");
+    });
 });

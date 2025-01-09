@@ -2,6 +2,9 @@
 
 import { IncomingMessage, ServerResponse } from "http";
 import { INetworkService } from "./service";
+import { MapOfType } from "@aitianyu.cn/types";
+import { ImportPackage } from "../api/importer";
+import { PathEntry } from "../handler/rest-handler";
 
 /** Http Query Response Callback */
 export type HttpCallback = (req: IncomingMessage, res: ServerResponse) => void;
@@ -12,8 +15,27 @@ export interface HttpServiceOption {
     host: string;
     /** Port to bind */
     port: number;
+    /**
+     * Http service to support advanced rest
+     *
+     * @undefined enable advanced rest and support parameter and wildcard character
+     * @true enable advanced rest and support parameter and wildcard character
+     * @falue use normal rest and only support full url matching
+     */
     advanceRest?: boolean;
+    /**
+     * Http service to support fallback when rest is not matched
+     *
+     * @true enable fallback
+     * @undefined disable fallback, HTTP 404 will be returned
+     * @falue disable fallback, HTTP 404 will be returned
+     */
     enablefallback?: boolean;
+
+    /** Customized Rest map, if no rest map is given, default global defined rest map will be used */
+    rest?: MapOfType<ImportPackage>;
+    /** Customized Rest fallback, if no fallback is given, default global defined fallback will be used */
+    fallback?: PathEntry;
 }
 
 /** Http Service API */

@@ -2,7 +2,6 @@
 
 import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { ICSPContributorFactorProtocolMap, IGlobalDefinition, IServerRequest, ISession } from "#interface";
-import { PROJECT_ENVIRONMENT_MODE, PROJECT_NAME, PROJECT_ROOT_PATH, PROJECT_VERSION } from "../Common";
 import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
 import { GlobalRequestManager } from "./infra/RequestManager";
@@ -11,6 +10,7 @@ import { LoggerManager } from "./infra/LoggerManager";
 import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
 import { FeatureManager } from "./infra/FeatureManager";
+import { EnvironmentManager } from "./infra/EnvironmentManager";
 
 /** To init infra of global scope */
 export function loadInfra(): void {
@@ -48,13 +48,7 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
         usage: new UsageManager(),
         trace: new TraceManager(),
         feature: new FeatureManager(),
-
-        environment: {
-            baseUrl: PROJECT_ROOT_PATH,
-            version: PROJECT_VERSION,
-            development: PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development",
-            name: PROJECT_NAME,
-        },
+        environment: new EnvironmentManager(),
     };
 
     return tianyu_infra;

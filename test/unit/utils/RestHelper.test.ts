@@ -25,4 +25,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             expect(RestHelper.getRest("/empty")).toEqual(rest);
         });
     });
+
+    describe("getRest customized", () => {
+        it("no valid path", () => {
+            expect(RestHelper.getRest("", { "/": {} })).toBeNull();
+            // expect(RestHelper.getRest("/")).toBeNull();
+            expect(
+                RestHelper.getRest(
+                    "/no_test",
+                    { "/": {} },
+                    {
+                        package: "p",
+                        module: "m",
+                        method: "m",
+                    },
+                ),
+            ).toEqual({ package: "p", module: "m", method: "m" });
+        });
+    });
 });

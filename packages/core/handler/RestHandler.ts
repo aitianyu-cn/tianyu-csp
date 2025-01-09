@@ -53,14 +53,18 @@ export class RestHandler {
     private _resttree: Subitem;
     private _rest: MapOfType<{ path: string; level: number; entry: ImportPackage }>;
 
-    public constructor(rest?: MapOfType<ImportPackage>, enableFallback?: boolean) {
+    public constructor(rest?: MapOfType<ImportPackage>, enableFallbackOrFallback?: boolean | PathEntry) {
         this._resttree = {
             id: null,
             actual: {},
             param: {},
             generic: null,
         };
-        this._fallback = enableFallback ? DEFAULT_REST_FALLBACK : null;
+        this._fallback = enableFallbackOrFallback
+            ? typeof enableFallbackOrFallback === "boolean"
+                ? DEFAULT_REST_FALLBACK
+                : enableFallbackOrFallback
+            : null;
         this._rest = {};
 
         this._processRest(rest || {});

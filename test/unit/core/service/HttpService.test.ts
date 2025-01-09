@@ -15,6 +15,7 @@ import {
 } from "#interface";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
+import { TimerTools } from "test/tools/TimerTools";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () => {
     const contributor = createContributor();
@@ -65,8 +66,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         });
     });
 
-    afterAll(() => {
+    afterAll(async () => {
         SERVICE?.close();
+
+        await TimerTools.sleep(1000);
     }, 50000);
 
     beforeEach(() => {
@@ -277,7 +280,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         );
     }, 50000);
 
-    describe("advanced reset", () => {
+    describe("advanced rest", () => {
         it("support advanced rest", () => {
             const service = new HttpService({ advanceRest: true, host: SERVICE_HOST, port: SERVICE_PORT });
             expect(service["_rest"]).toBeDefined();
@@ -286,6 +289,36 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         it("not support advanced rest", () => {
             const service = new HttpService({ advanceRest: false, host: SERVICE_HOST, port: SERVICE_PORT });
             expect(service["_rest"]).toBeNull();
+        });
+
+        it("customized rest", () => {
+            const service = new HttpService({
+                advanceRest: true,
+                host: SERVICE_HOST,
+                port: SERVICE_PORT,
+                enablefallback: true,
+                rest: {
+                    "/": {
+                        package: "h_p",
+                        module: "hm",
+                        method: "hm",
+                    },
+                    "/c": {
+                        package: "c_p",
+                        module: "cm",
+                        method: "cm",
+                    },
+                },
+                fallback: {
+                    package: "f_p",
+                    module: "f_m",
+                    method: "f_m",
+                },
+            });
+
+            expect(service["_rest"]?.mapping("/")).toEqual({ package: "h_p", module: "hm", method: "hm" });
+            expect(service["_rest"]?.mapping("/c")).toEqual({ package: "c_p", module: "cm", method: "cm" });
+            expect(service["_rest"]?.mapping("/d")).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
         });
     });
 });

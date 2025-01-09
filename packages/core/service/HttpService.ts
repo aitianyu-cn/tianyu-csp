@@ -13,10 +13,12 @@ import {
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
     ICSPContributorFactorProtocolMap,
+    ImportPackage,
+    PathEntry,
 } from "#interface";
 import { HttpHelper, TraceHelper, RestHelper, ErrorHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
-import { guid, MapOfString } from "@aitianyu.cn/types";
+import { guid, MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 
 /** Http 1.0 service */
@@ -29,6 +31,8 @@ export class HttpService implements IHttpService {
 
     private _server: Server;
     private _rest: RestHandler | null;
+    private _restMap?: MapOfType<ImportPackage>;
+    private _restFallback?: PathEntry;
 
     public constructor(options?: HttpServiceOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         this._contributor = contributor;
@@ -38,7 +42,11 @@ export class HttpService implements IHttpService {
         this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
 
         this._rest =
-            options?.advanceRest === undefined || options?.advanceRest ? new RestHandler(REST, options?.enablefallback) : null;
+            options?.advanceRest === undefined || options?.advanceRest
+                ? new RestHandler(options?.rest || REST, options?.enablefallback && options?.fallback)
+                : null;
+        this._restMap = options?.rest;
+        this._restFallback = options?.fallback;
         this._server = createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -185,7 +193,7 @@ export class HttpService implements IHttpService {
             if (dispatcher) {
                 const rest = this._rest
                     ? this._rest.mapping(payload.url)
-                    : /* istanbul ignore next */ RestHelper.getRest(payload.url);
+                    : /* istanbul ignore next */ RestHelper.getRest(payload.url, this._restMap, this._restFallback);
                 let response = rest
                     ? await dispatcher({ rest, payload }).catch((error) => {
                           const responseData: NetworkServiceResponseData = {
