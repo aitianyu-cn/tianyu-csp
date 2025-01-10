@@ -9,8 +9,8 @@ import {
     NetworkServiceResponseData,
     REQUEST_HANDLER_MODULE_ID,
     RequestPayloadData,
-    RequestRestData,
     ICSPContributorFactorProtocolMap,
+    PathEntry,
 } from "#interface";
 import { ErrorHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
@@ -78,7 +78,7 @@ export class RequestHandler {
      * @param data request payload data
      * @returns return a network response data
      */
-    private _dispatch(data: { rest: RequestRestData; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
+    private _dispatch(data: { rest: PathEntry; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
         const dispatcher = this._contributor?.findModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
         if (!dispatcher) {
             return Promise.reject(

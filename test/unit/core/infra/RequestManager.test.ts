@@ -48,6 +48,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
                 host: "localhost",
                 version: "1.1",
             },
+            disableCache: true,
         };
         const request = new GenericRequestManager(req);
 

@@ -1,53 +1,19 @@
 /** @format */
 
-import { DEFAULT_HTTP_HOST, DEFAULT_HTTP_PORT, SERVICE_ERROR_CODES } from "#core/Constant";
-import { RestHandler } from "#core/handler/RestHandler";
-import { REST } from "#core/handler/RestHandlerConstant";
-import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
-import {
-    HTTP_STATUS_CODE,
-    HttpServiceOption,
-    IHttpService,
-    RequestPayloadData,
-    RequestType,
-    NetworkServiceResponseData,
-    REQUEST_HANDLER_MODULE_ID,
-    ICSPContributorFactorProtocolMap,
-    ImportPackage,
-    PathEntry,
-} from "#interface";
-import { HttpHelper, TraceHelper, RestHelper, ErrorHelper } from "#utils";
+import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { HTTP_STATUS_CODE, HttpServiceOption, RequestPayloadData, ICSPContributorFactorProtocolMap } from "#interface";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
-import { guid, MapOfString, MapOfType } from "@aitianyu.cn/types";
-import { createServer, IncomingMessage, Server, ServerResponse } from "http";
+import { createServer, IncomingMessage, ServerResponse } from "http";
+import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
 
 /** Http 1.0 service */
-export class HttpService implements IHttpService {
-    private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
-
-    private _id: string;
-    private _host: string;
-    private _port: number;
-
-    private _server: Server;
-    private _rest: RestHandler | null;
-    private _restMap?: MapOfType<ImportPackage>;
-    private _restFallback?: PathEntry;
-
+export class HttpService extends AbstractHttpService<HttpServiceOption> {
     public constructor(options?: HttpServiceOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
-        this._contributor = contributor;
+        super(options, contributor);
+    }
 
-        this._id = guid();
-        this._host = options?.host || /* istanbul ignore next */ DEFAULT_HTTP_HOST;
-        this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
-
-        this._rest =
-            options?.advanceRest === undefined || options?.advanceRest
-                ? new RestHandler(options?.rest || REST, options?.enablefallback && options?.fallback)
-                : null;
-        this._restMap = options?.rest;
-        this._restFallback = options?.fallback;
-        this._server = createServer((req: IncomingMessage, res: ServerResponse) => {
+    protected override createServerInstance(): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction {
+        return createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -65,19 +31,6 @@ export class HttpService implements IHttpService {
         });
     }
 
-    public get id(): string {
-        return this._id;
-    }
-    public get type(): RequestType {
-        return "http";
-    }
-    public listen(): void {
-        this._server.listen(this._port, this._host);
-    }
-    public close(callback?: (err?: Error) => void): void {
-        this._server.close(callback);
-    }
-
     /**
      * handle http request if it is in get method
      *
@@ -85,42 +38,9 @@ export class HttpService implements IHttpService {
      * @param res http response
      */
     private onGet(req: IncomingMessage, res: ServerResponse): void {
-        const param = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
-        const cookie = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
-        const headers = HttpHelper.processHeader(req.headers);
-        const itemsGetter = this._contributor?.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
-        const language = HttpHelper.processLanguage(
-            cookie,
-            param,
-            req.headers,
-            itemsGetter?.({ name: "language", type: "cookie" }),
-            itemsGetter?.({ name: "language", type: "search" }),
-        );
-        const sessionIdKey =
-            this._contributor?.findModule(
-                "request-handler.items-getter",
-                REQUEST_HANDLER_MODULE_ID,
-            )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
-        const sessionId = cookie[sessionIdKey];
+        const payload = this.generatePayload(req.url, req.headers);
 
-        const requestId = guid();
-
-        const payload: RequestPayloadData = {
-            param,
-            cookie,
-            headers,
-            language,
-            requestId,
-            sessionId,
-
-            url: req.url?.split("?")[0] || /* istanbul ignore next */ "",
-            serviceId: this.id,
-            type: "http",
-            body: null,
-            traceId: TraceHelper.generateTraceId(),
-        };
-
-        this._handleDispatch(payload, req, res);
+        this._handleDispatch(payload, res);
     }
     /**
      * handle http request if it is in post method
@@ -141,42 +61,9 @@ export class HttpService implements IHttpService {
                 body = JSON.parse(decodeURI(data));
             } catch {}
 
-            const param: MapOfString = HttpHelper.processParameters(req.url || /* istanbul ignore next */ "");
-            const cookie: MapOfString = HttpHelper.processCookie(req.headers.cookie || /* istanbul ignore next */ "");
-            const headers = HttpHelper.processHeader(req.headers);
+            const payload = this.generatePayload(req.url, req.headers, body);
 
-            const itemsGetter = this._contributor?.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
-            const language = HttpHelper.processLanguage(
-                cookie,
-                param,
-                req.headers,
-                itemsGetter?.({ name: "language", type: "cookie" }),
-                itemsGetter?.({ name: "language", type: "search" }),
-            );
-            const sessionIdKey =
-                this._contributor?.findModule(
-                    "request-handler.items-getter",
-                    REQUEST_HANDLER_MODULE_ID,
-                )?.({ name: "session", type: "cookie" }) || DEFAULT_REST_REQUEST_ITEM_MAP.session;
-            const sessionId = cookie[sessionIdKey];
-
-            const requestId = guid();
-
-            const payload: RequestPayloadData = {
-                body,
-                param,
-                cookie,
-                headers,
-                language,
-                requestId,
-                sessionId,
-
-                url: req.url?.split("?")[0] || /* istanbul ignore next */ "",
-                serviceId: this.id,
-                type: "http",
-                traceId: TraceHelper.generateTraceId(),
-            };
-            this._handleDispatch(payload, req, res);
+            this._handleDispatch(payload, res);
         });
     }
     /**
@@ -187,46 +74,23 @@ export class HttpService implements IHttpService {
      * @param req http request
      * @param res http response
      */
-    private _handleDispatch(payload: RequestPayloadData, req: IncomingMessage, res: ServerResponse): void {
+    private _handleDispatch(payload: RequestPayloadData, res: ServerResponse): void {
         setTimeout(async () => {
-            const dispatcher = this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
-            if (dispatcher) {
-                const rest = this._rest
-                    ? this._rest.mapping(payload.url)
-                    : /* istanbul ignore next */ RestHelper.getRest(payload.url, this._restMap, this._restFallback);
-                let response = rest
-                    ? await dispatcher({ rest, payload }).catch((error) => {
-                          const responseData: NetworkServiceResponseData = {
-                              statusCode: ErrorHelper.getHttpStatusByJobStatus(error?.status),
-                              headers: payload.headers,
-                              body: {
-                                  error: [
-                                      {
-                                          code: error?.error.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                          message: error?.error.message || "Technical error occurs when processing request.",
-                                          error: error?.error.error,
-                                      },
-                                  ],
-                              },
-                          };
-                          return responseData;
-                      })
-                    : {
-                          statusCode: HTTP_STATUS_CODE.NOT_FOUND,
-                          headers: payload.headers,
-                          body: {
-                              error: [
-                                  {
-                                      code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
-                                      message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
-                                  },
-                              ],
-                          },
-                      };
-                this.onResponse(res, response);
-            } else {
-                this.onDispatcherInvalid(req, res);
+            const response = await this.dispatch(payload);
+
+            res.statusCode = response.statusCode;
+
+            for (const key of Object.keys(response.headers)) {
+                res.setHeader(key, response.headers[key]);
             }
+
+            res.end(
+                response.body
+                    ? typeof response.body === "string"
+                        ? response.body
+                        : JSON.stringify(response.body)
+                    : /* istanbul ignore next */ "",
+            );
         }, 0);
     }
     /**
@@ -248,42 +112,5 @@ export class HttpService implements IHttpService {
             res.statusCode = HTTP_STATUS_CODE.METHOD_NOT_ALLOWED;
             res.end(JSON.stringify(resBody));
         }, 0);
-    }
-    /**
-     * to response a invalid call if the request path is not found
-     *
-     * @param _req http request
-     * @param res http response
-     */
-    private onDispatcherInvalid(_req: IncomingMessage, res: ServerResponse): void {
-        setTimeout(() => {
-            const resBody = {
-                error: [
-                    {
-                        code: SERVICE_ERROR_CODES.SERVICE_HANDLER_LOST,
-                        message: "Request processor could not be found, please contact admin to check.",
-                    },
-                ],
-            };
-            res.statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR;
-            res.end(JSON.stringify(resBody));
-        }, 0);
-    }
-    /**
-     * to set a response from giving response data
-     *
-     * @param response http response
-     * @param data response data
-     */
-    private onResponse(response: ServerResponse, data: NetworkServiceResponseData): void {
-        response.statusCode = data.statusCode;
-
-        for (const key of Object.keys(data.headers)) {
-            response.setHeader(key, data.headers[key]);
-        }
-
-        response.end(
-            data.body ? (typeof data.body === "string" ? data.body : JSON.stringify(data.body)) : /* istanbul ignore next */ "",
-        );
     }
 }

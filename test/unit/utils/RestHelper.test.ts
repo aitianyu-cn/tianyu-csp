@@ -1,6 +1,6 @@
 /** @format */
 
-import { RequestRestData } from "#interface";
+import { HttpRestItem } from "#interface";
 import { RestHelper } from "#utils";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
@@ -12,7 +12,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
         });
 
         it("valid path", () => {
-            const rest: RequestRestData = { package: "a", module: "b", method: "c" };
+            const rest: HttpRestItem = { package: "a", module: "b", method: "c" };
 
             expect(RestHelper.getRest("/test/valid")).toEqual(rest);
             expect(RestHelper.getRest("/test/invalid")).toBeNull();
@@ -20,7 +20,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
         });
 
         it("default case", () => {
-            const rest: RequestRestData = { package: "a", module: "b", method: "default" };
+            const rest: HttpRestItem = { package: "a", module: "b", method: "default" };
 
             expect(RestHelper.getRest("/empty")).toEqual(rest);
         });

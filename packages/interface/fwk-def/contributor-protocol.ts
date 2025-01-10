@@ -2,13 +2,9 @@
 
 import { ContributorProtocolWithReturn } from "@aitianyu.cn/tianyu-app-fwk";
 import { JobWorkerExecutionResult, JobWorkerPayload } from "./contributor/job";
-import {
-    DefaultRequestItemsMap,
-    DefaultRequestItemTargetType,
-    RequestPayloadData,
-    RequestRestData,
-} from "./contributor/requests";
+import { DefaultRequestItemsMap, DefaultRequestItemTargetType, RequestPayloadData } from "./contributor/requests";
 import { NetworkServiceResponseData } from "./contributor/service";
+import { PathEntry } from "../handler/rest-handler";
 
 /** Extendable by user. */
 export interface ICSPContributorFactorProtocolMap {
@@ -23,13 +19,13 @@ export interface ICSPContributorFactorProtocolMap {
     >;
     /** To get a request dispatcher for request service */
     "request-handler.dispatcher": ContributorProtocolWithReturn<
-        { rest: RequestRestData; payload: RequestPayloadData },
+        { rest: PathEntry; payload: RequestPayloadData },
         Promise<NetworkServiceResponseData>
     >;
 
     /** To get a request dispatcher for request service */
     "dispatch-handler.network-dispatcher": ContributorProtocolWithReturn<
-        { rest: RequestRestData; payload: RequestPayloadData },
+        { rest: PathEntry; payload: RequestPayloadData },
         Promise<NetworkServiceResponseData>
     >;
     /** To get a request dispatcher for request service */

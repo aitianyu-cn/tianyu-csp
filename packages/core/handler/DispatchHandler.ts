@@ -10,8 +10,8 @@ import {
     JobWorkerPayload,
     NetworkServiceResponseData,
     RequestPayloadData,
-    RequestRestData,
     ICSPContributorFactorProtocolMap,
+    PathEntry,
 } from "#interface";
 import { createJobManager } from "#job";
 import { ErrorHelper } from "#utils";
@@ -71,10 +71,7 @@ export class DispatchHandler {
      * @param data request payload data
      * @returns return a network service response
      */
-    private async _networkDispatch(data: {
-        rest: RequestRestData;
-        payload: RequestPayloadData;
-    }): Promise<NetworkServiceResponseData> {
+    private async _networkDispatch(data: { rest: PathEntry; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
         const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._requestJobPool);
         if (!dispatcher) {
             return Promise.reject({

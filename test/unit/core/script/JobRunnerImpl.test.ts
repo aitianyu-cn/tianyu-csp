@@ -42,6 +42,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
                 },
             },
             script: {
@@ -86,6 +87,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
                 },
             },
             script: {
@@ -131,6 +133,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
                 },
             },
             script: {
@@ -176,6 +179,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
                 },
             },
             script: {

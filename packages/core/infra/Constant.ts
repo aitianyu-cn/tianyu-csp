@@ -7,6 +7,7 @@ export const DEFAULT_REST_REQUEST_ITEM_MAP = {
         search: "x-language",
     },
     session: "SESSION_ID",
+    disableCache: "disable-cache",
 };
 
 /** CSP supported module suffix */

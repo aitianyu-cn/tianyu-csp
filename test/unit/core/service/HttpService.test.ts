@@ -5,13 +5,13 @@ import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { createContributor } from "#core/InfraLoader";
 import { HttpService } from "#core/service/HttpService";
 import {
-    RequestRestData,
     RequestPayloadData,
     NetworkServiceResponseData,
     HTTP_STATUS_CODE,
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
     REQUEST_HANDLER_MODULE_ID,
+    PathEntry,
 } from "#interface";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
@@ -33,7 +33,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         },
         dispatch: async (data: any): Promise<NetworkServiceResponseData> => {
             const { payload } = data as {
-                rest: RequestRestData;
+                rest: PathEntry;
                 payload: RequestPayloadData;
             };
             return {
@@ -96,7 +96,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         it("get success", (done) => {
             DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
                 const { payload } = data as {
-                    rest: RequestRestData;
+                    rest: PathEntry;
                     payload: RequestPayloadData;
                 };
                 return {
@@ -183,7 +183,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         it("success", (done) => {
             DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
                 const { payload } = data as {
-                    rest: RequestRestData;
+                    rest: PathEntry;
                     payload: RequestPayloadData;
                 };
                 return {

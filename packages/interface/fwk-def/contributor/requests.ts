@@ -2,7 +2,6 @@
 
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
-import { JobWorkerExecutionEntry } from "./job";
 
 /**
  * Request items target type
@@ -26,6 +25,8 @@ export interface DefaultRequestItemsMap {
     language?: string | { [key in DefaultRequestItemTargetType]: string };
     /** default session define */
     session?: string | { [key in DefaultRequestItemTargetType]: string };
+    /** default disable cache define */
+    disableCache?: string;
 }
 
 /** Supported Network Request Service Type */
@@ -43,6 +44,8 @@ export interface RequestPayloadData {
     traceId?: string;
     /** Network session id */
     sessionId: string;
+    /** to disable request cache for current request */
+    disableCache: boolean;
 
     /** Network request type */
     type: RequestType;
@@ -58,9 +61,6 @@ export interface RequestPayloadData {
     /** Headers */
     headers: MapOfString;
 }
-
-/** Request url script package */
-export interface RequestRestData extends JobWorkerExecutionEntry {}
 
 /** Request response payload data */
 export interface ResponsePayloadData extends NetworkServiceResponseData {

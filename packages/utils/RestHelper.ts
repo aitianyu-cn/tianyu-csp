@@ -1,7 +1,7 @@
 /** @format */
 
 import { REST } from "#core/handler/RestHandlerConstant";
-import { ImportPackage, PathEntry, RequestRestData } from "#interface";
+import { HttpRestItem, PathEntry } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 
 /**
@@ -19,7 +19,7 @@ export class RestHelper {
      * @returns return a request rest data which defined in rest config,
      *          and null value will be returned if the url path is not mapped
      */
-    public static getRest(path: string, rest?: MapOfType<ImportPackage>, fallback?: PathEntry): RequestRestData | null {
+    public static getRest(path: string, rest?: MapOfType<HttpRestItem>, fallback?: PathEntry): HttpRestItem | null {
         if (!path) return null;
 
         const restPath = path.startsWith("/") ? path : `/${path}`;
@@ -29,7 +29,16 @@ export class RestHelper {
                   package: restData.package,
                   module: restData.module,
                   method: restData.method || "default",
+                  cache: restData.cache,
               }
             : fallback || null;
+    }
+
+    public static toPathEntry(rest: HttpRestItem): PathEntry {
+        return {
+            package: rest.package || "",
+            module: rest.module || "",
+            method: rest.method || "",
+        };
     }
 }

@@ -5,9 +5,49 @@ import { INetworkService } from "./service";
 import { MapOfType } from "@aitianyu.cn/types";
 import { ImportPackage } from "../api/importer";
 import { PathEntry } from "../handler/rest-handler";
+import { TlsOptions } from "tls";
+import { NetworkServiceResponseData } from "../fwk-def/contributor/service";
+import { RequestPayloadData } from "../fwk-def/contributor/requests";
 
 /** Http Query Response Callback */
 export type HttpCallback = (req: IncomingMessage, res: ServerResponse) => void;
+
+/** Http Server Cache Setting */
+export interface HttpServerCacheSetting {
+    /**
+     * Cache type
+     *
+     * @local use local cache
+     * @database use given cache callbacks to save, read and controlle the caches.
+     */
+    type: "local" | "database";
+    /**
+     * Milliseconds time of an interval runner to call the cycle to clean cached items which out of date
+     */
+    watch?: number;
+
+    /** To do cache cycle to clean items which out of date */
+    cycle?(): void;
+    /** To clean all caches */
+    clean?(): void;
+    /**
+     * To save a cache
+     *
+     * @param response new response data
+     * @param payload request payload
+     * @param option http request option
+     */
+    writer?(response: NetworkServiceResponseData, payload: RequestPayloadData, option?: HttpRequestCacheOption): void;
+    /**
+     * To get a response from cache
+     *
+     * @param payload request payload
+     * @param option http request option
+     *
+     * @returns return a response data, null value will be returned if cache not valid
+     */
+    reader?(payload: RequestPayloadData, option?: HttpRequestCacheOption): Promise<NetworkServiceResponseData | null>;
+}
 
 /** Htto Service Option */
 export interface HttpServiceOption {
@@ -36,7 +76,55 @@ export interface HttpServiceOption {
     rest?: MapOfType<ImportPackage>;
     /** Customized Rest fallback, if no fallback is given, default global defined fallback will be used */
     fallback?: PathEntry;
+
+    /**
+     * Customized Http Cache setting
+     *
+     * @undefined if the cache setting is not given, the http server will not enable the response cache
+     */
+    cache?: HttpServerCacheSetting;
 }
+
+/** Https Option */
+export type HttpSecurityOption = TlsOptions & {
+    /** allow http 1.0 */
+    allowHTTP1?: boolean | undefined;
+    /** request origins */
+    origins?: string[] | undefined;
+};
+
+/** Http2.0 Service Option */
+export type Http2ServiceOption = HttpServiceOption & HttpSecurityOption;
+
+/**
+ * The type of how to cache the request response data for quick response
+ *
+ * @warnning full type should not to be used for browser due to the header and cookies are not stable
+ *
+ * @field
+ * @url indicates the cache is mapped to the url only, return the cached data if the url is matched
+ * @full indicates the cache should check url, cookie, header and method
+ * @custom indicates the cache should check the custom specified items (based on url checking, if url is different, the cache will not valid)
+ */
+export type HttpRequestCacheType = "url" | "full" | "custom";
+
+/** Http Request Option of cache */
+export interface HttpRequestCacheOption {
+    /** type of how to cache the request response data */
+    type: HttpRequestCacheType;
+    /** indicates whether the cache should bind a session */
+    session?: boolean;
+    /** specified cookie items to used for cache checking */
+    cookie?: string[];
+    /** specified header items to used for cache checking */
+    header?: string[];
+    /** specified parameters items to used for cache checking */
+    params?: string[];
+    /** cache valid timeout, number of millisecond */
+    timeout?: number;
+}
+
+export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption };
 
 /** Http Service API */
 export interface IHttpService extends INetworkService {

@@ -37,6 +37,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
             },
             script: {
                 package: "test",
@@ -76,6 +77,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
             },
             script: {
                 package: "test",
@@ -116,6 +118,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
             },
             script: {
                 package: "test",
@@ -156,6 +159,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
             },
             script: {
                 package: "test",

@@ -2,7 +2,7 @@
 
 import { guid, MapOfString, MapOfType, ObjectHelper } from "@aitianyu.cn/types";
 import { DEFAULT_REST_FALLBACK } from "./RestHandlerConstant";
-import { ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
+import { HttpRestItem, ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
 
 const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
 
@@ -51,7 +51,7 @@ const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
 export class RestHandler {
     private _fallback: PathEntry | null;
     private _resttree: Subitem;
-    private _rest: MapOfType<{ path: string; level: number; entry: ImportPackage }>;
+    private _rest: MapOfType<{ path: string; level: number; entry: HttpRestItem }>;
 
     public constructor(rest?: MapOfType<ImportPackage>, enableFallbackOrFallback?: boolean | PathEntry) {
         this._resttree = {
@@ -185,7 +185,7 @@ export class RestHandler {
      * @param url request url
      * @returns return a package path, return null if the path is not found
      */
-    public mapping(url: string): PathEntry | null {
+    public mapping(url: string): HttpRestItem | null {
         const path = this._processPath(url.split("?")[0]);
 
         const mappeds: { id: string; type: SubitemType; params: MapOfString }[] = [];
@@ -244,7 +244,7 @@ export class RestHandler {
      * @param maps mapped rest list
      * @returns return a best rest package, return null if no rest package mapped
      */
-    private _filter(maps: { id: string; type: SubitemType; params: MapOfString }[]): PathEntry | null {
+    private _filter(maps: { id: string; type: SubitemType; params: MapOfString }[]): HttpRestItem | null {
         if (!maps.length) {
             return this._fallback;
         }
@@ -267,10 +267,11 @@ export class RestHandler {
         }
 
         const entry = this._rest[item.id].entry;
-        const result: PathEntry = {
+        const result: HttpRestItem = {
             package: this._format(entry.package || "", item.params),
             module: this._format(entry.module || "", item.params),
             method: this._format(entry.method || "default", item.params),
+            cache: entry.cache,
         };
 
         return result;

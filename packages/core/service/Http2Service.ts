@@ -1,27 +1,105 @@
 /** @format */
 
-import { guid } from "@aitianyu.cn/types";
-import { IHttpService, RequestType } from "#interface";
+import {
+    Http2ServiceOption,
+    HTTP_STATUS_CODE,
+    HttpSecurityOption,
+    ICSPContributorFactorProtocolMap,
+    RequestPayloadData,
+} from "#interface";
+import { createSecureServer, IncomingHttpHeaders, OutgoingHttpHeaders, ServerHttp2Stream } from "http2";
+import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
+import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
+import { SERVICE_ERROR_CODES } from "#core/Constant";
 
-export class Http2Service implements IHttpService {
-    private _id: string;
-
-    public constructor() {
-        this._id = guid();
+export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
+    public constructor(options?: Http2ServiceOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
+        super(options, contributor);
     }
 
-    public get id(): string {
-        return this._id;
+    protected override createServerInstance(
+        option?: Http2ServiceOption,
+    ): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction {
+        const securityOpt: HttpSecurityOption = option || {};
+        const server = createSecureServer(securityOpt);
+
+        server.on("stream", this.onStream.bind(this));
+
+        return server;
     }
 
-    public get type(): RequestType {
-        return "http";
+    private onStream(stream: ServerHttp2Stream, header: IncomingHttpHeaders, flags: number): void {
+        switch (header[":method"]?.toUpperCase()) {
+            case "GET":
+                this.onGet(stream, header, flags);
+                break;
+            case "POST":
+                this.onPost(stream, header, flags);
+                break;
+            default:
+                this.onInvalidCall(stream);
+                break;
+        }
     }
 
-    public listen(): void {
-        throw new Error("Method not implemented.");
+    private onGet(stream: ServerHttp2Stream, header: IncomingHttpHeaders, _flags: number): void {
+        const payload = this.generatePayload(header[":path"], header);
+        this._handleDispatch(payload, stream);
     }
-    public close(): void {
-        throw new Error("Method not implemented.");
+
+    private onPost(stream: ServerHttp2Stream, header: IncomingHttpHeaders, _flags: number): void {
+        let data: string = "";
+
+        stream.on("data", (chunk) => {
+            data += chunk;
+        });
+
+        stream.on("end", () => {
+            let body: any = null;
+            try {
+                body = JSON.parse(decodeURI(data));
+            } catch {}
+
+            const payload = this.generatePayload(header[":path"], header, body);
+            this._handleDispatch(payload, stream);
+        });
+    }
+
+    private onInvalidCall(stream: ServerHttp2Stream): void {
+        setTimeout(() => {
+            const resBody = {
+                error: [
+                    {
+                        code: SERVICE_ERROR_CODES.REQUEST_METHOD_NOT_SUPPORT,
+                        message: "Request method handler is not found, please ensure your http request uses correct method.",
+                    },
+                ],
+            };
+            stream.respond({
+                ":status": HTTP_STATUS_CODE.METHOD_NOT_ALLOWED,
+                "content-type": "application/json; charset=utf-8",
+            });
+            stream.end(JSON.stringify(resBody));
+        }, 0);
+    }
+
+    private _handleDispatch(payload: RequestPayloadData, stream: ServerHttp2Stream): void {
+        setTimeout(async () => {
+            const response = await this.dispatch(payload);
+
+            const header: OutgoingHttpHeaders = {
+                ...response.headers,
+                ":status": response.statusCode,
+            };
+
+            stream.respond(header);
+            stream.end(
+                response.body
+                    ? typeof response.body === "string"
+                        ? response.body
+                        : JSON.stringify(response.body)
+                    : /* istanbul ignore next */ "",
+            );
+        }, 0);
     }
 }

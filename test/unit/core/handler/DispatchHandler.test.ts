@@ -7,8 +7,8 @@ import {
     DISPATCH_HANDLER_MODULE_ID,
     HTTP_STATUS_CODE,
     JobWorkerExecutionResult,
+    PathEntry,
     RequestPayloadData,
-    RequestRestData,
 } from "#interface";
 import { AreaCode, guid } from "@aitianyu.cn/types";
 
@@ -32,7 +32,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
 
     describe("dispatch-handler.network-dispatcher", () => {
         const payload: {
-            rest: RequestRestData;
+            rest: PathEntry;
             payload: RequestPayloadData;
         } = {
             rest: {
@@ -51,6 +51,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
             },
         };
         it("execute witch error", (done) => {
