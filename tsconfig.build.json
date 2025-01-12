@@ -21,6 +21,7 @@
         "baseUrl": ".",
         "outDir": "./build",
         "paths": {
+            "packages/*": ["packages/*"],
             "#core/*": ["packages/core/*"],
             "#loader/*": ["packages/loader/*"],
 

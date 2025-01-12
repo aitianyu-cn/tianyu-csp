@@ -6,6 +6,7 @@ export * from "./handler/DispatchHandler";
 export * from "./handler/RequestHandler";
 
 export * from "./service/HttpService";
+export * from "./service/Http2Service";
 
 export { loadInfra as load } from "./InfraLoader";
 

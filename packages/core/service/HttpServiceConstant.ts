@@ -19,7 +19,7 @@ export const DISPATCH_ERROR_RESPONSES = {
     }),
     "rest-not-found": (payload: RequestPayloadData) => ({
         statusCode: HTTP_STATUS_CODE.NOT_FOUND,
-        headers: payload.headers,
+        headers: { "Content-Type": "application/json; charset=utf-8" },
         body: {
             error: [
                 {
@@ -29,9 +29,9 @@ export const DISPATCH_ERROR_RESPONSES = {
             ],
         },
     }),
-    "dispatch-request-error": (payload: RequestPayloadData, error: any) => ({
+    "dispatch-request-error": (_payload: RequestPayloadData, error: any) => ({
         statusCode: ErrorHelper.getHttpStatusByJobStatus(error?.status),
-        headers: payload.headers,
+        headers: { "Content-Type": "application/json; charset=utf-8" },
         body: {
             error: [
                 {

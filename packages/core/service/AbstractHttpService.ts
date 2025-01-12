@@ -68,7 +68,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
 
         this._cacheHandler = options?.cache && new RequestCacheHandler(options.cache);
 
-        this._server = this.createServerInstance();
+        this._server = this.createServerInstance(options);
         this._server.on("error", this.onError.bind(this));
     }
 
@@ -82,12 +82,12 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
 
     public listen(): void {
         this._cacheHandler?.start();
-        this._server?.listen(this._port, this._host);
+        this._server.listen(this._port, this._host);
     }
 
     public close(callback?: (err?: Error) => void): void {
         this._cacheHandler?.destroy();
-        this._server?.close(callback);
+        this._server.close(callback);
     }
 
     protected async dispatch(payload: RequestPayloadData): Promise<NetworkServiceResponseData> {

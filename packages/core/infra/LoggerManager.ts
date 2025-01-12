@@ -21,6 +21,7 @@ export class LoggerManager implements ILogger {
             "logger",
             "log",
             `Could not to record the '${LogLevelMap[level]}' for '${msg.substring(0, msg.length > 20 ? 20 : msg.length)}'.`,
+            true,
         );
     }
     public async info(msg: string): Promise<void> {
