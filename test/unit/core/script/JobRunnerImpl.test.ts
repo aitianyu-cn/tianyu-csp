@@ -32,6 +32,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
                     serviceId: "",
                     requestId: "",
@@ -43,6 +44,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
+                    version: "http",
                 },
             },
             script: {
@@ -77,6 +79,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
                     serviceId: "",
                     requestId: "",
@@ -88,6 +91,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
+                    version: "http",
                 },
             },
             script: {
@@ -123,6 +127,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
                     serviceId: "",
                     requestId: "",
@@ -134,6 +139,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
+                    version: "http",
                 },
             },
             script: {
@@ -169,6 +175,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
                     serviceId: "",
                     requestId: "",
@@ -180,6 +187,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
+                    version: "http",
                 },
             },
             script: {

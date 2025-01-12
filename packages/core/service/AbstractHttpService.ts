@@ -8,7 +8,7 @@ import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
     HTTP_STATUS_CODE,
-    HttpRequestCacheOption,
+    HttpProtocal,
     HttpRestItem,
     HttpServiceOption,
     ICSPContributorFactorProtocolMap,
@@ -97,6 +97,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         }
 
         const rest = this.getRest(payload.url);
+        RestHelper.transmit(payload, rest?.trans);
         let response = rest
             ? (await this._cacheHandler?.readCache(payload, rest?.cache)) ||
               (await dispatcher({ rest: RestHelper.toPathEntry(rest), payload }).then(
@@ -138,7 +139,9 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
             requestId,
             sessionId,
 
+            host: header.host || "",
             url: url?.split("?")[0] || /* istanbul ignore next */ "",
+            version: this.protocol,
             body: body || null,
             serviceId: this.id,
             type: "http",
@@ -178,4 +181,5 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
     }
 
     protected abstract createServerInstance(opt?: OPT): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
+    protected abstract protocol: HttpProtocal;
 }

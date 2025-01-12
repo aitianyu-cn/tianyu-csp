@@ -27,6 +27,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("success", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
                 serviceId: "",
                 requestId: "",
@@ -38,6 +39,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 param: {},
                 headers: {},
                 disableCache: true,
+                version: "http",
             },
             script: {
                 package: "test",
@@ -67,6 +69,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("failed", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
                 serviceId: "",
                 requestId: "",
@@ -78,6 +81,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 param: {},
                 headers: {},
                 disableCache: true,
+                version: "http",
             },
             script: {
                 package: "test",
@@ -108,6 +112,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("failed - no message", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
                 serviceId: "",
                 requestId: "",
@@ -119,6 +124,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 param: {},
                 headers: {},
                 disableCache: true,
+                version: "http",
             },
             script: {
                 package: "test",
@@ -149,6 +155,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("import wrong module", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
                 serviceId: "",
                 requestId: "",
@@ -160,6 +167,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 param: {},
                 headers: {},
                 disableCache: true,
+                version: "http",
             },
             script: {
                 package: "test",

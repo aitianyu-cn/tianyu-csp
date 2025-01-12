@@ -2,7 +2,7 @@
 
 import { IncomingMessage, ServerResponse } from "http";
 import { INetworkService } from "./service";
-import { MapOfType } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { ImportPackage } from "../api/importer";
 import { PathEntry } from "../handler/rest-handler";
 import { TlsOptions } from "tls";
@@ -11,6 +11,15 @@ import { RequestPayloadData } from "../fwk-def/contributor/requests";
 
 /** Http Query Response Callback */
 export type HttpCallback = (req: IncomingMessage, res: ServerResponse) => void;
+
+/**
+ * Http Supported Protocol in csp
+ *
+ * @http Http1.0 connection without secure
+ * @https Http1.0 connection based on secure
+ * @http2 Http2.0 connection based on secure
+ */
+export type HttpProtocal = "http" | "https" | "http2";
 
 /** Http Server Cache Setting */
 export interface HttpServerCacheSetting {
@@ -124,7 +133,41 @@ export interface HttpRequestCacheOption {
     timeout?: number;
 }
 
-export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption };
+/** Http request remote transmition rest option */
+export interface HttpRequestTransmitOption {
+    /**
+     * Remote transmition specified http protocal
+     *
+     * @default http2
+     */
+    protocol?: HttpProtocal;
+    /**
+     * Remote transmition url rewrite map
+     *
+     * @example
+     * rewrite: {
+     *      "/remote": "",
+     *      "/remote/test/code": "/test-code",
+     *      "/remote/debug": ""
+     * };
+     * remote: "template.org";
+     *
+     * source-url: "https://localhost/remote/test/code"
+     * target-url: "https://template.org/test-code"
+     *
+     * source-url: "https://localhost/remote/release/code"
+     * target-url: "https://template.org/release/code"
+     *
+     * source-url: "https://localhost/remote/debug/code"
+     * target-url: "https://template.org/code"
+     */
+    rewrite?: MapOfString;
+    /** Request relocated host */
+    host: string;
+}
+
+/** Http request rest item */
+export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption; trans?: HttpRequestTransmitOption };
 
 /** Http Service API */
 export interface IHttpService extends INetworkService {

@@ -2,6 +2,7 @@
 
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
+import { HttpProtocal } from "packages/interface/service/http-service";
 
 /**
  * Request items target type
@@ -34,8 +35,20 @@ export type RequestType = "http";
 
 /** Network Request Payload Data */
 export interface RequestPayloadData {
-    /** Network URL */
+    /**
+     * Request host
+     *
+     * if this is a transmition request, the url will be changed to remote host
+     */
+    host: string;
+    /**
+     * Network URL
+     *
+     * if this is a transmition request, the url will be changed to rewrite url
+     */
     url: string;
+    /** Http request protocol */
+    version: HttpProtocal;
     /** Network service id */
     serviceId: string;
     /** Network request id */

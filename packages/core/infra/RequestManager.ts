@@ -1,8 +1,14 @@
 /** @format */
 
-import { HTTP_STATUS_CODE, IServerRequest, RequestPayloadData, RequestType } from "#interface";
+import { HTTP_STATUS_CODE, HttpProtocal, IServerRequest, RequestPayloadData, RequestType } from "#interface";
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
+
+const HTTP_PROTOCOL_VERSION: { [key in HttpProtocal]: string } = {
+    http: "1.1",
+    https: "1.1",
+    http2: "2.0",
+};
 
 /**
  * CSP Generic Request Manager for global definition
@@ -15,6 +21,9 @@ export class GlobalRequestManager implements IServerRequest {
     }
     public get version(): string {
         return PROJECT_VERSION;
+    }
+    public get host(): string {
+        return "";
     }
     public get url(): string {
         return "/";
@@ -54,8 +63,9 @@ export class GlobalRequestManager implements IServerRequest {
 export class GenericRequestManager implements IServerRequest {
     private _id: string;
     private _url: string;
+    private _host: string;
     private _type: RequestType;
-    private _version: string;
+    private _version: HttpProtocal;
     private _language: AreaCode;
     private _session: string;
 
@@ -70,8 +80,9 @@ export class GenericRequestManager implements IServerRequest {
     public constructor(req: RequestPayloadData) {
         this._id = req.requestId;
         this._url = req.url;
+        this._host = req.host;
         this._type = req.type;
-        this._version = req.headers["version"] || "";
+        this._version = req.version;
         this._language = req.language;
         this._session = req.sessionId;
 
@@ -95,7 +106,10 @@ export class GenericRequestManager implements IServerRequest {
         return this._id;
     }
     public get version(): string {
-        return this._version;
+        return HTTP_PROTOCOL_VERSION[this._version];
+    }
+    public get host(): string {
+        return this._host;
     }
     public get url(): string {
         return this._url;

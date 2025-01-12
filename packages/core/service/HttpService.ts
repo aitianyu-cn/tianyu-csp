@@ -1,7 +1,13 @@
 /** @format */
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { HTTP_STATUS_CODE, HttpServiceOption, RequestPayloadData, ICSPContributorFactorProtocolMap } from "#interface";
+import {
+    HTTP_STATUS_CODE,
+    HttpServiceOption,
+    RequestPayloadData,
+    ICSPContributorFactorProtocolMap,
+    HttpProtocal,
+} from "#interface";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
@@ -29,6 +35,10 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                     break;
             }
         });
+    }
+
+    protected get protocol(): HttpProtocal {
+        return "http";
     }
 
     /**

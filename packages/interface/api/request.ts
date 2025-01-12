@@ -13,7 +13,9 @@ export interface IServerRequest {
     id: string;
     /** Request Service Version */
     version: string;
-    /** Request Url */
+    /** Request Host (change to remote host if there is a transmition request) */
+    host: string;
+    /** Request Url (change to rewritten url if there is a transmition request) */
     url: string;
     /** Network request type */
     type: RequestType;

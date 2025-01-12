@@ -11,6 +11,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
 
         expect(reqest.id).toEqual(PROJECT_NAME);
         expect(reqest.version).toEqual(PROJECT_VERSION);
+        expect(reqest.host).toEqual("");
         expect(reqest.url).toEqual("/");
         expect(reqest.type).toEqual("http");
         expect(reqest.language).toEqual(PROJECT_DEFAULT_LANGUAGE);
@@ -29,6 +30,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
 
     it("GenericRequestManager", () => {
         const req: RequestPayloadData = {
+            host: "localhost",
             url: "/a/b/c",
             serviceId: "222222",
             requestId: "111111",
@@ -49,11 +51,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
                 version: "1.1",
             },
             disableCache: true,
+            version: "http2",
         };
         const request = new GenericRequestManager(req);
 
         expect(request.id).toEqual("111111");
-        expect(request.version).toEqual("1.1");
+        expect(request.version).toEqual("2.0");
+        expect(request.host).toEqual("localhost");
         expect(request.url).toEqual("/a/b/c");
         expect(request.type).toEqual("http");
         expect(request.language).toEqual(AreaCode.zh_CN);

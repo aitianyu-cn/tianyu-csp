@@ -53,7 +53,7 @@ export class RestHandler {
     private _resttree: Subitem;
     private _rest: MapOfType<{ path: string; level: number; entry: HttpRestItem }>;
 
-    public constructor(rest?: MapOfType<ImportPackage>, enableFallbackOrFallback?: boolean | PathEntry) {
+    public constructor(rest?: MapOfType<HttpRestItem>, enableFallbackOrFallback?: boolean | PathEntry) {
         this._resttree = {
             id: null,
             actual: {},
@@ -75,7 +75,7 @@ export class RestHandler {
      *
      * @param rest source rest map
      */
-    private _processRest(rest: MapOfType<ImportPackage>): void {
+    private _processRest(rest: MapOfType<HttpRestItem>): void {
         const raw_rest = rest;
 
         for (const key of Object.keys(raw_rest)) {
@@ -272,6 +272,7 @@ export class RestHandler {
             module: this._format(entry.module || "", item.params),
             method: this._format(entry.method || "default", item.params),
             cache: entry.cache,
+            trans: entry.trans,
         };
 
         return result;

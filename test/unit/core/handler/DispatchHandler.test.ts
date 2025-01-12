@@ -41,6 +41,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 method: "",
             },
             payload: {
+                host: "",
                 url: "",
                 serviceId: "",
                 requestId: "",
@@ -52,6 +53,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 param: {},
                 headers: {},
                 disableCache: true,
+                version: "http",
             },
         };
         it("execute witch error", (done) => {

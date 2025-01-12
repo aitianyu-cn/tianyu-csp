@@ -1,7 +1,7 @@
 /** @format */
 
 import { REST } from "#core/handler/RestHandlerConstant";
-import { HttpRestItem, PathEntry } from "#interface";
+import { HttpRequestTransmitOption, HttpRestItem, PathEntry, RequestPayloadData } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 
 /**
@@ -34,11 +34,44 @@ export class RestHelper {
             : fallback || null;
     }
 
+    /**
+     * Convert rest item to be request processor path
+     *
+     * @param rest source rest item
+     * @returns a path entry
+     */
     public static toPathEntry(rest: HttpRestItem): PathEntry {
         return {
             package: rest.package || "",
             module: rest.module || "",
             method: rest.method || "",
         };
+    }
+
+    /**
+     * Convert http request payload to transmition request payload if this request is a transmition request
+     *
+     * @param payload source payload
+     * @param trans transmition option
+     */
+    public static transmit(payload: RequestPayloadData, trans?: HttpRequestTransmitOption): void {
+        if (!trans) {
+            return;
+        }
+
+        payload.host = trans.host;
+
+        if (trans.rewrite) {
+            let prefix = "";
+            for (const key of Object.keys(trans.rewrite)) {
+                if (payload.url.startsWith(key) && key.length > prefix.length) {
+                    prefix = key;
+                }
+            }
+
+            if (prefix) {
+                payload.url = payload.url.replace(prefix, trans.rewrite[prefix]);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
 import {
     Http2ServiceOption,
     HTTP_STATUS_CODE,
+    HttpProtocal,
     HttpSecurityOption,
     ICSPContributorFactorProtocolMap,
     RequestPayloadData,
@@ -26,6 +27,10 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
         server.on("stream", this.onStream.bind(this));
 
         return server;
+    }
+
+    protected get protocol(): HttpProtocal {
+        return "http2";
     }
 
     private onStream(stream: ServerHttp2Stream, header: IncomingHttpHeaders, flags: number): void {
