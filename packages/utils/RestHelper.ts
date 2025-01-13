@@ -1,7 +1,7 @@
 /** @format */
 
 import { REST } from "#core/handler/RestHandlerConstant";
-import { HttpRequestTransmitOption, HttpRestItem, PathEntry, RequestPayloadData } from "#interface";
+import { HttpRequestProxyOption, HttpRestItem, PathEntry, RequestPayloadData } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 
 /**
@@ -41,6 +41,13 @@ export class RestHelper {
      * @returns a path entry
      */
     public static toPathEntry(rest: HttpRestItem): PathEntry {
+        if (rest.proxy && !(rest.package && rest.module && rest.method)) {
+            return {
+                package: "$",
+                module: "default-loader",
+                method: "proxy",
+            };
+        }
         return {
             package: rest.package || "",
             module: rest.module || "",
@@ -54,7 +61,7 @@ export class RestHelper {
      * @param payload source payload
      * @param trans transmition option
      */
-    public static transmit(payload: RequestPayloadData, trans?: HttpRequestTransmitOption): void {
+    public static transmit(payload: RequestPayloadData, trans?: HttpRequestProxyOption): void {
         if (!trans) {
             return;
         }

@@ -80,9 +80,9 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         return "http";
     }
 
-    public listen(): void {
+    public listen(callback?: () => void): void {
         this._cacheHandler?.start();
-        this._server.listen(this._port, this._host);
+        this._server.listen(this._port, this._host, undefined, callback);
     }
 
     public close(callback?: (err?: Error) => void): void {
@@ -97,7 +97,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         }
 
         const rest = this.getRest(payload.url);
-        RestHelper.transmit(payload, rest?.trans);
+        RestHelper.transmit(payload, rest?.proxy);
         let response = rest
             ? (await this._cacheHandler?.readCache(payload, rest?.cache)) ||
               (await dispatcher({ rest: RestHelper.toPathEntry(rest), payload }).then(
@@ -139,7 +139,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
             requestId,
             sessionId,
 
-            host: header.host || "",
+            host: header.host || /* istanbul ignore next */ "",
             url: url?.split("?")[0] || /* istanbul ignore next */ "",
             version: this.protocol,
             body: body || null,

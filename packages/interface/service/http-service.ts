@@ -134,7 +134,7 @@ export interface HttpRequestCacheOption {
 }
 
 /** Http request remote transmition rest option */
-export interface HttpRequestTransmitOption {
+export interface HttpRequestProxyOption {
     /**
      * Remote transmition specified http protocal
      *
@@ -167,12 +167,16 @@ export interface HttpRequestTransmitOption {
 }
 
 /** Http request rest item */
-export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption; trans?: HttpRequestTransmitOption };
+export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption; proxy?: HttpRequestProxyOption };
 
 /** Http Service API */
 export interface IHttpService extends INetworkService {
-    /** To start http listening ont the binding host and port  */
-    listen(): void;
+    /**
+     * To start http listening ont the binding host and port
+     *
+     * @param callback callback function when server is started
+     */
+    listen(callback?: () => void): void;
 }
 
 /** Http Status Code */

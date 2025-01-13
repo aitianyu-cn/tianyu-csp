@@ -272,7 +272,7 @@ export class RestHandler {
             module: this._format(entry.module || "", item.params),
             method: this._format(entry.method || "default", item.params),
             cache: entry.cache,
-            trans: entry.trans,
+            proxy: entry.proxy,
         };
 
         return result;

@@ -46,16 +46,17 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
     let DISPATCH_SPY: any = null;
     let SERVICE: any = null;
 
-    beforeAll(() => {
+    beforeAll((done) => {
         SERVICE = new HttpService(
             {
                 host: SERVICE_HOST,
                 port: SERVICE_PORT,
+                cache: {
+                    type: "local",
+                },
             },
             contributor,
         );
-
-        SERVICE.listen();
 
         process.on("unhandledRejection", (e) => {
             console.log(e);
@@ -64,6 +65,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         process.on("uncaughtException", (e) => {
             console.log(e);
         });
+
+        SERVICE.listen(done);
     });
 
     afterAll(async () => {
@@ -319,6 +322,62 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             expect(service["_rest"]?.mapping("/")).toEqual({ package: "h_p", module: "hm", method: "hm" });
             expect(service["_rest"]?.mapping("/c")).toEqual({ package: "c_p", module: "cm", method: "cm" });
             expect(service["_rest"]?.mapping("/d")).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+        });
+    });
+
+    describe("edge case", () => {
+        it("convertRequestItems - empty requires", () => {
+            jest.spyOn(contributor, "findModule");
+
+            expect(SERVICE.convertRequestItems([])).toEqual([]);
+            expect(contributor.findModule).not.toHaveBeenCalled();
+        });
+
+        it("getRest - not enable advanced rest - get rest from default", () => {
+            const server = new HttpService(
+                {
+                    host: SERVICE_HOST,
+                    port: SERVICE_PORT,
+                    advanceRest: false,
+                },
+                contributor,
+            );
+            server["_restMap"] = {
+                "/": {
+                    package: "h_p",
+                    module: "hm",
+                    method: "hm",
+                },
+                "/c": {
+                    package: "c_p",
+                    module: "cm",
+                    method: "cm",
+                },
+            };
+            server["_restFallback"] = {
+                package: "f_p",
+                module: "f_m",
+                method: "f_m",
+            };
+            expect(server["getRest"]("/")).toEqual({ package: "h_p", module: "hm", method: "hm" });
+            expect(server["getRest"]("/c")).toEqual({ package: "c_p", module: "cm", method: "cm" });
+            expect(server["getRest"]("/d")).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+        });
+
+        it("service error", () => {
+            jest.spyOn(TIANYU.logger, "error").mockImplementation(() => Promise.resolve());
+
+            const server = new HttpService(
+                {
+                    host: SERVICE_HOST,
+                    port: SERVICE_PORT,
+                },
+                contributor,
+            );
+
+            server["onError"](new Error("test-error"));
+
+            expect(TIANYU.logger.error).toHaveBeenCalled();
         });
     });
 });

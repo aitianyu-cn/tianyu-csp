@@ -36,7 +36,7 @@ export class RequestCacheHandler {
         }
 
         if (this._setting.type === "database") {
-            return this._setting.reader?.(payload, option) || null;
+            return this._setting.reader?.(payload, option) ?? null;
         }
 
         const key = this.formatKey(!!option.session, payload.sessionId, payload.url);
@@ -56,32 +56,26 @@ export class RequestCacheHandler {
         }
 
         const key = this.formatKey(!!option.session, payload.sessionId, payload.url);
+        const { cookie, header, param } = this.generateCacheObject(payload, option);
 
         const documents = this._cache.get(key) || [];
 
         // to remove current cached data
         const newDocuments = documents.filter((doc) => {
             return (
-                !this.checkMap(doc.cookie, payload.cookie) ||
-                !this.checkMap(doc.header, payload.headers) ||
-                !this.checkMap(doc.param, payload.param) ||
+                ObjectHelper.compareObjects(doc.cookie, cookie) === "different" ||
+                ObjectHelper.compareObjects(doc.header, header) === "different" ||
+                ObjectHelper.compareObjects(doc.param, param) === "different" ||
                 ObjectHelper.compareObjects(doc.req, payload.body) === "different"
             );
         });
 
         newDocuments.unshift({
+            cookie,
+            header,
+            param,
             time: Date.now(),
             req: ObjectHelper.clone(payload.body),
-            cookie:
-                option.type === "full"
-                    ? ObjectHelper.clone(payload.cookie)
-                    : this.generateMap(option.cookie || [], payload.cookie),
-            header:
-                option.type === "full"
-                    ? ObjectHelper.clone(payload.headers)
-                    : this.generateMap(option.header || [], payload.headers),
-            param:
-                option.type === "full" ? ObjectHelper.clone(payload.param) : this.generateMap(option.params || [], payload.param),
             response: ObjectHelper.clone(response),
         });
 
@@ -115,13 +109,15 @@ export class RequestCacheHandler {
         payload: RequestPayloadData,
         option: HttpRequestCacheOption,
     ): NetworkServiceResponseData | null {
+        const { cookie, header, param } = this.generateCacheObject(payload, option);
+
         const documents = this._cache.get(key) || [];
 
         const target = documents.findIndex((doc) => {
             return (
-                this.checkMap(doc.cookie, payload.cookie) &&
-                this.checkMap(doc.header, payload.headers) &&
-                this.checkMap(doc.param, payload.param) &&
+                ObjectHelper.compareObjects(doc.cookie, cookie) === "same" &&
+                ObjectHelper.compareObjects(doc.header, header) === "same" &&
+                ObjectHelper.compareObjects(doc.param, param) === "same" &&
                 ObjectHelper.compareObjects(doc.req, payload.body) === "same"
             );
         });
@@ -144,14 +140,22 @@ export class RequestCacheHandler {
         return span < timeout;
     }
 
-    private checkMap(src: MapOfType<string | undefined>, target: MapOfString): boolean {
-        for (const key of Object.keys(src)) {
-            if (src[key] !== target[key]) {
-                return false;
-            }
-        }
+    private generateCacheObject(
+        payload: RequestPayloadData,
+        option: HttpRequestCacheOption,
+    ): {
+        cookie: MapOfType<string | undefined>;
+        header: MapOfType<string | undefined>;
+        param: MapOfType<string | undefined>;
+    } {
+        const cookie =
+            option.type === "full" ? ObjectHelper.clone(payload.cookie) : this.generateMap(option.cookie || [], payload.cookie);
+        const header =
+            option.type === "full" ? ObjectHelper.clone(payload.headers) : this.generateMap(option.header || [], payload.headers);
+        const param =
+            option.type === "full" ? ObjectHelper.clone(payload.param) : this.generateMap(option.params || [], payload.param);
 
-        return true;
+        return { cookie, header, param };
     }
 
     private generateMap(keys: string[], src: MapOfString): MapOfType<string | undefined> {
