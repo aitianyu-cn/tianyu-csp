@@ -16,6 +16,13 @@ export class HttpsClient extends AbstractHttpClient {
 
     private authorization: boolean;
 
+    /**
+     * Create a Https Client
+     *
+     * @param locate Remote host
+     * @param path connection path
+     * @param method request method
+     */
     public constructor(locate: string, path: string, method: HttpCallMethod) {
         super(locate, path, method);
 
@@ -24,14 +31,27 @@ export class HttpsClient extends AbstractHttpClient {
         this.certs = [];
     }
 
+    /**
+     * To add a cert into client connection
+     *
+     * @param cert new cert
+     */
     public addCert(cert: string): void {
         this.certs.push(cert);
     }
-
+    /**
+     * To add a ca into client connection
+     *
+     * @param ca new ca
+     */
     public addCa(ca: string): void {
         this.cas.push(ca);
     }
-
+    /**
+     * Set the connection should validate the cert
+     *
+     * @param requireAuth flag of auth checking
+     */
     public setRequireAuth(requireAuth: boolean): void {
         this.authorization = requireAuth;
     }

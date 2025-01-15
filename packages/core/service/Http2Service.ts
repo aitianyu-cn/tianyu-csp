@@ -21,7 +21,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
     protected override createServerInstance(
         option?: Http2ServiceOption,
     ): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction {
-        const securityOpt: HttpSecurityOption = option || {};
+        const securityOpt: HttpSecurityOption = option || /* istanbul ignore next */ {};
         const server = createSecureServer(securityOpt);
 
         server.on("stream", this.onStream.bind(this));

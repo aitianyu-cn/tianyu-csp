@@ -16,6 +16,13 @@ export abstract class AbstractHttpClient implements IHttpClient {
 
     protected result: string;
 
+    /**
+     * Create a Http Client
+     *
+     * @param locate Remote host
+     * @param path connection path
+     * @param method request method
+     */
     public constructor(locate: string, path: string, method: HttpCallMethod) {
         this.locate = locate;
         this.port = 80;

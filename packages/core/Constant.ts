@@ -28,6 +28,10 @@ export const SERVICE_ERROR_CODES = {
     SERVICE_HANDLER_LOST: "20002",
     /** could not find a handler to process http request url path */
     REQUEST_PATH_INVALID: "20003",
+    /** the api or feature is not valid */
+    SERVICE_NOT_SUPPORTED: "20004",
+    /** the connection to service has error */
+    SERVICE_REQUEST_ERROR: "20005",
 
     /** user session is not established */
     USER_SESSION_NOT_VALID: "30000",

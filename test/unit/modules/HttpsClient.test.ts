@@ -194,7 +194,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
                 () => {
                     done.fail();
                 },
-                (error) => {
+                (_error) => {
                     expect(lisenter).not.toHaveBeenCalled();
                     done();
                 },

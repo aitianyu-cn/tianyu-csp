@@ -9,3 +9,4 @@
 
 export * from "./HttpClient";
 export * from "./HttpsClient";
+export * from "./Http2Client";
