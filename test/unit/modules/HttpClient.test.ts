@@ -33,6 +33,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
         client.setPort(32000);
 
         handler.get.mockImplementation((req: IncomingMessage, res: ServerResponse) => {
+            res.setHeader("content-type", "text/plain");
             res.statusCode = 200;
             res.write("success");
             res.end();
@@ -40,6 +41,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
 
         await client.send();
         expect(client.raw).toEqual("success");
+        expect(client.allHeaders()["content-type"]).toEqual("text/plain");
     });
 
     it("http success 2", async () => {

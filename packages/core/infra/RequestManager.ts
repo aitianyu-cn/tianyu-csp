@@ -53,6 +53,9 @@ export class GlobalRequestManager implements IServerRequest {
     public params(_key: string): string {
         return "";
     }
+    public allHeaders(): MapOfString {
+        return {};
+    }
 }
 
 /**
@@ -134,5 +137,8 @@ export class GenericRequestManager implements IServerRequest {
     }
     public params(key: string): string {
         return this._params[key] || "";
+    }
+    public allHeaders(): MapOfString {
+        return this._headers;
     }
 }

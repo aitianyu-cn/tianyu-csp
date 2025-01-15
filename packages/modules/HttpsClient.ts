@@ -74,6 +74,8 @@ export class HttpsClient extends AbstractHttpClient {
 
         return new Promise<void>((resolve, reject) => {
             const client = Https.request(option, (res) => {
+                this.responseHeaders = res.headers;
+
                 if (res.statusCode !== HTTP_STATUS_CODE.OK) {
                     reject(res.statusCode);
                 }

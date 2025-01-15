@@ -1,6 +1,6 @@
 /** @format */
 
-import { AreaCode } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { RequestType } from "../fwk-def/contributor/requests";
 
 /** CSP Request API for global */
@@ -63,4 +63,10 @@ export interface IServerRequest {
      * @returns return the params value
      */
     params(key: string): string;
+    /**
+     * To get all headers from request
+     *
+     * @returns map of headers
+     */
+    allHeaders(): MapOfString;
 }

@@ -100,4 +100,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.AbstractHttpClient", (
 
         expect(client["body"]).toEqual({ o: 1 });
     });
+
+    it("allHeader", () => {
+        const client = new ClientImpl("localhost", "/", "GET");
+
+        client["responseHeaders"] = { cookie: "TEST=t;" };
+
+        expect(client.allHeaders()).toEqual({ cookie: "TEST=t;" });
+    });
 });

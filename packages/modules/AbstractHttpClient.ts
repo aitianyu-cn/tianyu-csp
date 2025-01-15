@@ -1,7 +1,7 @@
 /** @format */
 
 import { HttpCallMethod, IHttpClient } from "#interface";
-import { MapOfString } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 
 export abstract class AbstractHttpClient implements IHttpClient {
     protected locate: string;
@@ -15,6 +15,7 @@ export abstract class AbstractHttpClient implements IHttpClient {
     protected cookies: MapOfString;
 
     protected result: string;
+    protected responseHeaders: MapOfType<string | string[] | undefined>;
 
     /**
      * Create a Http Client
@@ -35,6 +36,7 @@ export abstract class AbstractHttpClient implements IHttpClient {
         this.body = null;
 
         this.result = "";
+        this.responseHeaders = {};
     }
 
     public get raw(): string {
@@ -67,6 +69,10 @@ export abstract class AbstractHttpClient implements IHttpClient {
 
     public setBody(body: any): void {
         this.body = body;
+    }
+
+    public allHeaders(): MapOfType<string | string[] | undefined> {
+        return this.responseHeaders;
     }
 
     public abstract send(): Promise<void>;

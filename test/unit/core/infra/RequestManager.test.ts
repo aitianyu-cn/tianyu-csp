@@ -7,25 +7,27 @@ import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "package
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", () => {
     it("GlobalRequestManager", () => {
-        const reqest = new GlobalRequestManager();
+        const request = new GlobalRequestManager();
 
-        expect(reqest.id).toEqual(PROJECT_NAME);
-        expect(reqest.version).toEqual(PROJECT_VERSION);
-        expect(reqest.host).toEqual("");
-        expect(reqest.url).toEqual("/");
-        expect(reqest.type).toEqual("http");
-        expect(reqest.language).toEqual(PROJECT_DEFAULT_LANGUAGE);
-        expect(reqest.session).toEqual("");
-        expect(reqest.body).toBeNull();
+        expect(request.id).toEqual(PROJECT_NAME);
+        expect(request.version).toEqual(PROJECT_VERSION);
+        expect(request.host).toEqual("");
+        expect(request.url).toEqual("/");
+        expect(request.type).toEqual("http");
+        expect(request.language).toEqual(PROJECT_DEFAULT_LANGUAGE);
+        expect(request.session).toEqual("");
+        expect(request.body).toBeNull();
 
         expect(() => {
-            reqest.setResponseCode(0);
+            request.setResponseCode(0);
         }).not.toThrow();
-        expect(reqest.getResponseCode()).toEqual(HTTP_STATUS_CODE.OK);
+        expect(request.getResponseCode()).toEqual(HTTP_STATUS_CODE.OK);
 
-        expect(reqest.cookie("")).toEqual("");
-        expect(reqest.header("")).toEqual("");
-        expect(reqest.params("")).toEqual("");
+        expect(request.cookie("")).toEqual("");
+        expect(request.header("")).toEqual("");
+        expect(request.params("")).toEqual("");
+
+        expect(request.allHeaders()).toEqual({});
     });
 
     it("GenericRequestManager", () => {
@@ -76,5 +78,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.cookie("UNKNOWN")).toEqual("");
         expect(request.header("UNKNOWN")).toEqual("");
         expect(request.params("UNKNOWN")).toEqual("");
+
+        expect(request.allHeaders()).toEqual({ host: "localhost", version: "1.1" });
     });
 });

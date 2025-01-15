@@ -99,6 +99,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
         expect(client.raw).toEqual("");
         expect(client.response).toBeNull();
         expect(client.status).toEqual(-1);
+        expect(client.allHeaders()).toEqual({});
 
         expect(client.getRaw(-1)).toBeNull();
         expect(client.getRaw(100)).toBeNull();
@@ -112,6 +113,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
         expect(client.getQuery(-1)).toBeNull();
         expect(client.getQuery(100)).toBeNull();
 
+        expect(client.getHeader(-1)).toEqual({});
+        expect(client.getHeader(100)).toEqual({});
+
         expect(client.multiRaws).toEqual([]);
         expect(client.multiResponses).toEqual([]);
         expect(client.multiStatus).toEqual([]);
@@ -119,7 +123,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
 
     it("invalid response", () => {
         const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
-        client["querys"].push({ query: {}, result: "test", status: -1 });
+        client["querys"].push({ query: {}, result: "test", status: -1, headers: {} });
 
         expect(client.response).toBeNull();
     });
@@ -154,6 +158,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
     });
 
     it("multi-querys", async () => {
+        let counter = 1;
         DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
             const { payload } = data as {
                 rest: PathEntry;
@@ -161,7 +166,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
             };
             return {
                 statusCode: HTTP_STATUS_CODE.OK,
-                headers: {},
+                headers: { counter: counter++ },
                 body: payload,
             };
         });
@@ -172,10 +177,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
 
         const querys: Http2Query[] = [
             {
-                path: "/test_invalid_path",
+                param: { TEST: "true" },
             },
             {
-                param: { TEST: "true" },
+                path: "/test_invalid_path",
             },
             {
                 body: "test-req-body",
@@ -200,8 +205,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
         expect(multiStatus[1]).toEqual(client.getStatus(1));
         expect(multiStatus[2]).toEqual(client.getStatus(2));
 
-        expect(multiStatus[0]).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
-        expect(multiResponses[1].param["TEST"]).toEqual("true");
+        expect(multiResponses[0].param["TEST"]).toEqual("true");
+        expect(multiStatus[1]).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
         expect(multiResponses[2].body).toEqual("test-req-body");
+
+        expect(client.allHeaders()).toEqual(client.getHeader(0));
+        expect(client.getHeader(1)["counter"]).toBeUndefined();
+        expect(client.getHeader(2)["counter"]).toEqual("2");
     });
 });

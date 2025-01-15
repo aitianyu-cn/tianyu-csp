@@ -4,12 +4,12 @@ import http2 from "http2";
 import { Http2Query, HttpCallMethod } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { MapOfString } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 
 export class Http2Client extends AbstractHttpClient {
     private _options?: http2.SecureClientSessionOptions;
-    private querys: { query: Http2Query; result: string; status: number }[];
+    private querys: { query: Http2Query; result: string; status: number; headers: MapOfType<string | string[] | undefined> }[];
 
     /**
      * Create a Http/2.0 Client
@@ -60,6 +60,10 @@ export class Http2Client extends AbstractHttpClient {
     /** Get all query responses status code */
     public get multiStatus(): number[] {
         return this.querys.map((value) => value.status);
+    }
+
+    public override allHeaders(): MapOfType<string | string[] | undefined> {
+        return this.count === 0 ? {} : this.querys[0].headers;
     }
 
     /**
@@ -118,6 +122,14 @@ export class Http2Client extends AbstractHttpClient {
         return this.querys[index].query;
     }
 
+    public getHeader(index: number): MapOfType<string | string[] | undefined> {
+        if (index < 0 || index >= this.count) {
+            return {};
+        }
+
+        return this.querys[index].headers;
+    }
+
     /**
      * To set the Http/2.0 connection option
      *
@@ -140,13 +152,13 @@ export class Http2Client extends AbstractHttpClient {
      * @returns return the index of the new added query, the index can be used to search the result
      */
     public query(req: Http2Query): number {
-        const newCount = this.querys.push({ query: req, result: "", status: -1 });
+        const newCount = this.querys.push({ query: req, result: "", status: -1, headers: {} });
         return newCount - 1;
     }
 
     public async send(): Promise<void> {
         if (!this.count) {
-            this.querys.push({ query: { body: this.body }, result: "", status: -1 });
+            this.querys.push({ query: { body: this.body }, result: "", status: -1, headers: {} });
         }
 
         const port = this.port <= 0 ? /* istanbul ignore next */ "" : `:${this.port}`;
@@ -173,6 +185,7 @@ export class Http2Client extends AbstractHttpClient {
                 req.on("response", (header) => {
                     const status = Number(header[":status"]);
                     this.querys[index].status = Number.isNaN(status) ? /* istanbul ignore next */ -1 : status;
+                    this.querys[index].headers = header;
 
                     req.on("data", (chunk) => {
                         this.querys[index].result += chunk;

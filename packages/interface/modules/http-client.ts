@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfString } from "@aitianyu.cn/types";
+import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { ClientSessionRequestOptions } from "http2";
 
 /**
@@ -94,6 +94,12 @@ export interface IHttpClient {
      * @param port service port
      */
     setPort(port: number): void;
+    /**
+     * Get all response headers from request
+     *
+     * @returns return headers of request
+     */
+    allHeaders(): MapOfType<string | string[] | undefined>;
 
     /** To send the request and wait for the response */
     send(): Promise<void>;
