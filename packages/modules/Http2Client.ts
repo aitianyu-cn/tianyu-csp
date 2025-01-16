@@ -6,6 +6,7 @@ import { AbstractHttpClient } from "./AbstractHttpClient";
 import { ErrorHelper, HttpHelper } from "#utils";
 import { MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { createGunzip } from "zlib";
 
 export class Http2Client extends AbstractHttpClient {
     private _options?: http2.SecureClientSessionOptions;
@@ -20,8 +21,6 @@ export class Http2Client extends AbstractHttpClient {
      */
     public constructor(locate: string, path: string, method: HttpCallMethod) {
         super(locate, path, method);
-
-        this.port = 0;
         this.querys = [];
     }
 
@@ -161,8 +160,11 @@ export class Http2Client extends AbstractHttpClient {
             this.querys.push({ query: { body: this.body }, result: "", status: -1, headers: {} });
         }
 
-        const port = this.port <= 0 ? /* istanbul ignore next */ "" : `:${this.port}`;
-        const client = http2.connect(`https://${this.locate}${port}`, this._options);
+        const port = this.port ? `:${this.port}` : /* istanbul ignore next */ "";
+        const client = http2.connect(`https://${this.locate}${port}`, {
+            rejectUnauthorized: HttpHelper.shouldRejectUnauth(),
+            ...this._options,
+        });
         const requestsPromise: Promise<void>[] = [];
         for (let index = 0; index < this.count; ++index) {
             requestsPromise.push(this.transfer(index, client));
@@ -187,10 +189,11 @@ export class Http2Client extends AbstractHttpClient {
                     this.querys[index].status = Number.isNaN(status) ? /* istanbul ignore next */ -1 : status;
                     this.querys[index].headers = header;
 
-                    req.on("data", (chunk) => {
-                        this.querys[index].result += chunk;
+                    const stream = this.decodeStream(req, header);
+                    stream.on("data", (chunk) => {
+                        this.querys[index].result += chunk.toString("utf-8");
                     });
-                    req.on("end", () => {
+                    stream.on("end", () => {
                         resolve();
                     });
                 });

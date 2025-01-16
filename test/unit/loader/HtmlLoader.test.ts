@@ -1,10 +1,10 @@
 /** @format */
 
-import * as HTML_LOADER from "#loader/HtmlLoader";
+import { html } from "packages/default-loader";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.HtmlLoader", () => {
-    it("loader", () => {
-        const data = HTML_LOADER.loader();
+    it("loader", async () => {
+        const data = await html();
         expect(data.body.includes("tianyu_shell_root")).toBeTruthy();
     });
 });

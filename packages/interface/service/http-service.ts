@@ -82,7 +82,7 @@ export interface HttpServiceOption {
     enablefallback?: boolean;
 
     /** Customized Rest map, if no rest map is given, default global defined rest map will be used */
-    rest?: MapOfType<ImportPackage>;
+    rest?: MapOfType<HttpRestItem>;
     /** Customized Rest fallback, if no fallback is given, default global defined fallback will be used */
     fallback?: PathEntry;
 

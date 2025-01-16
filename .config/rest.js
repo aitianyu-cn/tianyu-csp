@@ -44,4 +44,26 @@ module.exports = {
         module: "b",
         method: "",
     },
+
+    "/remote-proxy/test/*": {
+        proxy: {
+            host: "resource.aitianyu.cn",
+            protocol: "https",
+            rewrite: {
+                "/remote-proxy/test": "/",
+                "/remote-proxy/test/": "/",
+            },
+        },
+    },
+
+    "/remote-proxy/test2/*": {
+        proxy: {
+            host: "localhost:8082",
+            protocol: "http",
+            rewrite: {
+                "/remote-proxy/test2": "/",
+                "/remote-proxy/test2/": "/",
+            },
+        },
+    },
 };

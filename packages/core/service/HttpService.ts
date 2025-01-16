@@ -91,15 +91,18 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
             res.statusCode = response.statusCode;
 
             for (const key of Object.keys(response.headers)) {
-                res.setHeader(key, response.headers[key]);
+                response.headers[key] && res.setHeader(key, response.headers[key]);
             }
 
             res.end(
-                response.body
-                    ? typeof response.body === "string"
-                        ? response.body
-                        : JSON.stringify(response.body)
-                    : /* istanbul ignore next */ "",
+                this.encodeResponse(
+                    response.body
+                        ? typeof response.body === "string"
+                            ? response.body
+                            : JSON.stringify(response.body)
+                        : /* istanbul ignore next */ "",
+                    response.headers,
+                ),
             );
         }, 0);
     }

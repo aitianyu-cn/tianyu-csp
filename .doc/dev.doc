@@ -29,3 +29,7 @@ o   1. installation api to quick deployment.
 o   2. http2.0 supporting.
         o http2.0 service
         o http2.0 client
+o   3. http proxy
+        o http proxy for development mode only
+        o https proxy
+        o http2 proxy

@@ -126,7 +126,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
                 body: undefined,
                 cookie: {},
                 param: {},
-                headers: {},
+                headers: { host: "test.com" },
             });
 
             const fnTest = (url: string, target: string) => {
@@ -134,6 +134,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
                 RestHelper.transmit(payload, trans);
                 expect(payload.host).toEqual("server.com");
                 expect(payload.url).toEqual(target);
+                expect(payload.headers["host"]).toEqual("server.com");
             };
 
             fnTest("/remote/test/code", "/test-code");

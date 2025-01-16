@@ -2,12 +2,30 @@
 
 const { TianyuCSP } = require("../dist/lib/index");
 
-const app = TianyuCSP.app({
-    http1: {
-        host: "0.0.0.0",
-        port: "8080",
-        enablefallback: true,
-    },
-});
+try {
+    TianyuCSP.Infra.load();
 
-app();
+    const contributor = TianyuCSP.Infra.creator.contributor();
+
+    const dispatcher = new TianyuCSP.Infra.DispatchHandler(undefined, contributor);
+    const requester = new TianyuCSP.Infra.RequestHandler(contributor);
+
+    dispatcher.initialize();
+    requester.initialize();
+
+    const http1 = new TianyuCSP.Infra.HttpService(
+        {
+            host: "0.0.0.0",
+            port: "3000",
+            enablefallback: true,
+            advanceRest: true,
+        },
+        contributor,
+    );
+
+    http1.listen(() => {
+        console.log("---- start");
+    });
+} catch (e) {
+    console.log(e);
+}

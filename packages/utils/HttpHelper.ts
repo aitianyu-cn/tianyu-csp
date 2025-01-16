@@ -1,7 +1,7 @@
 /** @format */
 
 import { DEFAULT_REQUEST_LANGUAGE_ITEM } from "#core/Constant";
-import { AreaCode, MapOfString, parseAreaString } from "@aitianyu.cn/types";
+import { AreaCode, getBoolean, MapOfString, parseAreaString } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 import { URLSearchParams } from "url";
 
@@ -157,5 +157,18 @@ export class HttpHelper {
             paramPair.push(`${key}=${param[key]}`);
         }
         return paramPair.length ? `?${paramPair.join("&")}` : "";
+    }
+
+    public static parseHost(host: string): { host: string; port?: number } {
+        const hostPair = host.split(":");
+        const portNumber = Number(hostPair[1]);
+        return {
+            host: hostPair[0],
+            port: Number.isInteger(portNumber) ? portNumber : undefined,
+        };
+    }
+
+    public static shouldRejectUnauth(): boolean {
+        return !getBoolean((global as any).TIANYU_TEST_HTTPS_UNAUTH);
     }
 }

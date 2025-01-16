@@ -26,6 +26,7 @@ import { getBoolean, guid, MapOfType } from "@aitianyu.cn/types";
 import { DISPATCH_ERROR_RESPONSES } from "./HttpServiceConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { IncomingHttpHeaders } from "http";
+import { gzipSync } from "zlib";
 
 export interface IHttpServerListener {
     listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void): this;
@@ -182,4 +183,16 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
 
     protected abstract createServerInstance(opt?: OPT): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
     protected abstract protocol: HttpProtocal;
+
+    protected encodeResponse(
+        src: string,
+        header: MapOfType<string | readonly string[] | undefined | number>,
+    ): string | Buffer<ArrayBufferLike> {
+        switch (header["content-encoding"]) {
+            case "gzip":
+                return gzipSync(src);
+        }
+
+        return src;
+    }
 }

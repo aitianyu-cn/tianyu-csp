@@ -3,6 +3,7 @@
 import { createServer } from "@aitianyu.cn/server-base";
 import { IncomingMessage, ServerResponse, Server } from "http";
 import { TimerTools } from "test/tools/TimerTools";
+import { gzipSync } from "zlib";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     let server: Server;
@@ -109,6 +110,32 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
             req.on("end", () => {
                 res.statusCode = 200;
                 res.write("success");
+                res.end();
+            });
+        });
+
+        await client.send();
+
+        expect(client.raw).toEqual("success");
+        expect(body).toEqual(JSON.stringify(""));
+    });
+
+    it("http success 5 - gzip", async () => {
+        const client = new TIANYU.import.MODULE.HttpClient("localhost", "/test-path", "POST");
+        client.setPort(32000);
+        client.setHeader({ "accept-encoding": "gzip" });
+
+        let body = "";
+
+        handler.post.mockImplementation((req: IncomingMessage, res: ServerResponse) => {
+            req.on("data", (chunk) => {
+                body += chunk;
+            });
+
+            req.on("end", () => {
+                res.statusCode = 200;
+                res.setHeader("content-encoding", "gzip");
+                res.write(gzipSync("success"));
                 res.end();
             });
         });

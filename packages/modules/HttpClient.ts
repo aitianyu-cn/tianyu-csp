@@ -4,6 +4,7 @@ import * as Http from "http";
 import { HttpHelper } from "#utils";
 import { HTTP_STATUS_CODE } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
+import { createGunzip } from "zlib";
 
 /**
  * Http Client
@@ -31,10 +32,12 @@ export class HttpClient extends AbstractHttpClient {
                     reject(res.statusCode);
                 }
 
-                res.on("data", (chunk) => {
-                    this.result += chunk;
+                const stream = this.decodeStream(res, res.headers);
+                stream.on("data", (chunk) => {
+                    const data = chunk.toString("utf-8");
+                    this.result += data;
                 });
-                res.on("end", () => {
+                stream.on("end", () => {
                     resolve();
                 });
             });

@@ -67,6 +67,10 @@ export class RestHelper {
         }
 
         payload.host = trans.host;
+        payload.protocol = trans.protocol || "http2";
+        if (payload.headers["host"]) {
+            payload.headers["host"] = trans.host;
+        }
 
         if (trans.rewrite) {
             let prefix = "";

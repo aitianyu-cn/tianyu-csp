@@ -26,7 +26,7 @@ export class HttpsClient extends AbstractHttpClient {
     public constructor(locate: string, path: string, method: HttpCallMethod) {
         super(locate, path, method);
 
-        this.authorization = true;
+        this.authorization = HttpHelper.shouldRejectUnauth();
         this.cas = [];
         this.certs = [];
     }
@@ -67,8 +67,8 @@ export class HttpsClient extends AbstractHttpClient {
             method: this.method,
             headers: header,
             path: `${this.path || "/"}${HttpHelper.stringifyParam(this.param)}`,
-            ca: this.cas,
-            cert: this.certs,
+            ca: this.cas.length ? this.cas : undefined,
+            cert: this.certs.length ? this.certs : undefined,
             rejectUnauthorized: this.authorization,
         };
 
@@ -80,10 +80,12 @@ export class HttpsClient extends AbstractHttpClient {
                     reject(res.statusCode);
                 }
 
-                res.on("data", (chunk) => {
-                    this.result += chunk;
+                const stream = this.decodeStream(res, res.headers);
+                stream.on("data", (chunk) => {
+                    const data = chunk.toString("utf-8");
+                    this.result += data;
                 });
-                res.on("end", () => {
+                stream.on("end", () => {
                     resolve();
                 });
             });

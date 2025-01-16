@@ -166,7 +166,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
             };
             return {
                 statusCode: HTTP_STATUS_CODE.OK,
-                headers: { counter: counter++ },
+                headers: { counter: counter++, "content-encoding": "gzip", "content-type": "application/json" },
                 body: payload,
             };
         });

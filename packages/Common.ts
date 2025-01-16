@@ -70,3 +70,7 @@ if (fs.existsSync(privilege_map_path)) {
 
 /** Tianyu CSP system privilege definition map */
 export const SYSTEM_PRIVILEGE_MAP: TianyuCSPPrivilegeMap = raw_privileges;
+
+export function getInDevMode(): boolean {
+    return PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development";
+}

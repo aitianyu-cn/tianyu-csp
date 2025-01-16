@@ -2,10 +2,12 @@
 
 import { HttpCallMethod, IHttpClient } from "#interface";
 import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { EventEmitter, Stream } from "stream";
+import { createGunzip, Gunzip } from "zlib";
 
 export abstract class AbstractHttpClient implements IHttpClient {
     protected locate: string;
-    protected port: number;
+    protected port?: number;
     protected path: string;
     protected method: HttpCallMethod;
     protected body: any;
@@ -26,7 +28,6 @@ export abstract class AbstractHttpClient implements IHttpClient {
      */
     public constructor(locate: string, path: string, method: HttpCallMethod) {
         this.locate = locate;
-        this.port = 80;
         this.path = path;
         this.method = method;
 
@@ -76,4 +77,14 @@ export abstract class AbstractHttpClient implements IHttpClient {
     }
 
     public abstract send(): Promise<void>;
+
+    protected decodeStream(input: Stream, header: MapOfType<string | readonly string[] | undefined>): EventEmitter {
+        if (header["content-encoding"] === "gzip") {
+            const gzip = createGunzip();
+            input.pipe(gzip);
+            return gzip;
+        }
+
+        return input;
+    }
 }

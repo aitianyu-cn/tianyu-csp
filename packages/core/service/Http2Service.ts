@@ -99,11 +99,14 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
 
             stream.respond(header);
             stream.end(
-                response.body
-                    ? typeof response.body === "string"
-                        ? response.body
-                        : JSON.stringify(response.body)
-                    : /* istanbul ignore next */ "",
+                this.encodeResponse(
+                    response.body
+                        ? typeof response.body === "string"
+                            ? response.body
+                            : JSON.stringify(response.body)
+                        : /* istanbul ignore next */ "",
+                    header,
+                ),
             );
         }, 0);
     }

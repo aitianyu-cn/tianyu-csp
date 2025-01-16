@@ -5,6 +5,7 @@ import { createContributor } from "./InfraLoader";
 export * from "./handler/DispatchHandler";
 export * from "./handler/RequestHandler";
 
+export * from "./service/AbstractHttpService";
 export * from "./service/HttpService";
 export * from "./service/Http2Service";
 

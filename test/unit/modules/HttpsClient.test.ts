@@ -5,6 +5,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Server, ServerOptions, createServer } from "https";
 import path from "path";
 import { TimerTools } from "test/tools/TimerTools";
+import { gzipSync } from "zlib";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
     it("addCert", () => {
@@ -66,6 +67,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
             const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
             client.setPort(32001);
             client.addCert(cert);
+            client.addCa(cert);
             client.setRequireAuth(false);
 
             lisenter.mockImplementation((req, res) => {
@@ -148,6 +150,32 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
                 req.on("end", () => {
                     res.statusCode = 200;
                     res.write("success");
+                    res.end();
+                });
+            });
+
+            await client.send();
+
+            expect(client.raw).toEqual("success");
+            expect(body).toEqual(JSON.stringify(""));
+        });
+
+        it("http success 4 - gzip", async () => {
+            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "/test-path", "POST");
+            client.setPort(32001);
+            client.setRequireAuth(false);
+
+            let body = "";
+
+            lisenter.mockImplementation((req, res) => {
+                req.on("data", (chunk: any) => {
+                    body += chunk;
+                });
+
+                req.on("end", () => {
+                    res.statusCode = 200;
+                    res.setHeader("content-encoding", "gzip");
+                    res.write(gzipSync("success"));
                     res.end();
                 });
             });
