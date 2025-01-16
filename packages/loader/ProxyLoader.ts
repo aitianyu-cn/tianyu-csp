@@ -86,7 +86,7 @@ export async function loader(): Promise<NetworkServiceResponseData> {
     };
 }
 
-export function handleHttp2(client: Http2Client, body: any): void {
+function handleHttp2(client: Http2Client, body: any): void {
     const querys: Http2Query[] = Array.isArray(body?.queries) ? body.queries : [];
     if (querys.length) {
         for (const query of querys) {
@@ -97,7 +97,7 @@ export function handleHttp2(client: Http2Client, body: any): void {
     }
 }
 
-export function getResponseFromHttp2(client: Http2Client): NetworkServiceResponseData {
+function getResponseFromHttp2(client: Http2Client): NetworkServiceResponseData {
     if (client.count === 1) {
         return {
             statusCode: client.status,
