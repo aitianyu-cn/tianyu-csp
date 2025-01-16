@@ -48,7 +48,7 @@ export interface RequestPayloadData {
      */
     url: string;
     /** Http request protocol */
-    version: HttpProtocal;
+    protocol: HttpProtocal;
     /** Network service id */
     serviceId: string;
     /** Network request id */

@@ -44,7 +44,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
-                    version: "http",
+                    protocol: "http",
                 },
             },
             script: {
@@ -91,7 +91,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
-                    version: "http",
+                    protocol: "http",
                 },
             },
             script: {
@@ -139,7 +139,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
-                    version: "http",
+                    protocol: "http",
                 },
             },
             script: {
@@ -187,7 +187,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     param: {},
                     headers: {},
                     disableCache: true,
-                    version: "http",
+                    protocol: "http",
                 },
             },
             script: {

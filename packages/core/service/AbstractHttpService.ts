@@ -141,7 +141,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
 
             host: header.host || /* istanbul ignore next */ "",
             url: url?.split("?")[0] || /* istanbul ignore next */ "",
-            version: this.protocol,
+            protocol: this.protocol,
             body: body || null,
             serviceId: this.id,
             type: "http",

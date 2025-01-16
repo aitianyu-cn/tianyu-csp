@@ -8,7 +8,7 @@ function generatePayload(host?: string, url?: string, disableCache?: boolean): R
     return {
         host: host || "",
         url: url || "",
-        version: "http",
+        protocol: "http",
         serviceId: "",
         requestId: "",
         sessionId: "",

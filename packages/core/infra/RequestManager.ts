@@ -4,12 +4,6 @@ import { HTTP_STATUS_CODE, HttpProtocal, IServerRequest, RequestPayloadData, Req
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
 
-const HTTP_PROTOCOL_VERSION: { [key in HttpProtocal]: string } = {
-    http: "1.1",
-    https: "1.1",
-    http2: "2.0",
-};
-
 /**
  * CSP Generic Request Manager for global definition
  *
@@ -40,6 +34,9 @@ export class GlobalRequestManager implements IServerRequest {
     public get body(): any {
         return null;
     }
+    public get protocol(): HttpProtocal {
+        return "http2";
+    }
     public setResponseCode(_code: number): void {}
     public getResponseCode(): number {
         return HTTP_STATUS_CODE.OK;
@@ -54,6 +51,9 @@ export class GlobalRequestManager implements IServerRequest {
         return "";
     }
     public allHeaders(): MapOfString {
+        return {};
+    }
+    public allParams(): MapOfString {
         return {};
     }
 }
@@ -85,7 +85,7 @@ export class GenericRequestManager implements IServerRequest {
         this._url = req.url;
         this._host = req.host;
         this._type = req.type;
-        this._version = req.version;
+        this._version = req.protocol;
         this._language = req.language;
         this._session = req.sessionId;
 
@@ -109,7 +109,7 @@ export class GenericRequestManager implements IServerRequest {
         return this._id;
     }
     public get version(): string {
-        return HTTP_PROTOCOL_VERSION[this._version];
+        return PROJECT_VERSION;
     }
     public get host(): string {
         return this._host;
@@ -129,6 +129,9 @@ export class GenericRequestManager implements IServerRequest {
     public get body(): any {
         return this._body;
     }
+    public get protocol(): HttpProtocal {
+        return this._version;
+    }
     public cookie(key: string): string {
         return this._cookie[key] || "";
     }
@@ -140,5 +143,8 @@ export class GenericRequestManager implements IServerRequest {
     }
     public allHeaders(): MapOfString {
         return this._headers;
+    }
+    public allParams(): MapOfString {
+        return this._params;
     }
 }

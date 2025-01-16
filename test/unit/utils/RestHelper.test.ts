@@ -85,7 +85,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             const payload: RequestPayloadData = {
                 host: "localhost",
                 url: "/test",
-                version: "http",
+                protocol: "http",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -116,7 +116,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             const payloadGeneration = (url: string): RequestPayloadData => ({
                 host: "localhost",
                 url: url,
-                version: "http",
+                protocol: "http",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",

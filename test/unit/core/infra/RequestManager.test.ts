@@ -17,6 +17,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.language).toEqual(PROJECT_DEFAULT_LANGUAGE);
         expect(request.session).toEqual("");
         expect(request.body).toBeNull();
+        expect(request.protocol).toEqual("http2");
 
         expect(() => {
             request.setResponseCode(0);
@@ -28,6 +29,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.params("")).toEqual("");
 
         expect(request.allHeaders()).toEqual({});
+        expect(request.allParams()).toEqual({});
     });
 
     it("GenericRequestManager", () => {
@@ -39,32 +41,24 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
             sessionId: "123456789",
             type: "http",
             language: AreaCode.zh_CN,
-            body: {
-                data: "test",
-            },
-            cookie: {
-                LANGUAGE: "en_US",
-            },
-            param: {
-                PAR1: "test",
-            },
-            headers: {
-                host: "localhost",
-                version: "1.1",
-            },
+            body: { data: "test" },
+            cookie: { LANGUAGE: "en_US" },
+            param: { PAR1: "test" },
+            headers: { host: "localhost", version: "1.1" },
             disableCache: true,
-            version: "http2",
+            protocol: "http2",
         };
         const request = new GenericRequestManager(req);
 
         expect(request.id).toEqual("111111");
-        expect(request.version).toEqual("2.0");
+        expect(request.version).toEqual(PROJECT_VERSION);
         expect(request.host).toEqual("localhost");
         expect(request.url).toEqual("/a/b/c");
         expect(request.type).toEqual("http");
         expect(request.language).toEqual(AreaCode.zh_CN);
         expect(request.session).toEqual("123456789");
         expect(request.body).toEqual(req.body);
+        expect(request.protocol).toEqual("http2");
 
         expect(() => {
             request.setResponseCode(HTTP_STATUS_CODE.CONTINUE);
@@ -80,5 +74,6 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.params("UNKNOWN")).toEqual("");
 
         expect(request.allHeaders()).toEqual({ host: "localhost", version: "1.1" });
+        expect(request.allParams()).toEqual({ PAR1: "test" });
     });
 });
