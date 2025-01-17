@@ -237,18 +237,37 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
         });
     });
 
-    it("https", async () => {
-        registerGlobalTIANYU("localhost:30020", "/", "https", {}, {});
-        https_lisenter.mockImplementation((_, res) => {
-            res.statusCode = 200;
-            res.setHeader("counter", "2");
-            res.write("https - hello world!");
-            res.end();
+    describe("https", () => {
+        it("success", async () => {
+            registerGlobalTIANYU("localhost:30020", "/", "https", {}, {});
+            https_lisenter.mockImplementation((_, res) => {
+                res.statusCode = 200;
+                res.setHeader("counter", "2");
+                res.write("https - hello world!");
+                res.end();
+            });
+
+            const res = await proxy();
+            expect(res.body).toEqual("https - hello world!");
+            expect(res.headers["counter"]).toEqual("2");
         });
 
-        const res = await proxy();
-        expect(res.body).toEqual("https - hello world!");
-        expect(res.headers["counter"]).toEqual("2");
+        it("failed", async () => {
+            registerGlobalTIANYU("localhost:30020", "/", "https", {}, {});
+            https_lisenter.mockImplementation((_, res) => {
+                res.statusCode = HTTP_STATUS_CODE.NOT_FOUND;
+                res.setHeader("counter", "2");
+                res.write("https - hello world!");
+                res.end();
+            });
+
+            jest.spyOn(TIANYU.logger, "warn");
+
+            const res = await proxy();
+
+            expect(res.statusCode).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
+            expect(TIANYU.logger.warn).toHaveBeenCalled();
+        });
     });
 
     describe("http2", () => {

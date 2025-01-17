@@ -1,23 +1,10 @@
 /** @format */
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { Http2Query, HTTP_STATUS_CODE, HttpCallMethod, HttpProtocal, NetworkServiceResponseData } from "#interface";
+import { Http2Query, HTTP_STATUS_CODE, HttpCallMethod, NetworkServiceResponseData } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { MapOfType } from "@aitianyu.cn/types";
-import { AbstractHttpClient } from "packages/modules/AbstractHttpClient";
+import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
 import { Http2Client } from "packages/modules/Http2Client";
-
-const HTTP_CLIENT_MAP: { [key in HttpProtocal]: (locate: string, path: string, method: HttpCallMethod) => AbstractHttpClient } = {
-    http: (locate: string, path: string, method: HttpCallMethod) => {
-        return new TIANYU.import.MODULE.HttpClient(locate, path, method);
-    },
-    https: (locate: string, path: string, method: HttpCallMethod) => {
-        return new TIANYU.import.MODULE.HttpsClient(locate, path, method);
-    },
-    http2: (locate: string, path: string, method: HttpCallMethod) => {
-        return new TIANYU.import.MODULE.Http2Client(locate, path, method);
-    },
-};
 
 /**
  * @internal
@@ -69,7 +56,7 @@ export async function loader(): Promise<NetworkServiceResponseData> {
         TIANYU.logger.warn(
             ErrorHelper.getErrorString(
                 SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                `request to proxy to http://${relocatHost}${url} failed`,
+                `request to proxy to ${protocol === "http" ? "http" : "https"}://${relocatHost}${url} failed`,
                 String(error),
             ),
         );

@@ -10,3 +10,6 @@
 export * from "./HttpClient";
 export * from "./HttpsClient";
 export * from "./Http2Client";
+
+/** Remote procedures call */
+export * as RPC from "./RemoteProcedures";
