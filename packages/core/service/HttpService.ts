@@ -7,6 +7,7 @@ import {
     RequestPayloadData,
     ICSPContributorFactorProtocolMap,
     HttpProtocal,
+    HttpCallMethod,
 } from "#interface";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { createServer, IncomingMessage, ServerResponse } from "http";
@@ -48,9 +49,9 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
      * @param res http response
      */
     private onGet(req: IncomingMessage, res: ServerResponse): void {
-        const payload = this.generatePayload(req.url, req.headers);
+        const payload = this.generatePayload(req.url, req.headers, "GET");
 
-        this._handleDispatch(payload, res);
+        this._handleDispatch(payload, res, "GET");
     }
     /**
      * handle http request if it is in post method
@@ -71,9 +72,9 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                 body = JSON.parse(decodeURI(data));
             } catch {}
 
-            const payload = this.generatePayload(req.url, req.headers, body);
+            const payload = this.generatePayload(req.url, req.headers, "POST", body);
 
-            this._handleDispatch(payload, res);
+            this._handleDispatch(payload, res, "POST");
         });
     }
     /**
@@ -84,9 +85,9 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
      * @param req http request
      * @param res http response
      */
-    private _handleDispatch(payload: RequestPayloadData, res: ServerResponse): void {
+    private _handleDispatch(payload: RequestPayloadData, res: ServerResponse, method: HttpCallMethod): void {
         setTimeout(async () => {
-            const response = await this.dispatch(payload);
+            const response = await this.dispatch(payload, method);
 
             res.statusCode = response.statusCode;
 

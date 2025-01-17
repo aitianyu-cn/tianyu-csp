@@ -25,6 +25,7 @@ export const DISPATCH_ERROR_RESPONSES = {
                 {
                     code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
                     message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
+                    error: `Request '${payload.method}' => "${payload.host}${payload.url}" could not be executed due to request url handler does not exist or the method handler of this url is not configered.`,
                 },
             ],
         },

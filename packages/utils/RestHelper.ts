@@ -1,7 +1,15 @@
 /** @format */
 
 import { REST } from "#core/handler/RestHandlerConstant";
-import { HttpRequestProxyOption, HttpRestItem, PathEntry, RequestPayloadData } from "#interface";
+import {
+    HttpCallMethod,
+    HttpRequestProxyOption,
+    HttpRestItem,
+    HttpRestResult,
+    PathEntry,
+    RequestPayloadData,
+    RestMappingResult,
+} from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 
 /**
@@ -19,19 +27,34 @@ export class RestHelper {
      * @returns return a request rest data which defined in rest config,
      *          and null value will be returned if the url path is not mapped
      */
-    public static getRest(path: string, rest?: MapOfType<HttpRestItem>, fallback?: PathEntry): HttpRestItem | null {
+    public static getRest(
+        path: string,
+        method: HttpCallMethod,
+        rest?: MapOfType<HttpRestItem>,
+        fallback?: PathEntry,
+    ): RestMappingResult {
         if (!path) return null;
 
         const restPath = path.startsWith("/") ? path : `/${path}`;
         const restData = (rest ?? REST)[restPath];
-        return restData?.package && restData?.module
+        const pathEntry = restData?.handlers?.[method]
+            ? restData?.handlers[method]
+            : restData?.handler
+            ? restData?.handler
+            : null;
+        return pathEntry?.package && pathEntry?.module
             ? {
-                  package: restData.package,
-                  module: restData.module,
-                  method: restData.method || "default",
+                  handler: {
+                      package: pathEntry.package,
+                      module: pathEntry.module,
+                      method: pathEntry.method || "default",
+                  },
                   cache: restData.cache,
+                  proxy: restData.proxy,
               }
-            : fallback || null;
+            : fallback
+            ? { handler: fallback }
+            : null;
     }
 
     /**
@@ -40,8 +63,8 @@ export class RestHelper {
      * @param rest source rest item
      * @returns a path entry
      */
-    public static toPathEntry(rest: HttpRestItem): PathEntry {
-        if (rest.proxy && !(rest.package && rest.module && rest.method)) {
+    public static toPathEntry(rest: HttpRestResult): PathEntry {
+        if (rest.proxy && !(rest.handler.package && rest.handler.module && rest.handler.method)) {
             return {
                 package: "$",
                 module: "default-loader",
@@ -49,9 +72,9 @@ export class RestHelper {
             };
         }
         return {
-            package: rest.package || "",
-            module: rest.module || "",
-            method: rest.method || "",
+            package: rest.handler.package || "",
+            module: rest.handler.module || "",
+            method: rest.handler.method || "",
         };
     }
 

@@ -2,47 +2,98 @@
 
 module.exports = {
     "/test/valid": {
-        package: "a",
-        module: "b",
-        method: "c",
+        handler: {
+            package: "a",
+            module: "b",
+            method: "c",
+        },
     },
     "/test/invalid": {
-        package: "",
-        module: "",
-        method: "",
+        handler: {
+            package: "",
+            module: "",
+            method: "",
+        },
     },
     "/test/no_prefix": {
-        package: "a",
-        module: "b",
-        method: "c",
+        handler: {
+            package: "a",
+            module: "b",
+            method: "c",
+        },
     },
-    "/test": { package: "a", module: "b", method: "c" },
+    "/test": { handler: { package: "a", module: "b", method: "c" } },
 
     "/feature": {
-        package: "run.infra",
-        module: "Feature",
-        method: "execute",
+        handler: {
+            package: "run.infra",
+            module: "Feature",
+            method: "execute",
+        },
     },
     "/": {
-        package: "$",
-        module: "default-loader",
-        method: "html",
+        handler: {
+            package: "$",
+            module: "default-loader",
+            method: "html",
+        },
     },
     "/welcome": {
-        package: "$",
-        module: "default-loader",
-        method: "html",
+        handler: {
+            package: "$",
+            module: "default-loader",
+            method: "html",
+        },
     },
     "/welcome/{data}": {
-        package: "data.welcome",
-        module: "{data}",
-        method: "",
+        handler: {
+            package: "data.welcome",
+            module: "{data}",
+            method: "",
+        },
     },
 
     "/empty": {
-        package: "a",
-        module: "b",
-        method: "",
+        handler: {
+            package: "a",
+            module: "b",
+            method: "",
+        },
+    },
+
+    "/method-get": {
+        handlers: {
+            GET: {
+                package: "a",
+                module: "b",
+                method: "",
+            },
+        },
+    },
+
+    "/method-path": {
+        handlers: {
+            POST: {
+                package: "a",
+                module: "b",
+                method: "",
+            },
+        },
+    },
+
+    "/method-all": {
+        handlers: {
+            GET: {
+                package: "ag",
+                module: "bg",
+                method: "",
+            },
+            POST: {
+                package: "ap",
+                module: "bp",
+                method: "",
+            },
+        },
     },
 
     "/remote-proxy/test/*": {

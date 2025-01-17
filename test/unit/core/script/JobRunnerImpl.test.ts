@@ -34,6 +34,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 req: {
                     host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -81,6 +82,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 req: {
                     host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -129,6 +131,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 req: {
                     host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -177,6 +180,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 req: {
                     host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",

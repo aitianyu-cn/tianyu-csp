@@ -36,6 +36,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         const req: RequestPayloadData = {
             host: "localhost",
             url: "/a/b/c",
+            method: "GET",
             serviceId: "222222",
             requestId: "111111",
             sessionId: "123456789",

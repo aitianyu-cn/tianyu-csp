@@ -3,6 +3,7 @@
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
 import { HttpProtocal } from "packages/interface/service/http-service";
+import { HttpCallMethod } from "packages/interface/modules/http-client";
 
 /**
  * Request items target type
@@ -49,6 +50,8 @@ export interface RequestPayloadData {
     url: string;
     /** Http request protocol */
     protocol: HttpProtocal;
+    /** Http Request method */
+    method: HttpCallMethod;
     /** Network service id */
     serviceId: string;
     /** Network request id */

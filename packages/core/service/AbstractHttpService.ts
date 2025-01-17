@@ -8,17 +8,18 @@ import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
     HTTP_STATUS_CODE,
+    HttpCallMethod,
     HttpProtocal,
     HttpRestItem,
     HttpServiceOption,
     ICSPContributorFactorProtocolMap,
     IHttpService,
-    ImportPackage,
     NetworkServiceResponseData,
     PathEntry,
     REQUEST_HANDLER_MODULE_ID,
     RequestPayloadData,
     RequestType,
+    RestMappingResult,
 } from "#interface";
 import { ErrorHelper, HttpHelper, RestHelper, TraceHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
@@ -47,7 +48,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
     private _server: IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
 
     private _rest: RestHandler | null;
-    private _restMap?: MapOfType<ImportPackage>;
+    private _restMap?: MapOfType<HttpRestItem>;
     private _restFallback?: PathEntry;
 
     private _cacheHandler?: RequestCacheHandler;
@@ -91,13 +92,13 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         this._server.close(callback);
     }
 
-    protected async dispatch(payload: RequestPayloadData): Promise<NetworkServiceResponseData> {
+    protected async dispatch(payload: RequestPayloadData, method: HttpCallMethod): Promise<NetworkServiceResponseData> {
         const dispatcher = this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
         if (!dispatcher) {
             return DISPATCH_ERROR_RESPONSES["dispatch-invalid"](payload);
         }
 
-        const rest = this.getRest(payload.url);
+        const rest = this.getRest(payload.url, method);
         RestHelper.transmit(payload, rest?.proxy);
         let response = rest
             ? (await this._cacheHandler?.readCache(payload, rest?.cache)) ||
@@ -114,7 +115,12 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         return response;
     }
 
-    protected generatePayload(url: string | undefined, header: IncomingHttpHeaders, body?: undefined): RequestPayloadData {
+    protected generatePayload(
+        url: string | undefined,
+        header: IncomingHttpHeaders,
+        method: HttpCallMethod,
+        body?: undefined,
+    ): RequestPayloadData {
         const param = HttpHelper.processParameters(url || /* istanbul ignore next */ "");
         const cookie = HttpHelper.processCookie(header.cookie || /* istanbul ignore next */ "");
         const headers = HttpHelper.processHeader(header);
@@ -135,6 +141,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         const payload: RequestPayloadData = {
             param,
             cookie,
+            method,
             headers,
             language,
             requestId,
@@ -163,8 +170,8 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         );
     }
 
-    private getRest(url: string): HttpRestItem | null {
-        return this._rest ? this._rest.mapping(url) : RestHelper.getRest(url, this._restMap, this._restFallback);
+    private getRest(url: string, method: HttpCallMethod): RestMappingResult {
+        return this._rest ? this._rest.mapping(url, method) : RestHelper.getRest(url, method, this._restMap, this._restFallback);
     }
 
     private convertRequestItems(

@@ -8,6 +8,7 @@ import { PathEntry } from "../handler/rest-handler";
 import { TlsOptions } from "tls";
 import { NetworkServiceResponseData } from "../fwk-def/contributor/service";
 import { RequestPayloadData } from "../fwk-def/contributor/requests";
+import { HttpCallMethod } from "../modules/http-client";
 
 /** Http Query Response Callback */
 export type HttpCallback = (req: IncomingMessage, res: ServerResponse) => void;
@@ -167,7 +168,16 @@ export interface HttpRequestProxyOption {
 }
 
 /** Http request rest item */
-export type HttpRestItem = ImportPackage & { cache?: HttpRequestCacheOption; proxy?: HttpRequestProxyOption };
+export interface HttpRestItem {
+    /** Http Request handler for all methods */
+    handler?: ImportPackage;
+    /** Define different Http Request handler for each method type */
+    handlers?: { [key in HttpCallMethod]?: ImportPackage };
+    /** Http Request response cache option */
+    cache?: HttpRequestCacheOption;
+    /** Http Proxy setting */
+    proxy?: HttpRequestProxyOption;
+}
 
 /** Http Service API */
 export interface IHttpService extends INetworkService {

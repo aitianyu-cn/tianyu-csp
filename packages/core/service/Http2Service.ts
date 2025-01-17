@@ -3,6 +3,7 @@
 import {
     Http2ServiceOption,
     HTTP_STATUS_CODE,
+    HttpCallMethod,
     HttpProtocal,
     HttpSecurityOption,
     ICSPContributorFactorProtocolMap,
@@ -48,8 +49,8 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
     }
 
     private onGet(stream: ServerHttp2Stream, header: IncomingHttpHeaders, _flags: number): void {
-        const payload = this.generatePayload(header[":path"], header);
-        this._handleDispatch(payload, stream);
+        const payload = this.generatePayload(header[":path"], header, "GET");
+        this._handleDispatch(payload, stream, "GET");
     }
 
     private onPost(stream: ServerHttp2Stream, header: IncomingHttpHeaders, _flags: number): void {
@@ -65,8 +66,8 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
                 body = JSON.parse(decodeURI(data));
             } catch {}
 
-            const payload = this.generatePayload(header[":path"], header, body);
-            this._handleDispatch(payload, stream);
+            const payload = this.generatePayload(header[":path"], header, "POST", body);
+            this._handleDispatch(payload, stream, "POST");
         });
     }
 
@@ -88,9 +89,9 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
         }, 0);
     }
 
-    private _handleDispatch(payload: RequestPayloadData, stream: ServerHttp2Stream): void {
+    private _handleDispatch(payload: RequestPayloadData, stream: ServerHttp2Stream, method: HttpCallMethod): void {
         setTimeout(async () => {
-            const response = await this.dispatch(payload);
+            const response = await this.dispatch(payload, method);
 
             const header: OutgoingHttpHeaders = {
                 ...response.headers,

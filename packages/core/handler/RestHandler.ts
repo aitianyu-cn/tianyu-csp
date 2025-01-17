@@ -2,7 +2,7 @@
 
 import { guid, MapOfString, MapOfType, ObjectHelper } from "@aitianyu.cn/types";
 import { DEFAULT_REST_FALLBACK } from "./RestHandlerConstant";
-import { HttpRestItem, ImportPackage, PathEntry, Subitem, SubitemType } from "#interface";
+import { HttpCallMethod, HttpRestItem, HttpRestResult, PathEntry, RestMappingResult, Subitem, SubitemType } from "#interface";
 
 const PARAM_REGEX = /\{([0-9|a-z|A-Z\_\-]+(?:\s*,[^{}]*)?)\}/;
 
@@ -92,7 +92,7 @@ export class RestHandler {
      * @param path response path items array
      * @param entry path entry package
      */
-    private _processTree(rest: string, path: string[], entry: ImportPackage): void {
+    private _processTree(rest: string, path: string[], entry: HttpRestItem): void {
         let tree = this._resttree;
         for (const item of path) {
             const type = this._convertItemType(item);
@@ -185,14 +185,14 @@ export class RestHandler {
      * @param url request url
      * @returns return a package path, return null if the path is not found
      */
-    public mapping(url: string): HttpRestItem | null {
+    public mapping(url: string, method: HttpCallMethod): RestMappingResult {
         const path = this._processPath(url.split("?")[0]);
 
         const mappeds: { id: string; type: SubitemType; params: MapOfString }[] = [];
 
-        this._map(path, 0, this._resttree, "actual", {}, mappeds);
+        this._map(path, method, 0, this._resttree, "actual", {}, mappeds);
 
-        return this._filter(mappeds);
+        return this._filter(mappeds, method);
     }
 
     /**
@@ -207,6 +207,7 @@ export class RestHandler {
      */
     private _map(
         url: string[],
+        method: HttpCallMethod,
         index: number,
         subitem: Subitem,
         type: SubitemType,
@@ -216,24 +217,33 @@ export class RestHandler {
         if (index < url.length) {
             const pathName = url[index];
             if (subitem.actual[pathName]) {
-                this._map(url, index + 1, subitem.actual[pathName], "actual", ObjectHelper.clone(params), mappeds);
+                this._map(url, method, index + 1, subitem.actual[pathName], "actual", ObjectHelper.clone(params), mappeds);
             }
 
             for (const item of Object.keys(subitem.param)) {
                 const newparam = ObjectHelper.clone(params);
                 newparam[item] = url[index];
-                this._map(url, index + 1, subitem.param[item], "param", ObjectHelper.clone(newparam), mappeds);
+                this._map(url, method, index + 1, subitem.param[item], "param", ObjectHelper.clone(newparam), mappeds);
             }
 
             if (subitem.generic?.id) {
-                // this._map(url, index + 1, subitem.generic, "generic", ObjectHelper.clone(params), mappeds);
-                mappeds.push({ id: subitem.generic.id, type: "generic", params });
+                const item = this._rest[subitem.generic?.id];
+                if (item.entry.handlers?.[method] || item.entry.handler || (!item.entry.handlers && !item.entry.handler)) {
+                    // this._map(url, index + 1, subitem.generic, "generic", ObjectHelper.clone(params), mappeds);
+                    mappeds.push({ id: subitem.generic.id, type: "generic", params });
+                }
             }
         } else if (index === url.length) {
             if (subitem.id) {
-                mappeds.push({ id: subitem.id, type, params });
+                const item = this._rest[subitem.id];
+                if (item.entry.handlers?.[method] || item.entry.handler || (!item.entry.handlers && !item.entry.handler)) {
+                    mappeds.push({ id: subitem.id, type, params });
+                }
             } else if (subitem.generic?.id) {
-                mappeds.push({ id: subitem.generic.id, type: "generic", params });
+                const item = this._rest[subitem.generic?.id];
+                if (item.entry.handlers?.[method] || item.entry.handler || (!item.entry.handlers && !item.entry.handler)) {
+                    mappeds.push({ id: subitem.generic.id, type: "generic", params });
+                }
             }
         }
     }
@@ -244,9 +254,9 @@ export class RestHandler {
      * @param maps mapped rest list
      * @returns return a best rest package, return null if no rest package mapped
      */
-    private _filter(maps: { id: string; type: SubitemType; params: MapOfString }[]): HttpRestItem | null {
+    private _filter(maps: { id: string; type: SubitemType; params: MapOfString }[], method: HttpCallMethod): RestMappingResult {
         if (!maps.length) {
-            return this._fallback;
+            return this._fallback ? { handler: this._fallback } : null;
         }
 
         let item = maps[0];
@@ -267,10 +277,13 @@ export class RestHandler {
         }
 
         const entry = this._rest[item.id].entry;
-        const result: HttpRestItem = {
-            package: this._format(entry.package || "", item.params),
-            module: this._format(entry.module || "", item.params),
-            method: this._format(entry.method || "default", item.params),
+        const handler = entry.handlers?.[method] || entry.handler;
+        const result: HttpRestResult = {
+            handler: {
+                package: this._format(handler?.package || "", item.params),
+                module: this._format(handler?.module || "", item.params),
+                method: this._format(handler?.method || "default", item.params),
+            },
             cache: entry.cache,
             proxy: entry.proxy,
         };

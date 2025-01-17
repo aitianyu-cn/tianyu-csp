@@ -1,6 +1,8 @@
 /** @format */
 
 import { MapOfType } from "@aitianyu.cn/types";
+import { HttpRequestCacheOption, HttpRequestProxyOption, HttpRestItem } from "../service/http-service";
+import { ImportPackage } from "../api/importer";
 
 /**
  * Request url path split items type
@@ -34,3 +36,14 @@ export interface Subitem {
     /** generic type item */
     generic: Subitem | null;
 }
+
+export interface HttpRestResult {
+    /** Http Request handler */
+    handler: ImportPackage;
+    /** Http Request response cache option */
+    cache?: HttpRequestCacheOption;
+    /** Http Proxy setting */
+    proxy?: HttpRequestProxyOption;
+}
+
+export type RestMappingResult = HttpRestResult | null;

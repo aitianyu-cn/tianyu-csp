@@ -49,6 +49,7 @@ function registerGlobalTIANYU(
         param,
         headers,
         protocol,
+        method: "GET",
         serviceId: "",
         requestId: "",
         sessionId: "",

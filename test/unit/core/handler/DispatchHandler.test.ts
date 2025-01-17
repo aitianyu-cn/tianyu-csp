@@ -43,6 +43,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
             payload: {
                 host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",

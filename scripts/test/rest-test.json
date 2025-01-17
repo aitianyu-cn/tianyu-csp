@@ -1,49 +1,97 @@
 {
     "/": {
-        "package": "$",
-        "module": "default-loader",
-        "method": "html"
+        "handler": {
+            "package": "$",
+            "module": "default-loader",
+            "method": "html"
+        }
     },
     "/package": {
-        "package": "package",
-        "module": "test-module",
-        "method": "default"
+        "handlers": {
+            "GET": {
+                "package": "package",
+                "module": "test-module",
+                "method": "default"
+            }
+        }
     },
     "/package/*": {
-        "package": "package",
-        "module": "generic",
-        "method": "default"
+        "handlers": {
+            "POST": {
+                "package": "package",
+                "module": "generic",
+                "method": "default"
+            }
+        }
     },
     "/package/{module}/{method}": {
-        "package": "package",
-        "module": "{module}",
-        "method": "{method}"
+        "handlers": {
+            "GET": {
+                "package": "package",
+                "module": "{module}",
+                "method": "{method}-get"
+            },
+            "POST": {
+                "package": "package",
+                "module": "{module}",
+                "method": "{method}-post"
+            }
+        }
     },
     "/package/{module}/{method}/*": {
-        "package": "package-generic",
-        "module": "{module}",
-        "method": "{method}"
+        "handler": {
+            "package": "package-generic",
+            "module": "{module}",
+            "method": "{method}"
+        },
+        "handlers": {
+            "GET": {
+                "package": "package-generic-get",
+                "module": "{module}",
+                "method": "{method}"
+            }
+        }
     },
     "/config/{user}/*": {
-        "package": "package",
-        "module": "{user}",
-        "method": "default"
+        "handler": {
+            "package": "package",
+            "module": "{user}",
+            "method": "default"
+        }
     },
 
     "/double/*": {
-        "package": "double-package",
-        "module": "default",
-        "method": "default"
+        "handler": {
+            "package": "double-package",
+            "module": "default",
+            "method": "default"
+        }
     },
     "/double/data": {
-        "package": "double-package.data",
-        "module": "data",
-        "method": "default"
+        "handler": {
+            "package": "double-package.data",
+            "module": "data",
+            "method": "default"
+        }
     },
 
     "/format-test/{module}": {
-        "package": "format-test",
-        "module": "{module}{}",
-        "method": "default"
+        "handler": {
+            "package": "format-test",
+            "module": "{module}{}",
+            "method": "default"
+        }
+    },
+
+    "/default/handle/proxy/*": {
+        "proxy": {
+            "host": "resources.aitianyu.cn"
+        }
+    },
+
+    "/default/handle/proxy1": {
+        "proxy": {
+            "host": "aitianyu.cn"
+        }
     }
 }

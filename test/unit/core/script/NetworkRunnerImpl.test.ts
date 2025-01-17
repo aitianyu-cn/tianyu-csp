@@ -29,6 +29,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
             payload: {
                 host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -71,6 +72,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
             payload: {
                 host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -114,6 +116,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
             payload: {
                 host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -157,6 +160,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
             payload: {
                 host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",

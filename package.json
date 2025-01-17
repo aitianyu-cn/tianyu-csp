@@ -46,6 +46,7 @@
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
         "test": "jest --no-cache --verbose --passWithNoTests",
         "test-all": "jest --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
+        "test-all-offline": "jest -c \"./jest.config.offline.js\" --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
         "test-coverage": "jest --no-cache --coverage --passWithNoTests",
         "test-env-load": "node \"./test/config/test-loader.mjs\"",
         "test-auto": "npm run build && npm run test-env-load && npm run test-all",

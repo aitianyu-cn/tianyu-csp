@@ -7,33 +7,41 @@ import { AreaCode } from "@aitianyu.cn/types";
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
     describe("getRest", () => {
         it("no valid path", () => {
-            expect(RestHelper.getRest("")).toBeNull();
+            expect(RestHelper.getRest("", "GET")).toBeNull();
+            expect(RestHelper.getRest("", "POST")).toBeNull();
             // expect(RestHelper.getRest("/")).toBeNull();
-            expect(RestHelper.getRest("/no_test")).toBeNull();
+            expect(RestHelper.getRest("/no_test", "GET")).toBeNull();
+            expect(RestHelper.getRest("/no_test", "POST")).toBeNull();
         });
 
         it("valid path", () => {
-            const rest: HttpRestItem = { package: "a", module: "b", method: "c" };
+            const rest: HttpRestItem = { handler: { package: "a", module: "b", method: "c" } };
 
-            expect(RestHelper.getRest("/test/valid")).toEqual(rest);
-            expect(RestHelper.getRest("/test/invalid")).toBeNull();
-            expect(RestHelper.getRest("test/no_prefix")).toEqual(rest);
+            expect(RestHelper.getRest("/test/valid", "GET")).toEqual(rest);
+            expect(RestHelper.getRest("/test/valid", "POST")).toEqual(rest);
+            expect(RestHelper.getRest("/test/invalid", "GET")).toBeNull();
+            expect(RestHelper.getRest("/test/invalid", "POST")).toBeNull();
+            expect(RestHelper.getRest("test/no_prefix", "GET")).toEqual(rest);
+            expect(RestHelper.getRest("test/no_prefix", "POST")).toEqual(rest);
         });
 
         it("default case", () => {
-            const rest: HttpRestItem = { package: "a", module: "b", method: "default" };
+            const rest: HttpRestItem = { handler: { package: "a", module: "b", method: "default" } };
 
-            expect(RestHelper.getRest("/empty")).toEqual(rest);
+            expect(RestHelper.getRest("/empty", "GET")).toEqual(rest);
+            expect(RestHelper.getRest("/empty", "POST")).toEqual(rest);
         });
     });
 
     describe("getRest customized", () => {
         it("no valid path", () => {
-            expect(RestHelper.getRest("", { "/": {} })).toBeNull();
+            expect(RestHelper.getRest("", "GET", { "/": {} })).toBeNull();
+            expect(RestHelper.getRest("", "POST", { "/": {} })).toBeNull();
             // expect(RestHelper.getRest("/")).toBeNull();
             expect(
                 RestHelper.getRest(
                     "/no_test",
+                    "GET",
                     { "/": {} },
                     {
                         package: "p",
@@ -41,39 +49,41 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
                         method: "m",
                     },
                 ),
-            ).toEqual({ package: "p", module: "m", method: "m" });
+            ).toEqual({ handler: { package: "p", module: "m", method: "m" } });
         });
     });
 
     it("toPathEntry", () => {
-        expect(RestHelper.toPathEntry({})).toEqual({ package: "", module: "", method: "" });
-        expect(RestHelper.toPathEntry({ package: "test" })).toEqual({ package: "test", module: "", method: "" });
-        expect(RestHelper.toPathEntry({ package: "test", module: "develop" })).toEqual({
+        expect(RestHelper.toPathEntry({ handler: {} })).toEqual({ package: "", module: "", method: "" });
+        expect(RestHelper.toPathEntry({ handler: { package: "test" } })).toEqual({ package: "test", module: "", method: "" });
+        expect(RestHelper.toPathEntry({ handler: { package: "test", module: "develop" } })).toEqual({
             package: "test",
             module: "develop",
             method: "",
         });
-        expect(RestHelper.toPathEntry({ package: "test", module: "develop", method: "run" })).toEqual({
+        expect(RestHelper.toPathEntry({ handler: { package: "test", module: "develop", method: "run" } })).toEqual({
             package: "test",
             module: "develop",
             method: "run",
         });
-        expect(RestHelper.toPathEntry({ proxy: { host: "" } })).toEqual({
+        expect(RestHelper.toPathEntry({ handler: {}, proxy: { host: "" } })).toEqual({
             package: "$",
             module: "default-loader",
             method: "proxy",
         });
-        expect(RestHelper.toPathEntry({ proxy: { host: "" }, package: "test" })).toEqual({
+        expect(RestHelper.toPathEntry({ proxy: { host: "" }, handler: { package: "test" } })).toEqual({
             package: "$",
             module: "default-loader",
             method: "proxy",
         });
-        expect(RestHelper.toPathEntry({ proxy: { host: "" }, package: "test", module: "tm" })).toEqual({
+        expect(RestHelper.toPathEntry({ proxy: { host: "" }, handler: { package: "test", module: "tm" } })).toEqual({
             package: "$",
             module: "default-loader",
             method: "proxy",
         });
-        expect(RestHelper.toPathEntry({ proxy: { host: "" }, package: "test", module: "tm", method: "proxy" })).toEqual({
+        expect(
+            RestHelper.toPathEntry({ proxy: { host: "" }, handler: { package: "test", module: "tm", method: "proxy" } }),
+        ).toEqual({
             package: "test",
             module: "tm",
             method: "proxy",
@@ -85,6 +95,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             const payload: RequestPayloadData = {
                 host: "localhost",
                 url: "/test",
+                method: "GET",
                 protocol: "http",
                 serviceId: "",
                 requestId: "",
@@ -116,6 +127,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
             const payloadGeneration = (url: string): RequestPayloadData => ({
                 host: "localhost",
                 url: url,
+                method: "GET",
                 protocol: "http",
                 serviceId: "",
                 requestId: "",

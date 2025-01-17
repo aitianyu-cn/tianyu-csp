@@ -302,14 +302,16 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
                 enablefallback: true,
                 rest: {
                     "/": {
-                        package: "h_p",
-                        module: "hm",
-                        method: "hm",
+                        handler: {
+                            package: "h_p",
+                            module: "hm",
+                            method: "hm",
+                        },
                     },
                     "/c": {
-                        package: "c_p",
-                        module: "cm",
-                        method: "cm",
+                        handlers: {
+                            GET: { package: "c_p", module: "cm", method: "cm" },
+                        },
                     },
                 },
                 fallback: {
@@ -319,9 +321,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
                 },
             });
 
-            expect(service["_rest"]?.mapping("/")).toEqual({ package: "h_p", module: "hm", method: "hm" });
-            expect(service["_rest"]?.mapping("/c")).toEqual({ package: "c_p", module: "cm", method: "cm" });
-            expect(service["_rest"]?.mapping("/d")).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+            expect(service["_rest"]?.mapping("/", "GET")?.handler).toEqual({ package: "h_p", module: "hm", method: "hm" });
+            expect(service["_rest"]?.mapping("/", "POST")?.handler).toEqual({ package: "h_p", module: "hm", method: "hm" });
+            expect(service["_rest"]?.mapping("/c", "GET")?.handler).toEqual({ package: "c_p", module: "cm", method: "cm" });
+            expect(service["_rest"]?.mapping("/c", "POST")?.handler).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+            expect(service["_rest"]?.mapping("/d", "GET")?.handler).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+            expect(service["_rest"]?.mapping("/d", "POST")?.handler).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
         });
     });
 
@@ -344,14 +349,20 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             );
             server["_restMap"] = {
                 "/": {
-                    package: "h_p",
-                    module: "hm",
-                    method: "hm",
+                    handler: {
+                        package: "h_p",
+                        module: "hm",
+                        method: "hm",
+                    },
                 },
                 "/c": {
-                    package: "c_p",
-                    module: "cm",
-                    method: "cm",
+                    handlers: {
+                        POST: {
+                            package: "c_p",
+                            module: "cm",
+                            method: "cm",
+                        },
+                    },
                 },
             };
             server["_restFallback"] = {
@@ -359,9 +370,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
                 module: "f_m",
                 method: "f_m",
             };
-            expect(server["getRest"]("/")).toEqual({ package: "h_p", module: "hm", method: "hm" });
-            expect(server["getRest"]("/c")).toEqual({ package: "c_p", module: "cm", method: "cm" });
-            expect(server["getRest"]("/d")).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+            expect(server["getRest"]("/", "GET")?.handler).toEqual({ package: "h_p", module: "hm", method: "hm" });
+            expect(server["getRest"]("/c", "POST")?.handler).toEqual({ package: "c_p", module: "cm", method: "cm" });
+            expect(server["getRest"]("/c", "GET")?.handler).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
+            expect(server["getRest"]("/d", "GET")?.handler).toEqual({ package: "f_p", module: "f_m", method: "f_m" });
         });
 
         it("service error", () => {
