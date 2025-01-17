@@ -18,7 +18,9 @@ o   7. refine rest path processor and support condition mapping
 o   8. notes of all export modules
 o   9. support javascript in configuration file.
 o   10.support postgre or tidb or redis(at least a kv database) ===> supported 'redis'
-    11.support remote procedure call
+o   11.support remote procedure call
+        o http for development mode only
+        o https & http2 supporting
 o   12.support external object call
 
 phase2 - OPTIONAL:
