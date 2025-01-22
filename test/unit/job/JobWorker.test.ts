@@ -2,7 +2,7 @@
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { JobWorkerPayload } from "#interface";
-import { JobWorker } from "#job/JobWorker";
+import { JobWorker } from "#job";
 import { PROJECT_ROOT_PATH } from "packages/Common";
 import path from "path";
 import * as TYPES from "@aitianyu.cn/types";
@@ -386,6 +386,29 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
         it("worker not inited", (done) => {
             const worker = new JobWorker();
             worker.terminate().then(done, done.fail);
+        });
+    });
+
+    describe("run - console", () => {
+        it("success", (done) => {
+            jest.spyOn(TIANYU.logger, "debug").mockImplementation(() => Promise.resolve());
+
+            const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/console.js");
+            const payload: JobWorkerPayload = {
+                options: {
+                    workerData: { inp: true },
+                },
+                package: "a",
+                module: "a",
+                method: "a",
+            };
+
+            const worker = new JobWorker();
+            worker.run(file, payload, "id").then(() => {
+                expect(TIANYU.logger.debug).toHaveBeenCalledTimes(2);
+
+                done();
+            }, done.fail);
         });
     });
 });

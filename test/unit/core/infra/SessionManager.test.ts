@@ -29,8 +29,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.SessionManager", ()
         jest.spyOn(SESSION_HANDLER, "handleSessionIsAdminMode").mockReturnValue(Promise.resolve({ admin: true }));
         jest.spyOn(SESSION_HANDLER, "handleSessionPrivileges").mockReturnValue(
             Promise.resolve({
-                p1: { read: true, write: true, delete: false, change: true, execute: true },
-                p2: { read: true, write: true, delete: false, change: true, execute: true },
+                p1: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "allow" },
+                p2: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "non" },
             }),
         );
 
@@ -47,16 +47,18 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.SessionManager", ()
         expect(mgr.defaultLanguage).toEqual(PROJECT_DEFAULT_LANGUAGE);
         expect(mgr.user).toEqual({ userId: USER_ID, displayName: "Test User" });
 
-        expect(mgr.checkPrivilege("p1", "read")).toBeTruthy();
-        expect(mgr.checkPrivilege("p1", "write")).toBeTruthy();
-        expect(mgr.checkPrivilege("p1", "delete")).toBeFalsy();
-        expect(mgr.checkPrivilege("p1", "change")).toBeTruthy();
-        expect(mgr.checkPrivilege("p1", "execute")).toBeTruthy();
+        expect(mgr.checkPrivilege("p1", "read")).toEqual("allow");
+        expect(mgr.checkPrivilege("p1", "write")).toEqual("allow");
+        expect(mgr.checkPrivilege("p1", "delete")).toEqual("avoid");
+        expect(mgr.checkPrivilege("p1", "change")).toEqual("allow");
+        expect(mgr.checkPrivilege("p1", "execute")).toEqual("allow");
 
-        expect(mgr.checkPrivilege("p2", "read")).toBeTruthy();
-        expect(mgr.checkPrivilege("p2", "write")).toBeTruthy();
-        expect(mgr.checkPrivilege("p2", "delete")).toBeFalsy();
-        expect(mgr.checkPrivilege("p2", "change")).toBeTruthy();
-        expect(mgr.checkPrivilege("p2", "execute")).toBeTruthy();
+        expect(mgr.checkPrivilege("p2", "read")).toEqual("allow");
+        expect(mgr.checkPrivilege("p2", "write")).toEqual("allow");
+        expect(mgr.checkPrivilege("p2", "delete")).toEqual("avoid");
+        expect(mgr.checkPrivilege("p2", "change")).toEqual("allow");
+        expect(mgr.checkPrivilege("p2", "execute")).toEqual("non");
+
+        expect(mgr.checkPrivilege("p3", "read")).toEqual("non");
     });
 });

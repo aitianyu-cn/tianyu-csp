@@ -2,17 +2,30 @@
 
 const { TianyuCSP } = require("../dist/lib/index");
 
-TianyuCSP.Infra.load();
+try {
+    TianyuCSP.Infra.load();
 
-console.log(TIANYU.environment);
+    const contributor = TianyuCSP.Infra.creator.contributor();
 
-const dispatcher = new TianyuCSP.Infra.DispatchHandler();
-dispatcher.initialize();
-const requestHandler = new TianyuCSP.Infra.RequestHandler();
-requestHandler.initialize();
+    const dispatcher = new TianyuCSP.Infra.DispatchHandler(undefined, contributor);
+    const requester = new TianyuCSP.Infra.RequestHandler(contributor);
 
-const http1 = new TianyuCSP.Infra.HttpService({
-    host: "0.0.0.0",
-    port: "8080",
-});
-http1.listen();
+    dispatcher.initialize();
+    requester.initialize();
+
+    const http1 = new TianyuCSP.Infra.HttpService(
+        {
+            host: "0.0.0.0",
+            port: "3000",
+            enablefallback: true,
+            advanceRest: true,
+        },
+        contributor,
+    );
+
+    http1.listen(() => {
+        console.log("---- start");
+    });
+} catch (e) {
+    console.log(e);
+}

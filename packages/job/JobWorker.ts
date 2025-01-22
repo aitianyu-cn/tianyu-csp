@@ -5,6 +5,11 @@ import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessa
 import { guid } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 
+/**
+ * @internal
+ *
+ * Job worker thread
+ */
 export class JobWorker implements IJobWorker {
     private _id: string;
     private _worker: Worker | null;
@@ -65,13 +70,32 @@ export class JobWorker implements IJobWorker {
                     module: payload.module,
                     method: payload.method,
                 };
+                const workData: any = { payload: data, script: entry };
+                // const isTypescript = /\.ts$/.test(script);
+                // /* istanbul ignore if */
+                // if (isTypescript) {
+                //     workData["__filename"] = script;
+                // }
+                // this._worker = new Worker(isTypescript ? /* istanbul ignore next */ TS_PROXY_SCRIPT : script, {
+                //     argv,
+                //     env,
+                //     workerData: workData,
+                //     stdout: true,
+                //     stderr: true,
+                // });
                 this._worker = new Worker(script, {
                     argv,
                     env,
-                    workerData: {
-                        payload: data,
-                        script: entry,
-                    },
+                    workerData: workData,
+                    stdout: true,
+                    stderr: true,
+                });
+
+                this._worker.stdout.on("data", (data) => {
+                    TIANYU.logger.debug(`JOB info ${this.id}: ${data}`);
+                });
+                this._worker.stderr.on("data", (data) => {
+                    TIANYU.logger.debug(`JOB error ${this.id}: ${data}`);
                 });
 
                 this._worker.on("error", (error: Error) => {
@@ -120,6 +144,11 @@ export class JobWorker implements IJobWorker {
         return this._executionId;
     }
 
+    /**
+     * To reset all data
+     *
+     * This is used for reuseable thread later
+     */
     public reset(): void {
         this._status = "active";
         this._worker = null;

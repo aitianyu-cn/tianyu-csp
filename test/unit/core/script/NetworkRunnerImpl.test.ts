@@ -18,8 +18,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
         jest.spyOn(SESSION_HANDLER, "handleSessionIsAdminMode").mockReturnValue(Promise.resolve({ admin: true }));
         jest.spyOn(SESSION_HANDLER, "handleSessionPrivileges").mockReturnValue(
             Promise.resolve({
-                p1: { read: true, write: true, delete: false, change: true, execute: true },
-                p2: { read: true, write: true, delete: false, change: true, execute: true },
+                p1: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "allow" },
+                p2: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "non" },
             }),
         );
     });
@@ -27,7 +27,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("success", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -37,6 +39,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
+                protocol: "http",
             },
             script: {
                 package: "test",
@@ -66,7 +70,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("failed", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -76,6 +82,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
+                protocol: "http",
             },
             script: {
                 package: "test",
@@ -106,7 +114,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("failed - no message", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -116,6 +126,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
+                protocol: "http",
             },
             script: {
                 package: "test",
@@ -146,7 +158,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
     it("import wrong module", (done) => {
         const payload: { payload: RequestPayloadData; script: JobWorkerExecutionEntry } = {
             payload: {
+                host: "",
                 url: "",
+                method: "GET",
                 serviceId: "",
                 requestId: "",
                 sessionId: "",
@@ -156,6 +170,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 cookie: {},
                 param: {},
                 headers: {},
+                disableCache: true,
+                protocol: "http",
             },
             script: {
                 package: "test",

@@ -1,15 +1,7 @@
 /** @format */
 
-import { IGlobalDefinition, IServerRequest, ISession } from "#interface";
-import {
-    DATABASE_CONFIGS_MAP,
-    DATABASE_TYPES_MAP,
-    PROJECT_ENVIRONMENT_MODE,
-    PROJECT_NAME,
-    PROJECT_ROOT_PATH,
-    PROJECT_VERSION,
-} from "../Common";
-import { ContributorManager } from "./infra/ContributorManager";
+import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
+import { ICSPContributorFactorProtocolMap, IGlobalDefinition, IServerRequest, ISession } from "#interface";
 import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
 import { GlobalRequestManager } from "./infra/RequestManager";
@@ -17,7 +9,10 @@ import { GlobalSessionManager } from "./infra/SessionManager";
 import { LoggerManager } from "./infra/LoggerManager";
 import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
+import { FeatureManager } from "./infra/FeatureManager";
+import { EnvironmentManager } from "./infra/EnvironmentManager";
 
+/** To init infra of global scope */
 export function loadInfra(): void {
     /* istanbul ignore if */
     if ((global as any).TIANYU) {
@@ -29,15 +24,22 @@ export function loadInfra(): void {
     (global as any).TIANYU = generateInfra(sessionMgr, requestMgr);
 }
 
+/** to create a default contributor */
+export function createContributor(): IContributor<ICSPContributorFactorProtocolMap> {
+    return new Contributor.Object<ICSPContributorFactorProtocolMap>();
+}
+
+/**
+ * To generate an infra for job worker
+ *
+ * @param sessionMgr session manager instance
+ * @param request request instance
+ * @returns return a global definition
+ */
 export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
-        db: new DatabaseManager({
-            dbTypes: DATABASE_TYPES_MAP,
-            configMap: DATABASE_CONFIGS_MAP,
-        }),
-        fwk: {
-            contributor: new ContributorManager(),
-        },
+        db: new DatabaseManager(),
+        fwk: {},
         import: importImpl(),
 
         logger: new LoggerManager(),
@@ -45,13 +47,8 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
         session: sessionMgr,
         usage: new UsageManager(),
         trace: new TraceManager(),
-
-        environment: {
-            baseUrl: PROJECT_ROOT_PATH,
-            version: PROJECT_VERSION,
-            development: PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development",
-            name: PROJECT_NAME,
-        },
+        feature: new FeatureManager(),
+        environment: new EnvironmentManager(),
     };
 
     return tianyu_infra;

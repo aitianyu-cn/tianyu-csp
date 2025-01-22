@@ -1,6 +1,6 @@
 /** @format */
 
-import { HttpHelper } from "#utils/HttpHelper";
+import { HttpHelper } from "#utils";
 import { AreaCode, MapOfString, parseAreaCode } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 
@@ -87,6 +87,44 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
 
         it("no language provides", () => {
             expect(HttpHelper.processLanguage({}, {}, {})).toEqual(AreaCode.unknown);
+        });
+    });
+
+    it("stringifyCookie", () => {
+        expect(HttpHelper.stringifyCookie({})).toEqual("");
+        expect(HttpHelper.stringifyCookie({ test: undefined } as any)).toEqual("");
+        expect(HttpHelper.stringifyCookie({ test: "1", test2: "2" })).toEqual("test=1;test2=2;");
+    });
+
+    it("stringifyParam", () => {
+        expect(HttpHelper.stringifyParam({})).toEqual("");
+        expect(HttpHelper.stringifyParam({ test: undefined } as any)).toEqual("?test=undefined");
+        expect(HttpHelper.stringifyParam({ test: "1", test2: "2" })).toEqual("?test=1&test2=2");
+    });
+
+    describe("parseHost", () => {
+        it("not have port", () => {
+            const { host, port } = HttpHelper.parseHost("localhost");
+            expect(host).toEqual("localhost");
+            expect(port).toBeUndefined();
+        });
+
+        it("has port", () => {
+            const { host, port } = HttpHelper.parseHost("localhost:8080");
+            expect(host).toEqual("localhost");
+            expect(port).toEqual(8080);
+        });
+    });
+
+    describe("shouldRejectUnauth", () => {
+        it("true", () => {
+            (global as any).TIANYU_TEST_HTTPS_UNAUTH = false;
+            expect(HttpHelper.shouldRejectUnauth()).toBeTruthy();
+        });
+
+        it("false", () => {
+            (global as any).TIANYU_TEST_HTTPS_UNAUTH = true;
+            expect(HttpHelper.shouldRejectUnauth()).toBeFalsy();
         });
     });
 });

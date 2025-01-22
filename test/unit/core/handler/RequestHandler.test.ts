@@ -1,13 +1,16 @@
 /** @format */
 
 import { RequestHandler } from "#core/handler/RequestHandler";
+import { createContributor } from "#core/InfraLoader";
 import { DISPATCH_HANDLER_MODULE_ID, HTTP_STATUS_CODE, NetworkServiceResponseData, REQUEST_HANDLER_MODULE_ID } from "#interface";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", () => {
+    const contributor = createContributor();
+
     let REQ_HANDLER: any = null;
 
     beforeAll(() => {
-        REQ_HANDLER = new RequestHandler();
+        REQ_HANDLER = new RequestHandler(contributor);
         REQ_HANDLER.initialize();
     });
 
@@ -16,7 +19,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
     });
 
     it("request-handler.items-getter", () => {
-        const method = TIANYU.fwk.contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+        const method = contributor.findModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
         expect(method).toBeDefined();
 
@@ -28,7 +31,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
 
     describe("request-handler.dispatcher", () => {
         it("dispatcher not valid", (done) => {
-            const dispatcher = TIANYU.fwk.contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+            const dispatcher = contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             expect(dispatcher).toBeDefined();
 
             if (dispatcher) {
@@ -47,7 +50,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
         });
 
         it("success", (done) => {
-            TIANYU.fwk.contributor.exportModule(
+            contributor.exportModule(
                 "dispatch-handler.network-dispatcher",
                 DISPATCH_HANDLER_MODULE_ID,
                 function (): Promise<NetworkServiceResponseData> {
@@ -61,7 +64,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
             );
 
             new Promise<void>((resolve) => {
-                const dispatcher = TIANYU.fwk.contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+                const dispatcher = contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
                 expect(dispatcher).toBeDefined();
 
                 if (dispatcher) {
@@ -78,7 +81,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
                     );
                 }
             }).finally(() => {
-                TIANYU.fwk.contributor.unexportModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
+                contributor.unexportModule("dispatch-handler.network-dispatcher", DISPATCH_HANDLER_MODULE_ID);
                 done();
             });
         });

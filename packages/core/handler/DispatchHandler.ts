@@ -1,6 +1,7 @@
 /** @format */
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { findActualModule } from "#core/infra/ImporterManager";
 import {
     DISPATCH_HANDLER_MODULE_ID,
     DispatchHandlerOption,
@@ -9,50 +10,69 @@ import {
     JobWorkerPayload,
     NetworkServiceResponseData,
     RequestPayloadData,
-    RequestRestData,
+    ICSPContributorFactorProtocolMap,
+    PathEntry,
 } from "#interface";
-import { createJobManager } from "#job/index";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { createJobManager } from "#job";
+import { ErrorHelper } from "#utils";
+import { IContributor } from "@aitianyu.cn/tianyu-app-fwk/dist/types/interface/contributor";
 import path from "path";
 
+/**
+ * Tianyu CSP Job Dispatch handler
+ *
+ * to dispatch network requests and schedule jobs in different threads
+ */
 export class DispatchHandler {
+    private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
     private _options?: DispatchHandlerOption;
 
     private _requestJobPool: string;
     private _scheduleJobPool: string;
 
-    public constructor(options?: DispatchHandlerOption) {
+    /**
+     * Create a dispatch handler instance from options and contributor
+     *
+     * @param options dispatch handler option
+     * @param contributor app framework contributor for registering some external apis
+     */
+    public constructor(options?: DispatchHandlerOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         this._options = options;
+        this._contributor = contributor;
         this._requestJobPool = "";
         this._scheduleJobPool = "";
 
         // create endpoints
-        TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.network-dispatcher");
-        TIANYU.fwk.contributor.registerEndpoint("dispatch-handler.job-dispatcher");
+        this._contributor?.registerEndpoint("dispatch-handler.network-dispatcher");
+        this._contributor?.registerEndpoint("dispatch-handler.job-dispatcher");
 
         // export execution module
-        TIANYU.fwk.contributor.exportModule(
+        this._contributor?.exportModule(
             "dispatch-handler.network-dispatcher",
             DISPATCH_HANDLER_MODULE_ID,
             this._networkDispatch.bind(this),
         );
-        TIANYU.fwk.contributor.exportModule(
+        this._contributor?.exportModule(
             "dispatch-handler.job-dispatcher",
             DISPATCH_HANDLER_MODULE_ID,
             this._jobDispatch.bind(this),
         );
     }
 
+    /** To initialize the dispath handler */
     public initialize(): void {
-        this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers });
-        this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers });
+        this._requestJobPool = createJobManager({ limitWorkers: this._options?.limitRequestsWorkers }, this._contributor);
+        this._scheduleJobPool = createJobManager({ limitWorkers: this._options?.limitScheduleWorkers }, this._contributor);
     }
 
-    private async _networkDispatch(data: {
-        rest: RequestRestData;
-        payload: RequestPayloadData;
-    }): Promise<NetworkServiceResponseData> {
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._requestJobPool);
+    /**
+     * to handle a network request
+     *
+     * @param data request payload data
+     * @returns return a network service response
+     */
+    private async _networkDispatch(data: { rest: PathEntry; payload: RequestPayloadData }): Promise<NetworkServiceResponseData> {
+        const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._requestJobPool);
         if (!dispatcher) {
             return Promise.reject({
                 status: "error",
@@ -64,8 +84,9 @@ export class DispatchHandler {
             });
         }
 
+        const dir = path.resolve(__dirname, "../script/network-runner");
         const { exitCode, value, error, status } = await dispatcher({
-            script: path.resolve(__dirname, "../script/network-runner.js"),
+            script: findActualModule(dir) || /* istanbul ignore next */ dir,
             payload: {
                 ...data.rest,
                 traceId: data.payload.traceId,
@@ -88,15 +109,21 @@ export class DispatchHandler {
                     value?.statusCode === undefined
                         ? exitCode || HTTP_STATUS_CODE.NO_CONTENT
                         : value?.statusCode || HTTP_STATUS_CODE.OK,
-                headers: value?.handler || {},
+                headers: value?.headers || {},
                 body: value?.body || "",
             };
             return result;
         }
     }
 
+    /**
+     * to handle a schedule job
+     *
+     * @param data job payload data
+     * @returns return a job execution result
+     */
     private async _jobDispatch(payload: JobWorkerPayload): Promise<JobWorkerExecutionResult> {
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", this._scheduleJobPool);
+        const dispatcher = this._contributor?.findModule("job-manager.dispatch", this._scheduleJobPool);
         if (!dispatcher) {
             const errorRes: JobWorkerExecutionResult = {
                 exitCode: Number(SERVICE_ERROR_CODES.INTERNAL_ERROR),
@@ -112,9 +139,10 @@ export class DispatchHandler {
             };
             return errorRes;
         }
+        const dir = path.resolve(__dirname, "../script/job-runner");
         const result = await dispatcher({
             payload,
-            script: path.resolve(__dirname, "../script/job-runner.js"),
+            script: findActualModule(dir) || /* istanbul ignore next */ dir,
         });
 
         return result;

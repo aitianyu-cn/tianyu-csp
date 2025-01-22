@@ -1,42 +1,31 @@
 /** @format */
 
-import { IUsage, OperationActions, SupportedDatabaseType } from "#interface";
-import { StringHelper } from "@aitianyu.cn/types";
-import { DATABASE_SYS_DB_MAP } from "../../Common";
-import { DEFAULT_SYS_DB_MAP } from "./Constant";
-import { TraceHelper } from "#utils/TraceHelper";
+import { IUsage, OperationActions } from "#interface";
+import { TraceHelper } from "#utils";
+import { doXcall } from "./code/GenericXcall";
 
-const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
-    mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`) VALUES('{7}', '{8}', '{9}', '{10}', '{11}');",
-};
-
+/** CSP Usage Manager for global definition */
 export class UsageManager implements IUsage {
+    /**
+     * To record a usage action for giving project and found
+     *
+     * @param project used project name
+     * @param moduleOrFunctionName used project function name, module name or data name
+     * @param action function, module or data operation action type
+     * @param msg additional message
+     */
     public async record(project: string, moduleOrFunctionName: string, action: OperationActions, msg?: string): Promise<void> {
-        const dbInfo = DATABASE_SYS_DB_MAP["usage"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["usage"];
-        const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
-            dbInfo.database,
-            dbInfo.table,
-
-            dbInfo.field.user,
-            dbInfo.field.func,
-            dbInfo.field.action,
-            dbInfo.field.time,
-            dbInfo.field.msg,
-
-            TIANYU.session.user.userId,
-            `${project}#${moduleOrFunctionName}`,
-            action,
-            TraceHelper.generateTime(),
-            msg || "",
-        ]);
-        const connection = TIANYU.db.connect(dbInfo.database);
-        await connection
-            .execute(sql)
-            .catch((error) => {
-                TIANYU.logger.error(JSON.stringify(error));
-            })
-            .finally(() => {
-                connection.close();
-            });
+        await doXcall(
+            {
+                user: TIANYU.session.user.userId,
+                endpoint: `${project}#${moduleOrFunctionName}`,
+                action: action,
+                time: TraceHelper.generateTime(),
+                message: msg || "",
+            },
+            "usage",
+            "record",
+            `Could not to record the usage for function '${moduleOrFunctionName}' in '${project}' project.`,
+        );
     }
 }

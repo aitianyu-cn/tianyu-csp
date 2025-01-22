@@ -19,8 +19,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
         jest.spyOn(SESSION_HANDLER, "handleSessionIsAdminMode").mockReturnValue(Promise.resolve({ admin: true }));
         jest.spyOn(SESSION_HANDLER, "handleSessionPrivileges").mockReturnValue(
             Promise.resolve({
-                p1: { read: true, write: true, delete: false, change: true, execute: true },
-                p2: { read: true, write: true, delete: false, change: true, execute: true },
+                p1: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "allow" },
+                p2: { read: "allow", write: "allow", delete: "avoid", change: "allow", execute: "non" },
             }),
         );
     });
@@ -32,7 +32,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -42,6 +44,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
+                    protocol: "http",
                 },
             },
             script: {
@@ -76,7 +80,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -86,6 +92,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
+                    protocol: "http",
                 },
             },
             script: {
@@ -121,7 +129,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -131,6 +141,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
+                    protocol: "http",
                 },
             },
             script: {
@@ -166,7 +178,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 name: "",
                 payload: undefined,
                 req: {
+                    host: "",
                     url: "",
+                    method: "GET",
                     serviceId: "",
                     requestId: "",
                     sessionId: "",
@@ -176,6 +190,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     cookie: {},
                     param: {},
                     headers: {},
+                    disableCache: true,
+                    protocol: "http",
                 },
             },
             script: {

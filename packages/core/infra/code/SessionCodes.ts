@@ -1,56 +1,30 @@
 /** @format */
 
-import { FunctionalityPrivilegeMap, SupportedDatabaseType } from "#interface";
-import { getBoolean, MapOfType, StringHelper } from "@aitianyu.cn/types";
-import { DATABASE_SYS_DB_MAP, SESSION_LIFE_TIME } from "../../../Common";
-import { DEFAULT_SYS_DB_MAP } from "../Constant";
+import { FunctionalityPrivilegeMap } from "#interface";
+import { getBoolean, MapOfType } from "@aitianyu.cn/types";
+import { SYSTEM_PRIVILEGE_MAP } from "../../../Common";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-
-const TemplateSQL: { [id: string]: { [key in SupportedDatabaseType]: string } } = {
-    session: {
-        mysql: "SELECT `{2}` as userId, `{3}` as time FROM `{0}`.`{1}` WHERE `{2}` = '{4}';",
-    },
-    user: {
-        mysql: "SELECT `{2}` as name, `{3}` as license FROM `{0}`.`{1}` WHERE `{4}` = '{5}';",
-    },
-    license: {
-        mysql: "SELECT `{2}` as admin FROM `{0}`.`{1}` WHERE `{3}` = '{4}';",
-    },
-    role: {
-        mysql: "SELECT `{2}` as name, `{3}` as read, `{4}` as write, `{5}` as delete, `{6}` as change, `{7}` as execute FROM `{0}`.`{1}` WHERE `{8}` = '{9}';",
-    },
-};
+import { doXcall } from "./GenericXcall";
 
 export async function handleSession(sessionId: string): Promise<string> {
-    const dbInfo = DATABASE_SYS_DB_MAP["session"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["session"];
-    const connection = TIANYU.db.connect(dbInfo.database);
-    const sessionInfo = await connection
-        .query(
-            StringHelper.format(TemplateSQL["session"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
+    const xcallResult = await doXcall(
+        {
+            id: sessionId,
+        },
+        "session",
+        "get",
+        `Could not to read session info for session '${sessionId}'.`,
+    );
 
-                dbInfo.field.user,
-                dbInfo.field.time,
-
-                sessionId,
-            ]),
-        )
-        .finally(() => {
-            connection.close();
-        });
-
-    if (!Array.isArray(sessionInfo) || !sessionInfo.length) {
+    const userId = xcallResult?.userId || "";
+    const valid = xcallResult?.valid || false;
+    if (!userId) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID,
             message: "Session not valid.",
         });
     }
-
-    const { userId, time } = sessionInfo[0];
-    const dateTime = new Date(time);
-    const timespan = (Date.now() - dateTime.getTime()) / 1000 / 60;
-    if (timespan > SESSION_LIFE_TIME) {
+    if (!valid) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME,
             message: "Session not valid.",
@@ -61,96 +35,70 @@ export async function handleSession(sessionId: string): Promise<string> {
 }
 
 export async function handleSessionUser(user: string): Promise<{ name: string; license: string }> {
-    const dbInfo = DATABASE_SYS_DB_MAP["user"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["user"];
-    const connection = TIANYU.db.connect(dbInfo.database);
-    const userInfo = await connection
-        .query(
-            StringHelper.format(TemplateSQL["user"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
+    const xcallResult = await doXcall(
+        {
+            id: user,
+        },
+        "user",
+        "get",
+        `Could not to read user info for user '${user}'.`,
+    );
 
-                dbInfo.field.name,
-                dbInfo.field.license,
-                dbInfo.field.id,
-
-                user,
-            ]),
-        )
-        .finally(() => {
-            connection.close();
-        });
-
-    if (!Array.isArray(userInfo) || !userInfo.length) {
+    const userName = xcallResult?.name;
+    const license = xcallResult?.license;
+    if (typeof userName !== "string" || typeof license !== "string") {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_NOT_FOUND,
             message: "User not valid.",
         });
     }
 
-    return userInfo[0];
+    return { name: userName, license };
 }
 
 export async function handleSessionIsAdminMode(license: string): Promise<{ admin: boolean }> {
-    const dbInfo = DATABASE_SYS_DB_MAP["license"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["license"];
-    const connection = TIANYU.db.connect(dbInfo.database);
-    const licenseInfo = await connection
-        .query(
-            StringHelper.format(TemplateSQL["license"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
+    const xcallResult = await doXcall(
+        {
+            id: license,
+        },
+        "license",
+        "get",
+        `Could not to read license info for license '${license}'.`,
+    );
 
-                dbInfo.field.admin,
-
-                license,
-            ]),
-        )
-        .finally(() => {
-            connection.close();
-        });
-
-    if (!Array.isArray(licenseInfo) || !licenseInfo.length) {
+    const isAdmin = xcallResult?.admin;
+    if (typeof isAdmin !== "boolean") {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.LICENSE_ERROR,
             message: "license not valid.",
         });
     }
 
-    return licenseInfo[0];
+    return { admin: isAdmin };
 }
 export async function handleSessionPrivileges(license: string): Promise<MapOfType<FunctionalityPrivilegeMap>> {
-    const dbInfo = DATABASE_SYS_DB_MAP["role"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["role"];
-    const connection = TIANYU.db.connect(dbInfo.database);
-    const roleInfos = await connection
-        .query(
-            StringHelper.format(TemplateSQL["role"][TIANYU.db.databaseType(connection.name)], [
-                dbInfo.database,
-                dbInfo.table,
-
-                dbInfo.field.name,
-                dbInfo.field.read,
-                dbInfo.field.write,
-                dbInfo.field.delete,
-                dbInfo.field.change,
-                dbInfo.field.execute,
-
-                dbInfo.field.lid,
-                license,
-            ]),
-        )
-        .finally(() => {
-            connection.close();
-        });
+    const xcallResult = await doXcall(
+        {
+            id: license,
+        },
+        "role",
+        "get",
+        `Could not to read role info for license '${license}'.`,
+    );
 
     const privileges: MapOfType<FunctionalityPrivilegeMap> = {};
-    if (Array.isArray(roleInfos) && roleInfos.length) {
-        for (const item of roleInfos) {
-            privileges[item["name"]] = {
-                read: getBoolean(item["read"]),
-                write: getBoolean(item["write"]),
-                delete: getBoolean(item["delete"]),
-                change: getBoolean(item["change"]),
-                execute: getBoolean(item["execute"]),
-            };
+    if (Array.isArray(xcallResult) && xcallResult.length) {
+        for (const item of xcallResult) {
+            const privilegeDef = SYSTEM_PRIVILEGE_MAP[item["name"]];
+            if (privilegeDef) {
+                privileges[item["name"]] = {
+                    read: privilegeDef.read ? (getBoolean(item["read"]) ? "allow" : "avoid") : "non",
+                    write: privilegeDef.write ? (getBoolean(item["write"]) ? "allow" : "avoid") : "non",
+                    delete: privilegeDef.delete ? (getBoolean(item["delete"]) ? "allow" : "avoid") : "non",
+                    change: privilegeDef.change ? (getBoolean(item["change"]) ? "allow" : "avoid") : "non",
+                    execute: privilegeDef.execute ? (getBoolean(item["execute"]) ? "allow" : "avoid") : "non",
+                };
+            }
         }
     }
 

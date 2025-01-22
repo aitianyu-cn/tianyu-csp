@@ -1,0 +1,51 @@
+{
+    "p1": {
+        "read": true,
+        "write": true,
+        "delete": true,
+        "change": true,
+        "execute": true
+    },
+    "p2": {
+        "read": false,
+        "write": true,
+        "delete": true,
+        "change": true,
+        "execute": true
+    },
+    "p3": {
+        "read": false,
+        "write": false,
+        "delete": true,
+        "change": true,
+        "execute": true
+    },
+    "p4": {
+        "read": false,
+        "write": false,
+        "delete": false,
+        "change": true,
+        "execute": true
+    },
+    "p5": {
+        "read": false,
+        "write": false,
+        "delete": false,
+        "change": false,
+        "execute": true
+    },
+    "p6": {
+        "read": false,
+        "write": false,
+        "delete": false,
+        "change": false,
+        "execute": false
+    },
+    "p7": {
+        "read": true,
+        "write": true,
+        "delete": true,
+        "change": true,
+        "execute": true
+    }
+}

@@ -1,7 +1,8 @@
 /** @format */
 
 import { AreaCode } from "@aitianyu.cn/types";
-import { OperationActions } from "./privilege";
+import { OperationActions } from "../csp-config";
+import { TianyuCSPPrivilegeType } from "./privilege";
 
 /** CSP session user info */
 export interface ISessionUser {
@@ -34,5 +35,5 @@ export interface ISession {
      *
      * @returns return true if the user has privilege of action, otherwise false
      */
-    checkPrivilege(functionality: string, action: OperationActions): boolean;
+    checkPrivilege(functionality: string, action: OperationActions): TianyuCSPPrivilegeType;
 }

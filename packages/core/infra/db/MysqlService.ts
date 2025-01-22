@@ -1,17 +1,19 @@
 /** @format */
 
 import { IDBConnection, IDBLifecycle } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import * as mysql from "mysql";
 import { INFRA_ERROR_CODES } from "../../Constant";
 
+/** Mysql connection manager and service */
 export class MysqlService implements IDBConnection, IDBLifecycle {
     private _database: string;
     private _pool: mysql.Pool;
 
     public constructor(databaseName: string, config: mysql.ConnectionConfig) {
         this._database = databaseName;
-        this._pool = mysql.createPool({ ...config, database: databaseName });
+        // this._pool = mysql.createPool({ ...config, database: databaseName });
+        this._pool = mysql.createPool({ ...config });
     }
 
     public get name(): string {

@@ -1,15 +1,16 @@
 /** @format */
 
+import { OperationActions } from "../csp-config";
+
 /**
- * Type of supported opertion actions
+ * CSP privilege operation status type
  *
- * read: access a resource
- * write: open a resource and to do a data write operation
- * delete: remove a resource
- * change: to update a resource
- * execute: to start a job
+ * @example
+ * allow    // the operation is allowed
+ * avoid    // the operation is avoid
+ * non      // the operation is not required
  */
-export type OperationActions = "read" | "write" | "delete" | "change" | "execute";
+export type TianyuCSPPrivilegeType = "allow" | "avoid" | "non";
 
 /** Map of functionalities privilege */
-export type FunctionalityPrivilegeMap = { [action in OperationActions]: boolean };
+export type FunctionalityPrivilegeMap = { [action in OperationActions]: TianyuCSPPrivilegeType };

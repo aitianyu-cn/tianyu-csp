@@ -1,15 +1,10 @@
 /** @format */
 
-import { ITrace, SupportedDatabaseType, TraceArea } from "#interface";
-import { StringHelper } from "@aitianyu.cn/types";
-import { DATABASE_SYS_DB_MAP } from "../../Common";
-import { DEFAULT_SYS_DB_MAP } from "./Constant";
-import { TraceHelper } from "#utils/TraceHelper";
+import { ITrace, TraceArea } from "#interface";
+import { TraceHelper } from "#utils";
+import { doXcall } from "./code/GenericXcall";
 
-const TemplateSQL: { [key in SupportedDatabaseType]: string } = {
-    mysql: "INSERT INTO `{0}`.`{1}` (`{2}`, `{3}`, `{4}`, `{5}`, `{6}`, '{7}') VALUES('{8}', '{9}', '{10}', '{11}', '{12}', '{13}');",
-};
-
+/** CSP Trace Manager for global definition */
 export class TraceManager implements ITrace {
     private _traceId: string;
 
@@ -24,33 +19,18 @@ export class TraceManager implements ITrace {
         this._traceId = id;
     }
     public async trace(message: string, errorDetails?: string, area?: TraceArea): Promise<void> {
-        const dbInfo = DATABASE_SYS_DB_MAP["trace"] || /* istanbul ignore next */ DEFAULT_SYS_DB_MAP["trace"];
-        const sql = StringHelper.format(TemplateSQL[TIANYU.db.databaseType(dbInfo.database)], [
-            dbInfo.database,
-            dbInfo.table,
-
-            dbInfo.field.user,
-            dbInfo.field.id,
-            dbInfo.field.time,
-            dbInfo.field.msg,
-            dbInfo.field.error,
-            dbInfo.field.area,
-
-            TIANYU.session.user.userId,
-            this._traceId,
-            TraceHelper.generateTime(),
-            message,
-            errorDetails || "",
-            area || "edge",
-        ]);
-        const connection = TIANYU.db.connect(dbInfo.database);
-        await connection
-            .execute(sql)
-            .catch((error) => {
-                TIANYU.logger.error(JSON.stringify(error));
-            })
-            .finally(() => {
-                connection.close();
-            });
+        await doXcall(
+            {
+                user: TIANYU.session.user.userId,
+                traceId: this._traceId,
+                time: TraceHelper.generateTime(),
+                message: message,
+                details: errorDetails || "",
+                area: area || "edge",
+            },
+            "trace",
+            "trace",
+            `Could not to record the trace for '${message.substring(0, message.length > 20 ? 20 : message.length)}'.`,
+        );
     }
 }

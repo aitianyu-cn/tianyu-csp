@@ -1,7 +1,8 @@
 /** @format */
 
-import { AreaCode } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { RequestType } from "../fwk-def/contributor/requests";
+import { HttpProtocal } from "../service/http-service";
 
 /** CSP Request API for global */
 export interface IServerRequest {
@@ -13,7 +14,9 @@ export interface IServerRequest {
     id: string;
     /** Request Service Version */
     version: string;
-    /** Request Url */
+    /** Request Host (change to remote host if there is a transmition request) */
+    host: string;
+    /** Request Url (change to rewritten url if there is a transmition request) */
     url: string;
     /** Network request type */
     type: RequestType;
@@ -23,8 +26,20 @@ export interface IServerRequest {
     session: string;
     /** request body */
     body: any;
+    /** request based http protocol */
+    protocol: HttpProtocal;
 
+    /**
+     * to set a response code
+     *
+     * @param code new response code
+     */
     setResponseCode(code: number): void;
+    /**
+     * get current response code
+     *
+     * @returns return current code
+     */
     getResponseCode(): number;
 
     /**
@@ -51,4 +66,16 @@ export interface IServerRequest {
      * @returns return the params value
      */
     params(key: string): string;
+    /**
+     * To get all headers from request.
+     *
+     * @returns map of headers
+     */
+    allHeaders(): MapOfString;
+    /**
+     * To get all parameters.
+     *
+     * @returns map of params
+     */
+    allParams(): MapOfString;
 }

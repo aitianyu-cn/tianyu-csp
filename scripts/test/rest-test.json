@@ -1,0 +1,97 @@
+{
+    "/": {
+        "handler": {
+            "package": "$",
+            "module": "default-loader",
+            "method": "html"
+        }
+    },
+    "/package": {
+        "handlers": {
+            "GET": {
+                "package": "package",
+                "module": "test-module",
+                "method": "default"
+            }
+        }
+    },
+    "/package/*": {
+        "handlers": {
+            "POST": {
+                "package": "package",
+                "module": "generic",
+                "method": "default"
+            }
+        }
+    },
+    "/package/{module}/{method}": {
+        "handlers": {
+            "GET": {
+                "package": "package",
+                "module": "{module}",
+                "method": "{method}-get"
+            },
+            "POST": {
+                "package": "package",
+                "module": "{module}",
+                "method": "{method}-post"
+            }
+        }
+    },
+    "/package/{module}/{method}/*": {
+        "handler": {
+            "package": "package-generic",
+            "module": "{module}",
+            "method": "{method}"
+        },
+        "handlers": {
+            "GET": {
+                "package": "package-generic-get",
+                "module": "{module}",
+                "method": "{method}"
+            }
+        }
+    },
+    "/config/{user}/*": {
+        "handler": {
+            "package": "package",
+            "module": "{user}",
+            "method": "default"
+        }
+    },
+
+    "/double/*": {
+        "handler": {
+            "package": "double-package",
+            "module": "default",
+            "method": "default"
+        }
+    },
+    "/double/data": {
+        "handler": {
+            "package": "double-package.data",
+            "module": "data",
+            "method": "default"
+        }
+    },
+
+    "/format-test/{module}": {
+        "handler": {
+            "package": "format-test",
+            "module": "{module}{}",
+            "method": "default"
+        }
+    },
+
+    "/default/handle/proxy/*": {
+        "proxy": {
+            "host": "resources.aitianyu.cn"
+        }
+    },
+
+    "/default/handle/proxy1": {
+        "proxy": {
+            "host": "aitianyu.cn"
+        }
+    }
+}

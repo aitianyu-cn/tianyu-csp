@@ -1,6 +1,6 @@
 {
-    "name": "tianyu-csp",
-    "version": "0.0.1",
+    "name": "@aitianyu.cn/tianyu-csp",
+    "version": "0.1.0",
     "description": "Project for Common Service Platform of Tianyu.",
     "exports": {
         ".": {
@@ -9,6 +9,23 @@
             "require": "./dist/lib/index.js",
             "node": "./dist/lib/index.js",
             "default": "./dist/lib/index.js"
+        },
+        "./install": {
+            "types": "./dist/types/install.d.ts",
+            "import": "./dist/lib/install.js",
+            "require": "./dist/lib/install.js",
+            "node": "./dist/lib/install.js",
+            "default": "./dist/lib/install.js"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "*": [
+                "./dist/types/index.d.ts"
+            ],
+            "install": [
+                "./dist/types/install.d.ts"
+            ]
         }
     },
     "type": "commonjs",
@@ -25,11 +42,15 @@
         "copy": "npm run copy-lib && npm run copy-types && npm run copy-basic-res",
         "copy-lib": "copyfiles -u 2 \"build/packages/**/*.js\" dist/lib",
         "copy-types": "copyfiles -u 2 \"build/packages/**/*.d.ts\" dist/types",
-        "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
+        "copy-basic-res": "copyfiles -u 1 \"packages/**/*.json\" \"packages/**/*.html\" \"packages/**/*.config.json\" \"packages/**/configs/**\" dist/lib",
         "copy-basic-types": "copyfiles -u 1 \"packages/**/*.d.ts\" dist/types",
-        "test": "jest  --no-cache --verbose --passWithNoTests",
-        "test-all": "jest  --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
-        "test-coverage": "jest  --no-cache --coverage --passWithNoTests"
+        "test": "jest --no-cache --verbose --passWithNoTests",
+        "test-all": "jest --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
+        "test-all-offline": "jest -c \"./jest.config.offline.js\" --no-cache --verbose --coverage --passWithNoTests --detectOpenHandles",
+        "test-coverage": "jest --no-cache --coverage --passWithNoTests",
+        "test-env-load": "node \"./test/config/test-loader.mjs\"",
+        "test-auto": "npm run build && npm run test-env-load && npm run test-all",
+        "deploy-build": "npm run build && node \"./scripts/deploy.js\""
     },
     "repository": {
         "type": "git",
@@ -47,23 +68,27 @@
     },
     "homepage": "https://github.com/aitianyu-cn/tianyu-csp#readme",
     "dependencies": {
+        "@aitianyu.cn/tianyu-app-fwk": "^0.0.1",
         "@aitianyu.cn/tianyu-store": "^1.0.0-beta.1",
         "@aitianyu.cn/types": "^0.0.13",
         "async-mutex": "^0.5.0",
         "core-js": "^3.36.0",
         "cross-env": "^7.0.3",
         "fs": "^0.0.1-security",
+        "https": "^1.0.0",
+        "ioredis": "^5.4.1",
         "mysql": "^2.18.1",
         "path": "^0.12.7",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^5.4.2"
     },
     "devDependencies": {
+        "@aitianyu.cn/server-base": "^1.0.5",
         "@types/jest": "^29.5.14",
         "@types/mysql": "^2.15.26",
         "@types/node": "^20.11.28",
         "copyfiles": "^2.4.1",
         "jest": "^29.3.1",
-        "jest-environment-jsdom": "^29.4.1",
         "jest-html-reporters": "^3.0.11",
         "process": "^0.11.10",
         "rimraf": "^5.0.5",

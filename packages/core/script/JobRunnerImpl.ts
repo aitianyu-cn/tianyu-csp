@@ -11,7 +11,7 @@ import {
     ScheduleJobPayload,
     SchedultJobExecuteParam,
 } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { MessagePort } from "worker_threads";
 
 export async function run_job_scripts(workerData: any, parentPort: MessagePort | null): Promise<void> {

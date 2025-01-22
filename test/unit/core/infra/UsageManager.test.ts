@@ -1,41 +1,24 @@
 /** @format */
 
 import { UsageManager } from "#core/infra/UsageManager";
-import { IDBConnection } from "#interface";
+import * as XCALL from "#core/infra/code/GenericXcall";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.UsageManager", () => {
     const usageMgr = new UsageManager();
 
-    const connection: IDBConnection = {
-        name: "",
-        execute: async (_sql: string) => Promise.resolve(),
-        executeBatch: async (_sqls: string[]) => Promise.resolve(),
-        query: async (_sql: string) => Promise.resolve([]),
-        close: () => undefined,
-    };
+    it("record with not message", async () => {
+        jest.spyOn(XCALL, "doXcall").mockImplementation(() => Promise.resolve());
 
-    beforeEach(() => {
-        jest.spyOn(TIANYU.logger, "error").mockReturnValue(Promise.resolve());
-        jest.spyOn(TIANYU.db, "connect").mockReturnValue(connection);
+        await usageMgr.record("test", "module", "read");
+
+        expect(XCALL.doXcall).toHaveBeenCalled();
     });
 
-    it("trace with error", (done) => {
-        jest.spyOn(connection, "execute").mockReturnValue(Promise.reject());
-        jest.spyOn(connection, "close");
-        usageMgr.record("test", "module", "change").then(() => {
-            expect(TIANYU.logger.error).toHaveBeenCalled();
-            expect(connection.close).toHaveBeenCalled();
-            done();
-        }, done.fail);
-    });
+    it("record with message", async () => {
+        jest.spyOn(XCALL, "doXcall").mockImplementation(() => Promise.resolve());
 
-    it("trace success", (done) => {
-        jest.spyOn(connection, "execute").mockReturnValue(Promise.resolve());
-        jest.spyOn(connection, "close");
-        usageMgr.record("test", "module", "change", "msg").then(() => {
-            expect(TIANYU.logger.error).not.toHaveBeenCalled();
-            expect(connection.close).toHaveBeenCalled();
-            done();
-        }, done.fail);
+        await usageMgr.record("test", "module", "read", "message");
+
+        expect(XCALL.doXcall).toHaveBeenCalled();
     });
 });

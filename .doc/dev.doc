@@ -1,0 +1,38 @@
+phase2 - TODO:
+
+o   1. documentary for configurations and database.
+o   2. basic modules implementation like trace, logger.
+        o supported HTTP client
+
+x   3. monitor implementation and integration.
+        - reason: move to phase3 since there are some difficulties like
+                  definition structure, store structure, statues update
+                  type, multi-threads communication and etc...
+
+x   4. filter supporting (simple filter and advance filter).
+        - reason: the filter supporting move to phase3
+
+o   5. quick start api to run an application  =====================> only for sql database.
+o   6. html loader
+o   7. refine rest path processor and support condition mapping
+o   8. notes of all export modules
+o   9. support javascript in configuration file.
+o   10.support postgre or tidb or redis(at least a kv database) ===> supported 'redis'
+o   11.support remote procedure call
+        o http for development mode only
+        o https & http2 supporting
+o   12.support external object call
+
+phase2 - OPTIONAL:
+
+o   1. installation api to quick deployment.
+        o mysql deployment tool to create database
+        o mysql data importer to initialize database data
+o   2. http2.0 supporting.
+        o http2.0 service
+        o http2.0 client
+        o http2.0 service cert & key hot-loading
+o   3. http proxy
+        o http proxy for development mode only
+        o https proxy
+        o http2 proxy

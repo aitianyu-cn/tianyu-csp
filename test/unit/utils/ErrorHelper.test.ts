@@ -1,7 +1,7 @@
 /** @format */
 
 import { HTTP_STATUS_CODE } from "#interface";
-import { ErrorHelper } from "#utils/ErrorHelper";
+import { ErrorHelper } from "#utils";
 import { guid } from "@aitianyu.cn/types";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.ErrorHelper", () => {
@@ -24,6 +24,29 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.ErrorHelper", () => {
             TIANYU.trace.setId(traceId);
 
             const error = ErrorHelper.getError("10000", "this is a test string", "error details");
+
+            expect(error.code).toEqual("10000");
+            expect(error.message).toEqual("this is a test string");
+            expect(error.error).toEqual("error details");
+            expect(error.traceId).toEqual(traceId);
+        });
+    });
+
+    describe("getErrorString", () => {
+        it("no trace id", () => {
+            const error = JSON.parse(ErrorHelper.getErrorString("10000", "this is a test string", "error details"));
+
+            expect(error.code).toEqual("10000");
+            expect(error.message).toEqual("this is a test string");
+            expect(error.error).toEqual("error details");
+            expect(error.traceId).toEqual(undefined);
+        });
+
+        it("has trace id", () => {
+            const traceId = guid();
+            TIANYU.trace.setId(traceId);
+
+            const error = JSON.parse(ErrorHelper.getErrorString("10000", "this is a test string", "error details"));
 
             expect(error.code).toEqual("10000");
             expect(error.message).toEqual("this is a test string");

@@ -1,22 +1,25 @@
 /** @format */
 
-import { JobManager } from "#job/JobManager";
+import { createContributor } from "#core/InfraLoader";
+import { JobManager } from "#job";
 import { guid } from "@aitianyu.cn/types";
 import { PROJECT_ROOT_PATH } from "packages/Common";
 import path from "path";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
-    let jobMgr: any = null;
+    const contributor = createContributor();
     const JOB_MGR_ID = guid();
 
+    let jobMgr: any = null;
+
     beforeAll(() => {
-        jobMgr = new JobManager({ limitWorkers: 3, id: JOB_MGR_ID });
+        jobMgr = new JobManager({ limitWorkers: 3, id: JOB_MGR_ID }, contributor);
     });
 
     it("run", (done) => {
         const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/multi-job.js");
 
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", JOB_MGR_ID);
+        const dispatcher = contributor.findModule("job-manager.dispatch", JOB_MGR_ID);
         expect(dispatcher).toBeDefined();
         if (!dispatcher) {
             done();
@@ -53,7 +56,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
     it("run with timeout", (done) => {
         const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/multi-job.js");
 
-        const dispatcher = TIANYU.fwk.contributor.findModule("job-manager.dispatch", JOB_MGR_ID);
+        const dispatcher = contributor.findModule("job-manager.dispatch", JOB_MGR_ID);
         expect(dispatcher).toBeDefined();
         if (!dispatcher) {
             done();

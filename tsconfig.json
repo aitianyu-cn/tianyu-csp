@@ -22,11 +22,15 @@
         "outDir": "./build",
         "paths": {
             "#core/*": ["packages/core/*"],
-            "#module/*": ["packages/modules/*"],
-            "#utils/*": ["packages/utils/*"],
+            "#loader/*": ["packages/loader/*"],
+
+            "#module": ["packages/modules/module-export.ts"],
+            "#utils": ["packages/utils/utils-export.ts"],
             "#interface": ["packages/interface/index.ts"],
-            "#job/*": ["packages/job/*"],
-            "install/*": ["install/*"],
+            "#job": ["packages/job/index.ts"],
+
+            "#install/*": ["packages/install/*"],
+
             "scripts/*": ["scripts/*"],
             "test/*": ["test/*"],
             "OUT": ["dist/lib/index.js"]

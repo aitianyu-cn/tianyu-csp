@@ -1,15 +1,23 @@
 /** @format */
 
-import { HTTP_STATUS_CODE, IServerRequest, RequestPayloadData, RequestType } from "#interface";
+import { HTTP_STATUS_CODE, HttpProtocal, IServerRequest, RequestPayloadData, RequestType } from "#interface";
 import { AreaCode, MapOfString } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
 
+/**
+ * CSP Generic Request Manager for global definition
+ *
+ * This is only used in job worker thread
+ */
 export class GlobalRequestManager implements IServerRequest {
     public get id(): string {
         return PROJECT_NAME;
     }
     public get version(): string {
         return PROJECT_VERSION;
+    }
+    public get host(): string {
+        return "";
     }
     public get url(): string {
         return "/";
@@ -26,6 +34,9 @@ export class GlobalRequestManager implements IServerRequest {
     public get body(): any {
         return null;
     }
+    public get protocol(): HttpProtocal {
+        return "http2";
+    }
     public setResponseCode(_code: number): void {}
     public getResponseCode(): number {
         return HTTP_STATUS_CODE.OK;
@@ -39,13 +50,25 @@ export class GlobalRequestManager implements IServerRequest {
     public params(_key: string): string {
         return "";
     }
+    public allHeaders(): MapOfString {
+        return {};
+    }
+    public allParams(): MapOfString {
+        return {};
+    }
 }
 
+/**
+ * CSP System Request Manager for global definition
+ *
+ * This is only used in main thread.
+ */
 export class GenericRequestManager implements IServerRequest {
     private _id: string;
     private _url: string;
+    private _host: string;
     private _type: RequestType;
-    private _version: string;
+    private _version: HttpProtocal;
     private _language: AreaCode;
     private _session: string;
 
@@ -60,8 +83,9 @@ export class GenericRequestManager implements IServerRequest {
     public constructor(req: RequestPayloadData) {
         this._id = req.requestId;
         this._url = req.url;
+        this._host = req.host;
         this._type = req.type;
-        this._version = req.headers["version"] || "";
+        this._version = req.protocol;
         this._language = req.language;
         this._session = req.sessionId;
 
@@ -85,7 +109,10 @@ export class GenericRequestManager implements IServerRequest {
         return this._id;
     }
     public get version(): string {
-        return this._version;
+        return PROJECT_VERSION;
+    }
+    public get host(): string {
+        return this._host;
     }
     public get url(): string {
         return this._url;
@@ -102,6 +129,9 @@ export class GenericRequestManager implements IServerRequest {
     public get body(): any {
         return this._body;
     }
+    public get protocol(): HttpProtocal {
+        return this._version;
+    }
     public cookie(key: string): string {
         return this._cookie[key] || "";
     }
@@ -110,5 +140,11 @@ export class GenericRequestManager implements IServerRequest {
     }
     public params(key: string): string {
         return this._params[key] || "";
+    }
+    public allHeaders(): MapOfString {
+        return this._headers;
+    }
+    public allParams(): MapOfString {
+        return this._params;
     }
 }

@@ -2,6 +2,8 @@
 
 A Common Service Platform of Tianyu includes Data API, Network API, Schedule Job and Status Monitor.
 
+[HOW TO USE](.doc/how-to-use.md)
+
 ## MOTIVATION
 
 Most of backend services, need to handle `Database Access`, `Network Connection`, `Job Management`, etc. And need to have a common `Status Monitor` to get current service status.
@@ -88,12 +90,52 @@ Infrastructure contains basic API and some default resources (international stri
 
 All of components under this folder, based on the database accessment. In this part, will define an inner database API implementation.
 
-- **_Database_**
+- **_Database & Code_**
 
-  There are some infra database API definitions. To provide infra part needed database operation interfaces.
+  There are some infra database API definitions. To provide infra part needed database operation interfaces and database interaction implementations.
 
-- **_Logger_**
-- **_Message_**
-- **_Options_**
-- **_Trace_**
-- **_Usage_**
+  Database API is exported in `TIANYU.db`.
+
+- **_Managers_**
+
+  Managers of infra are the main API for `Tianyu-CSP`. There are some default and basic operation interface and will be post only by `TIANYU.${function name}`. Contains `import`, `logger`, `request`, `session`, `trace`, `usage`, `fwk` and `environment`.
+
+  1. **import**: this is a packaged API for import module and files from specified path. It also provides `html` method which receive a path string to import a html file as string, and `MODULE` object to export all internal Objects which are out of infra. <u> _(NOTE: All internal objects will not be able to use by importing and require. All objects can only used by `TIANYU.${function name}` and `TIANYU.import.MODULE`.)_</u>
+
+  2. **logger**: this is a logger tool to record runtime logs and to do persistence.
+
+  3. **request**: this is a request context and work for request and sub-job. For each thread, it will have its independent request instance with the network info.
+
+  4. **session**: this is same like **request**, to provide user info, privilege checking. For each request or sub-job, it will have a session instance belongs to itself.
+
+  5. **trace**: to provide a recorder API to record error trace data. there is only a write API.
+
+  6. **usage**: to provide a recorder API to record function usage data. there is only a write API.
+
+  7. **fwk**: this is a framework instance for each request or sub-job. the purpose of it to decouple the dependencies. in `Tianyu-CSP`, there are some predefined API for internally using. <u>**PLEASE DO NOT USE THE PRE-DEFINED API IN YOUR CODE.**</u>
+
+  8. **environment**: this is a constant object to provide some application data, includes `version`, `developmentMode`, `application name` and etc...
+
+  9. **feature**: this is a feature tool to get a specified feature is enabled or not.
+
+- **_Handler & Service_**
+
+  **Handler**
+
+  provides data pre-processing, data dispatching and exception handling. By using `TIANYU.fwk`, they are totally decoupled. Data transferring uses internal pip.
+
+  **Service**
+
+  provides all external network interaction implementations, include `http-service`, `socket-service` and etc...
+
+### Job
+
+Job contains the implementation of Node.JS multi-thread. By JobManager, the jobs will be managed to control the jobs' lifecycle. Job manager has a max-workers option, to control the maximum threads count, if the threads count is over maximum, the new jobs will be stored and to be executed when has thread released.
+
+### Modules
+
+This is some exported tools class. All the objects in modules should only be used by `TIANYU.import.MODULE`.
+
+### Utils
+
+This is some public tools to process data, convert data type and other data generation.

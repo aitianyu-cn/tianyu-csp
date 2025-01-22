@@ -1,6 +1,11 @@
-/** @format */
+/**
+ * @format
+ * @internal
+ *
+ * exporter for utils
+ */
 
-export * from "./DBConfigConverter";
+export * from "./DBHelper";
 export * from "./ErrorHelper";
 export * from "./HttpHelper";
 export * from "./RestHelper";

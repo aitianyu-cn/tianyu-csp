@@ -1,17 +1,13 @@
 /** @format */
 
-import { ContributorProtocolWithReturn } from "./contributor/basic";
+import { ContributorProtocolWithReturn } from "@aitianyu.cn/tianyu-app-fwk";
 import { JobWorkerExecutionResult, JobWorkerPayload } from "./contributor/job";
-import {
-    DefaultRequestItemsMap,
-    DefaultRequestItemTargetType,
-    RequestPayloadData,
-    RequestRestData,
-} from "./contributor/requests";
+import { DefaultRequestItemsMap, DefaultRequestItemTargetType, RequestPayloadData } from "./contributor/requests";
 import { NetworkServiceResponseData } from "./contributor/service";
+import { PathEntry } from "../handler/rest-handler";
 
 /** Extendable by user. */
-export interface IContributorFactorProtocolMap {
+export interface ICSPContributorFactorProtocolMap {
     // =======================================================================
     // This is default definitions for core using
     // =======================================================================
@@ -23,13 +19,13 @@ export interface IContributorFactorProtocolMap {
     >;
     /** To get a request dispatcher for request service */
     "request-handler.dispatcher": ContributorProtocolWithReturn<
-        { rest: RequestRestData; payload: RequestPayloadData },
+        { rest: PathEntry; payload: RequestPayloadData },
         Promise<NetworkServiceResponseData>
     >;
 
     /** To get a request dispatcher for request service */
     "dispatch-handler.network-dispatcher": ContributorProtocolWithReturn<
-        { rest: RequestRestData; payload: RequestPayloadData },
+        { rest: PathEntry; payload: RequestPayloadData },
         Promise<NetworkServiceResponseData>
     >;
     /** To get a request dispatcher for request service */
