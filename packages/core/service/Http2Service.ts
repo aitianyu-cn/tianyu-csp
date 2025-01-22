@@ -7,16 +7,21 @@ import {
     HttpProtocal,
     HttpSecurityOption,
     ICSPContributorFactorProtocolMap,
+    IHttp2Events,
     RequestPayloadData,
 } from "#interface";
-import { createSecureServer, IncomingHttpHeaders, OutgoingHttpHeaders, ServerHttp2Stream } from "http2";
+import { createSecureServer, Http2SecureServer, IncomingHttpHeaders, OutgoingHttpHeaders, ServerHttp2Stream } from "http2";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 
-export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
+export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2Events> {
+    protected declare _server: Http2SecureServer;
+
     public constructor(options?: Http2ServiceOption, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         super(options, contributor);
+
+        this.setupEvents();
     }
 
     protected override createServerInstance(
@@ -32,6 +37,12 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption> {
 
     protected get protocol(): HttpProtocal {
         return "http2";
+    }
+
+    private setupEvents(): void {
+        this.on("authorization-changed", (option) => {
+            this._server.setSecureContext(option);
+        });
     }
 
     private onStream(stream: ServerHttp2Stream, header: IncomingHttpHeaders, flags: number): void {

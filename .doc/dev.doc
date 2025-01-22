@@ -31,6 +31,7 @@ o   1. installation api to quick deployment.
 o   2. http2.0 supporting.
         o http2.0 service
         o http2.0 client
+        o http2.0 service cert & key hot-loading
 o   3. http proxy
         o http proxy for development mode only
         o https proxy

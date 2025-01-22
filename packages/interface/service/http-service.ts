@@ -2,10 +2,10 @@
 
 import { IncomingMessage, ServerResponse } from "http";
 import { INetworkService } from "./service";
-import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { CallbackActionT, MapOfString, MapOfType } from "@aitianyu.cn/types";
 import { ImportPackage } from "../api/importer";
 import { PathEntry } from "../handler/rest-handler";
-import { TlsOptions } from "tls";
+import { SecureContextOptions, TlsOptions } from "tls";
 import { NetworkServiceResponseData } from "../fwk-def/contributor/service";
 import { RequestPayloadData } from "../fwk-def/contributor/requests";
 import { HttpCallMethod } from "../modules/http-client";
@@ -180,13 +180,53 @@ export interface HttpRestItem {
 }
 
 /** Http Service API */
-export interface IHttpService extends INetworkService {
+export interface IHttpService<Event extends {}> extends INetworkService, IHttpEventHandler<Event> {
     /**
      * To start http listening ont the binding host and port
      *
      * @param callback callback function when server is started
      */
     listen(callback?: () => void): void;
+}
+
+/**
+ * Http Service Event Handler API to register and response an event
+ *
+ * @template Event a template event describe map
+ */
+export interface IHttpEventHandler<Event extends {}> {
+    /**
+     * To invoke an event with value
+     *
+     * @param event event id
+     * @param value event value
+     */
+    emit<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(event: EK, value: EV): void;
+
+    /**
+     * To watch an event occurs
+     *
+     * @param event watched event id
+     * @param watcher watcher name
+     * @param callback callback function if the event is triggered
+     */
+    watch<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(
+        event: EK,
+        watcher: string,
+        callback: CallbackActionT<EV>,
+    ): void;
+
+    /**
+     * To stop watching an event
+     *
+     * @param event event id
+     * @param watcher watcher name
+     */
+    unwatch<EK extends keyof Event>(event: EK, watcher: string): void;
+}
+
+export interface IHttp2Events {
+    "authorization-changed": SecureContextOptions;
 }
 
 /** Http Status Code */

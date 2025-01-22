@@ -294,4 +294,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         expect(client.status).toEqual(HTTP_STATUS_CODE.METHOD_NOT_ALLOWED);
         expect(DISPATCH_SPY).not.toHaveBeenCalled();
     }, 50000);
+
+    it("on authorization-changed", () => {
+        jest.spyOn(SERVICE["_server"], "setSecureContext").mockImplementation(() => undefined);
+
+        SERVICE.emit("authorization-changed", { key: "test-key-2", cert: "test-cert-2" });
+
+        expect(SERVICE["_server"].setSecureContext).toHaveBeenCalledWith({ key: "test-key-2", cert: "test-cert-2" });
+    });
 });

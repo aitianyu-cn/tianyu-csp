@@ -23,7 +23,7 @@ import {
 } from "#interface";
 import { ErrorHelper, HttpHelper, RestHelper, TraceHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
-import { getBoolean, guid, MapOfType } from "@aitianyu.cn/types";
+import { CallbackActionT, getBoolean, guid, MapOfType } from "@aitianyu.cn/types";
 import { DISPATCH_ERROR_RESPONSES } from "./HttpServiceConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { IncomingHttpHeaders } from "http";
@@ -41,16 +41,23 @@ export interface IHttpServerAction {
     on(event: "error", listener: (err: Error) => void): this;
 }
 
-export abstract class AbstractHttpService<OPT extends HttpServiceOption> implements IHttpService {
+interface IEventMapItem {
+    on?: CallbackActionT<any>;
+    watches: MapOfType<CallbackActionT<any>>;
+}
+
+export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event extends {} = {}> implements IHttpService<Event> {
+    protected _server: IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
+
     private _id: string;
     private _host: string;
     private _port: number;
-    private _server: IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
 
     private _rest: RestHandler | null;
     private _restMap?: MapOfType<HttpRestItem>;
     private _restFallback?: PathEntry;
 
+    private _eventMap: Partial<Record<keyof Event, IEventMapItem>>;
     private _cacheHandler?: RequestCacheHandler;
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
 
@@ -69,9 +76,49 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption> impleme
         this._restFallback = options?.fallback;
 
         this._cacheHandler = options?.cache && new RequestCacheHandler(options.cache);
+        this._eventMap = {};
 
         this._server = this.createServerInstance(options);
         this._server.on("error", this.onError.bind(this));
+    }
+
+    protected on<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(
+        event: EK,
+        callback: CallbackActionT<EV>,
+    ): void {
+        if (!this._eventMap[event]) {
+            this._eventMap[event] = { watches: {} };
+        }
+
+        this._eventMap[event].on = callback;
+    }
+
+    public emit<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(event: EK, value: EV): void {
+        const item = this._eventMap[event];
+        if (item) {
+            item.on?.(value);
+            for (const watcher of Object.values(item.watches)) {
+                watcher(value);
+            }
+        }
+    }
+
+    public watch<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(
+        event: EK,
+        watcher: string,
+        callback: CallbackActionT<EV>,
+    ): void {
+        if (!this._eventMap[event]) {
+            this._eventMap[event] = { watches: {} };
+        }
+
+        this._eventMap[event].watches[watcher] = callback;
+    }
+
+    public unwatch<EK extends keyof Event>(event: EK, watcher: string): void {
+        if (this._eventMap[event]?.watches[watcher]) {
+            delete this._eventMap[event].watches[watcher];
+        }
     }
 
     public get id(): string {
