@@ -31,7 +31,8 @@
     "type": "commonjs",
     "files": [
         "dist",
-        ".doc"
+        ".doc",
+        "update.md"
     ],
     "scripts": {
         "start": "node \"./scripts/starter.js\"",
