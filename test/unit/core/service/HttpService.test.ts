@@ -112,7 +112,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.get().then((value) => {
                 const res = JSON.parse(value);
-                expect(res.param["TEST"]).toEqual("true");
+                expect(res.param["TEST"]).toEqual(["true"]);
                 expect(DISPATCH_SPY).toHaveBeenCalled();
                 done();
             }, done.fail);
@@ -199,7 +199,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.post({ data: "test-data" }).then((value) => {
                 const res = JSON.parse(value);
-                expect(res.param["TEST"]).toEqual("true");
+                expect(res.param["TEST"]).toEqual(["true"]);
                 expect(DISPATCH_SPY).toHaveBeenCalled();
                 done();
             }, done.fail);

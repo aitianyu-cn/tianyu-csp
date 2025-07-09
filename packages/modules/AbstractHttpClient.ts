@@ -1,7 +1,7 @@
 /** @format */
 
 import { HttpCallMethod, IHttpClient } from "#interface";
-import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { EventEmitter, Stream } from "stream";
 import { createGunzip, Gunzip } from "zlib";
 
@@ -12,8 +12,8 @@ export abstract class AbstractHttpClient implements IHttpClient {
     protected method: HttpCallMethod;
     protected body: any;
 
-    protected param: MapOfString;
-    protected header: MapOfString;
+    protected param: MapOfStrings;
+    protected header: MapOfType<string | string[] | undefined>;
     protected cookies: MapOfString;
 
     protected result: string;
@@ -52,11 +52,11 @@ export abstract class AbstractHttpClient implements IHttpClient {
         }
     }
 
-    public setParameter(param: MapOfString): void {
+    public setParameter(param: MapOfStrings): void {
         this.param = { ...this.param, ...param };
     }
 
-    public setHeader(header: MapOfString): void {
+    public setHeader(header: MapOfType<string | string[] | undefined>): void {
         this.header = { ...this.header, ...header };
     }
 

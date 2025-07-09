@@ -1,7 +1,7 @@
 /** @format */
 
 import { RequestPayloadData, HttpRequestCacheOption, NetworkServiceResponseData, HttpServerCacheSetting } from "#interface";
-import { MapOfString, MapOfType, ObjectCalculater, ObjectHelper } from "@aitianyu.cn/types";
+import { MapOfString, MapOfStrings, MapOfType, ObjectCalculater, ObjectHelper } from "@aitianyu.cn/types";
 
 const DEFAULT_REQUEST_CACHE_TIMEOUT = 300000;
 const DEFAULT_REQUEST_CACHE_WATCHDOG = DEFAULT_REQUEST_CACHE_TIMEOUT * 10;
@@ -9,9 +9,9 @@ const DEFAULT_REQUEST_CACHE_WATCHDOG = DEFAULT_REQUEST_CACHE_TIMEOUT * 10;
 export interface RequestCacheDocument {
     time: number;
     req: any;
-    cookie: MapOfType<string | undefined>;
-    header: MapOfType<string | undefined>;
-    param: MapOfType<string | undefined>;
+    cookie: MapOfType<string | string[] | undefined>;
+    header: MapOfType<string | string[] | undefined>;
+    param: MapOfType<string | string[] | undefined>;
     response: NetworkServiceResponseData;
 }
 
@@ -158,8 +158,8 @@ export class RequestCacheHandler {
         return { cookie, header, param };
     }
 
-    private generateMap(keys: string[], src: MapOfString): MapOfType<string | undefined> {
-        const target: MapOfType<string | undefined> = {};
+    private generateMap(keys: string[], src: MapOfType<string | string[] | undefined>): MapOfType<string | string[] | undefined> {
+        const target: MapOfType<string | string[] | undefined> = {};
 
         for (const key of keys) {
             target[key] = src[key];

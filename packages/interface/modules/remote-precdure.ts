@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfString } from "@aitianyu.cn/types";
+import { MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { HttpCallMethod } from "./http-client";
 import { HttpProtocal } from "../service/http-service";
 
@@ -15,9 +15,9 @@ export interface ProcedureCallPayload {
     /** http require method */
     method: HttpCallMethod;
     /** require url searches */
-    param?: MapOfString;
+    param?: MapOfStrings;
     /** http require header */
-    header?: MapOfString;
+    header?: MapOfType<string | string[] | undefined>;
     /** http require cookies */
     cookies?: MapOfString;
     /** http request data (only used for "POST" method) */

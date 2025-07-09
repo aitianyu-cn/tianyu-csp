@@ -44,14 +44,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.AbstractHttpClient", (
         const client = new ClientImpl("localhost", "/", "GET");
 
         client["param"] = {
-            p1: "p1",
+            p1: ["p1"],
         };
 
-        client.setParameter({ p2: "p2" });
+        client.setParameter({ p2: ["p2"] });
 
         expect(client["param"]).toEqual({
-            p1: "p1",
-            p2: "p2",
+            p1: ["p1"],
+            p2: ["p2"],
         });
     });
 

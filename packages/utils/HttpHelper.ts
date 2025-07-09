@@ -1,7 +1,7 @@
 /** @format */
 
 import { DEFAULT_REQUEST_LANGUAGE_ITEM } from "#core/Constant";
-import { AreaCode, getBoolean, MapOfString, parseAreaString } from "@aitianyu.cn/types";
+import { AreaCode, getBoolean, MapOfString, MapOfStrings, MapOfType, parseAreaString } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 import { URLSearchParams } from "url";
 
@@ -41,8 +41,8 @@ export class HttpHelper {
      * @param url source url
      * @returns return a map of all search parameter items
      */
-    public static processParameters(url: string): MapOfString {
-        const param: MapOfString = {};
+    public static processParameters(url: string): MapOfStrings {
+        const param: MapOfStrings = {};
 
         const originUrl = url || "";
         const urlParam = originUrl.split("?");
@@ -50,7 +50,10 @@ export class HttpHelper {
             try {
                 const querySearcher = new URLSearchParams(urlParam[1]);
                 for (const [key, value] of querySearcher) {
-                    param[key] = value;
+                    if (!param[key]) {
+                        param[key] = [];
+                    }
+                    param[key].push(value);
                 }
             } catch {
                 //
@@ -90,13 +93,13 @@ export class HttpHelper {
      * @param header header of request
      * @returns return a map of all header items
      */
-    public static processHeader(header: IncomingHttpHeaders): MapOfString {
-        const newHeader: MapOfString = {};
+    public static processHeader(header: IncomingHttpHeaders): MapOfStrings {
+        const newHeader: MapOfStrings = {};
 
         for (const key of Object.keys(header)) {
             const value = header[key];
             if (value) {
-                newHeader[key] = typeof value === "string" ? value : value.join("%%%");
+                newHeader[key] = typeof value === "string" ? [value] : value;
             }
         }
 
@@ -117,7 +120,7 @@ export class HttpHelper {
      */
     public static processLanguage(
         cookies: MapOfString,
-        params: MapOfString,
+        params: MapOfStrings,
         headers: IncomingHttpHeaders,
         defaultNameForCookie?: string,
         defaultNameForParam?: string,
@@ -126,7 +129,7 @@ export class HttpHelper {
         const cookieLanguage = cookies[defaultNameForCookie || DEFAULT_REQUEST_LANGUAGE_ITEM.toUpperCase()] || "";
         const acceptLanguage = parseAcceptLanguage(headers["accept-language"] || "");
 
-        const language = paramsLanguage || cookieLanguage || acceptLanguage;
+        const language = paramsLanguage?.[0] || cookieLanguage || acceptLanguage;
 
         return language ? parseAreaString(language, true) : AreaCode.unknown;
     }
@@ -151,10 +154,16 @@ export class HttpHelper {
      * @param param source parameters map
      * @returns return a search string of parameters map
      */
-    public static stringifyParam(param: MapOfString): string {
+    public static stringifyParam(param: MapOfType<string | string[]>): string {
         const paramPair: string[] = [];
         for (const key of Object.keys(param)) {
-            paramPair.push(`${key}=${param[key]}`);
+            if (Array.isArray(param[key])) {
+                for (const item of param[key]) {
+                    paramPair.push(`${key}=${item}`);
+                }
+            } else {
+                paramPair.push(`${key}=${param[key]}`);
+            }
         }
         return paramPair.length ? `?${paramPair.join("&")}` : "";
     }
@@ -168,6 +177,11 @@ export class HttpHelper {
         };
     }
 
+    /**
+     * To get a flag indicates the authorization should be force checked for security http connect.
+     *
+     * @returns return true if should force authorization checking
+     */
     public static shouldRejectUnauth(): boolean {
         return !getBoolean((global as any).TIANYU_TEST_HTTPS_UNAUTH);
     }

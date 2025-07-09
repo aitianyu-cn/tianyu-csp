@@ -50,7 +50,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
         client.setPort(32000);
         client.setCookie({ LANG: "zh_CN" });
         client.setHeader({ cookie: "SESSION=123456789;" });
-        client.setParameter({ p1: "p1" });
+        client.setParameter({ p1: ["p1"] });
 
         let path = "";
         let cookie = "";

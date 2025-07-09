@@ -48,4 +48,8 @@ export * from "./modules/feature";
 export * from "./modules/http-client";
 export * from "./modules/remote-precdure";
 
+export * from "./plugin/TianyuCSPPlugin";
+export * from "./plugin/middleware/TianyuCSPMiddleWare";
+export * from "./plugin/middleware/HttpServiceMiddleWare";
+
 export * from "./csp-config";

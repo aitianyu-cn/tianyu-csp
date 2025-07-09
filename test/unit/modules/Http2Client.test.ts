@@ -177,7 +177,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
 
         const querys: Http2Query[] = [
             {
-                param: { TEST: "true" },
+                param: { TEST: ["true"] },
             },
             {
                 path: "/test_invalid_path",
@@ -205,7 +205,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
         expect(multiStatus[1]).toEqual(client.getStatus(1));
         expect(multiStatus[2]).toEqual(client.getStatus(2));
 
-        expect(multiResponses[0].param["TEST"]).toEqual("true");
+        expect(multiResponses[0].param["TEST"]).toEqual(["true"]);
         expect(multiStatus[1]).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
         expect(multiResponses[2].body).toEqual("test-req-body");
 
