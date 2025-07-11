@@ -2,23 +2,13 @@
 
 ## TODO
 
-1. Middleware (interfaces) for csp modules and service.
-
-   - router processing  
-     To translate a actual url to be internal used url
-
-   - request/response data processing
-     - response encoding
-     - request decoding
-
-2. Plugin (interfaces) for csp modules and service
-3. Socket connection for long connection over network.
-
 ## OPTINAL
 
 1. FTP protocol and service.
 2. Streaming Media service.
 3. SMB service
+4. Plugin (interfaces) for csp modules and service
+5. Socket connection for long connection over network.
 
 ## Done
 
