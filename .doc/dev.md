@@ -19,8 +19,6 @@
    - internal based dir
    - global based dir
 
-5. support tcp/udp service and client
-
 ## OPTINAL
 
 1. FTP protocol and service.
@@ -34,3 +32,5 @@
    - decode
    - encode
    - array type in url search structure.
+
+2. support tcp/udp service and client

@@ -36,6 +36,7 @@ export * from "./handler/rest-handler";
 
 export * from "./service/http-service";
 export * from "./service/service";
+export * from "./service/socket-service";
 
 export * from "./job/worker";
 export * from "./job/worker-mgr";
@@ -47,6 +48,7 @@ export * from "./lib/schedule";
 export * from "./modules/feature";
 export * from "./modules/http-client";
 export * from "./modules/remote-precdure";
+export * from "./modules/socket-client";
 
 export * from "./plugin/TianyuCSPPlugin";
 export * from "./plugin/middleware/TianyuCSPMiddleWare";

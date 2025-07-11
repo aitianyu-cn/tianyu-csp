@@ -7,7 +7,7 @@ import { ImportPackage } from "../api/importer";
 import { PathEntry } from "../handler/rest-handler";
 import { SecureContextOptions, TlsOptions } from "tls";
 import { NetworkServiceResponseData } from "../fwk-def/contributor/service";
-import { RequestPayloadData } from "../fwk-def/contributor/requests";
+import { RequestPayloadData, RequestType } from "../fwk-def/contributor/requests";
 import { HttpCallMethod } from "../modules/http-client";
 
 /** Http Query Response Callback */
@@ -181,6 +181,8 @@ export interface HttpRestItem {
 
 /** Http Service API */
 export interface IHttpService<Event extends {}> extends INetworkService, IHttpEventHandler<Event> {
+    /** network service request type */
+    type: RequestType;
     /**
      * To start http listening ont the binding host and port
      *
