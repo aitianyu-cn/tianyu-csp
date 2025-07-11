@@ -150,6 +150,25 @@ export class FileHelper {
         });
     }
 
+    public static async setLength(file: IOFilePath, length: number): Promise<void> {
+        const filePath = FileHelper.transformFilePath(file);
+        return new Promise<void>((resolve, reject) => {
+            fs.truncate(filePath, length, async (err: NodeJS.ErrnoException | null) => {
+                if (err) {
+                    reject(
+                        ErrorHelper.getError(
+                            IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
+                            `set length of file[${filePath}] to ${length} failed - error: ${err.message}`,
+                            err.stack,
+                        ),
+                    );
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
     public static async mkdir(file: IOFilePath): Promise<string | undefined> {
         const filePath = FileHelper.transformFilePath(file);
         return new Promise<string | undefined>((resolve, reject) => {

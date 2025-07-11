@@ -11,6 +11,7 @@ import {
     FILE_HELPER_DEFAULT_READ_FILE,
     FILE_HELPER_DEFAULT_REMOVE_DIR_FAILED,
     FILE_HELPER_DEFAULT_REMOVE_FILE_FAILED,
+    FILE_HELPER_DEFAULT_SET_LENGTH_FILE,
     FILE_HELPER_DEFAULT_WRITE_FILE,
 } from "test/content/file/Constant";
 
@@ -323,6 +324,47 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.FileHelper", () => {
     describe("rmdir", () => {
         it("failed case", (done) => {
             FileHelper.rmdir(FILE_HELPER_DEFAULT_REMOVE_DIR_FAILED).then(
+                () => {
+                    done.fail();
+                },
+                () => {
+                    done();
+                },
+            );
+        });
+    });
+
+    describe("setLength", () => {
+        beforeEach(async () => {
+            FileHelper.exist(FILE_HELPER_DEFAULT_SET_LENGTH_FILE) &&
+                (await FileHelper.remove(FILE_HELPER_DEFAULT_SET_LENGTH_FILE));
+        });
+
+        afterEach(async () => {
+            FileHelper.exist(FILE_HELPER_DEFAULT_SET_LENGTH_FILE) &&
+                (await FileHelper.remove(FILE_HELPER_DEFAULT_SET_LENGTH_FILE));
+        });
+
+        it("change size success", async () => {
+            const file = FileHelper.transformFilePath(FILE_HELPER_DEFAULT_SET_LENGTH_FILE);
+            fs.writeFileSync(file, Buffer.from("this is a test file string", "utf8"));
+            expect(fs.readFileSync(file).toString("utf-8")).toEqual("this is a test file string");
+            await FileHelper.setLength(FILE_HELPER_DEFAULT_SET_LENGTH_FILE, 4);
+            expect(fs.statSync(file).size).toEqual(4);
+            expect(fs.readFileSync(file).toString("utf-8")).toEqual("this");
+        });
+
+        it("change size failed", (done) => {
+            jest.spyOn(fs as any, "ftruncate").mockImplementation((_1, _2, fn: any) => {
+                fn(new Error());
+            });
+            FileHelper.setLength(
+                {
+                    type: "external",
+                    path: "/a/b/c",
+                },
+                10,
+            ).then(
                 () => {
                     done.fail();
                 },

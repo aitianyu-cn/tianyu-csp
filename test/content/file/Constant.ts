@@ -41,3 +41,8 @@ export const FILE_HELPER_DEFAULT_REMOVE_DIR_FAILED: IOFilePath = {
     type: "external",
     path: "0:/test/content/file/remove-dir",
 };
+
+export const FILE_HELPER_DEFAULT_SET_LENGTH_FILE: IOFilePath = {
+    type: "internal",
+    path: "test/content/file/size-change.a",
+};

@@ -10,6 +10,7 @@ export * from "./service/HttpService";
 export * from "./service/Http2Service";
 export * from "./service/TcpService";
 export * from "./service/UdpService";
+export * as IO from "./service/io";
 
 export { loadInfra as load } from "./InfraLoader";
 

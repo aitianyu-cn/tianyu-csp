@@ -35,3 +35,4 @@
    - file operation helper
    - internal based dir
    - global based dir
+   - binary file reader/writer object
