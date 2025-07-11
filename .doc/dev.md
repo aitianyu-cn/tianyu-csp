@@ -14,11 +14,6 @@
 2. Plugin (interfaces) for csp modules and service
 3. Socket connection for long connection over network.
 
-4. file service for writing & reading file / folder
-
-   - internal based dir
-   - global based dir
-
 ## OPTINAL
 
 1. FTP protocol and service.
@@ -34,3 +29,9 @@
    - array type in url search structure.
 
 2. support tcp/udp service and client
+
+3. file service
+
+   - file operation helper
+   - internal based dir
+   - global based dir

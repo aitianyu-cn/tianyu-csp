@@ -37,6 +37,7 @@ export * from "./handler/rest-handler";
 export * from "./service/http-service";
 export * from "./service/service";
 export * from "./service/socket-service";
+export * from "./service/io";
 
 export * from "./job/worker";
 export * from "./job/worker-mgr";

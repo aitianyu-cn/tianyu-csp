@@ -19,7 +19,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
             address: "0.0.0.0",
             port: 60000,
         });
-        SERVICE.onMessage = messageHandler;
+        SERVICE.onData = messageHandler;
         SERVICE.listen(done);
     });
 
@@ -95,7 +95,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
             },
             "IPv6",
         );
-        service.onMessage = messageHandler;
+        service.onData = messageHandler;
         await new Promise<void>((resolve) => {
             service.listen(resolve);
         });

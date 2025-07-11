@@ -52,6 +52,14 @@ export const SERVICE_ERROR_CODES = {
     JOB_EXECUTION_TIMEOUT: "40003",
 };
 
+export const IO_ERROR_CODES = {
+    IO_FILE_OPEN_FAILED: "60000",
+    IO_FILE_OPERATION_FAILED: "60001",
+    IO_FILE_READ_FAILED: "60002",
+    IO_FILE_WRITE_FAILED: "60003",
+    IO_DIR_OPERATION_FAILED: "60004",
+};
+
 /** default http host ip */
 export const DEFAULT_HTTP_HOST = "0.0.0.0";
 /** default http host port */
