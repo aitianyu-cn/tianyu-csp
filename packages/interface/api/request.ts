@@ -1,6 +1,6 @@
 /** @format */
 
-import { AreaCode, MapOfString } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { RequestType } from "../fwk-def/contributor/requests";
 import { HttpProtocal } from "../service/http-service";
 
@@ -57,7 +57,7 @@ export interface IServerRequest {
      *
      * @returns return the header value
      */
-    header(key: string): string;
+    header(key: string): string | string[];
     /**
      * To get a request params value by key. This field is used in HTTP request.
      *
@@ -65,17 +65,17 @@ export interface IServerRequest {
      *
      * @returns return the params value
      */
-    params(key: string): string;
+    params(key: string): string | string[];
     /**
      * To get all headers from request.
      *
      * @returns map of headers
      */
-    allHeaders(): MapOfString;
+    allHeaders(): MapOfType<string | string[] | undefined>;
     /**
      * To get all parameters.
      *
      * @returns map of params
      */
-    allParams(): MapOfString;
+    allParams(): MapOfStrings;
 }

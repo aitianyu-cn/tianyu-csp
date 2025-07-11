@@ -1,7 +1,7 @@
 /** @format */
 
 import { HttpHelper } from "#utils";
-import { AreaCode, MapOfString, parseAreaCode } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString, MapOfStrings, parseAreaCode } from "@aitianyu.cn/types";
 import { IncomingHttpHeaders } from "http";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
@@ -18,9 +18,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
             const param = HttpHelper.processParameters(url);
 
             expect(Object.keys(param).length).toEqual(3);
-            expect(param["A"]).toEqual("1");
-            expect(param["B"]).toEqual("2");
-            expect(param["C"]).toEqual("3");
+            expect(param["A"]).toEqual(["1"]);
+            expect(param["B"]).toEqual(["2"]);
+            expect(param["C"]).toEqual(["3"]);
         });
     });
 
@@ -47,8 +47,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
             const header = HttpHelper.processHeader(incomeHeader);
 
             expect(Object.keys(header).length).toEqual(2);
-            expect(header["A"]).toEqual("1");
-            expect(header["B"]).toEqual("1%%%2%%%3");
+            expect(header["A"]).toEqual(["1"]);
+            expect(header["B"]).toEqual(["1", "2", "3"]);
         });
     });
 
@@ -59,10 +59,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.HttpHelper", () => {
             LANGUAGE_INVALID: "aaa",
         };
 
-        const PARAMS: MapOfString = {
-            language: parseAreaCode(AreaCode.af_ZA),
-            language_custom: parseAreaCode(AreaCode.ar_AE),
-            language_invalid: "bbb",
+        const PARAMS: MapOfStrings = {
+            language: [parseAreaCode(AreaCode.af_ZA)],
+            language_custom: [parseAreaCode(AreaCode.ar_AE)],
+            language_invalid: ["bbb"],
         };
 
         const HEADERS: IncomingHttpHeaders = {

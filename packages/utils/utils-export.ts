@@ -10,3 +10,4 @@ export * from "./ErrorHelper";
 export * from "./HttpHelper";
 export * from "./RestHelper";
 export * from "./TraceHelper";
+export * from "./FileHelper";

@@ -1,6 +1,6 @@
 /** @format */
 
-import { AreaCode, MapOfString } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { NetworkServiceResponseData } from "./service";
 import { HttpProtocal } from "packages/interface/service/http-service";
 import { HttpCallMethod } from "packages/interface/modules/http-client";
@@ -73,9 +73,9 @@ export interface RequestPayloadData {
     /** Cookies */
     cookie: MapOfString;
     /** Search Parameters */
-    param: MapOfString;
+    param: MapOfStrings;
     /** Headers */
-    headers: MapOfString;
+    headers: MapOfType<string | string[] | undefined>;
 }
 
 /** Request response payload data */

@@ -44,7 +44,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
             language: AreaCode.zh_CN,
             body: { data: "test" },
             cookie: { LANGUAGE: "en_US" },
-            param: { PAR1: "test" },
+            param: { PAR1: ["test"] },
             headers: { host: "localhost", version: "1.1" },
             disableCache: true,
             protocol: "http2",
@@ -68,13 +68,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
 
         expect(request.cookie("LANGUAGE")).toEqual("en_US");
         expect(request.header("host")).toEqual("localhost");
-        expect(request.params("PAR1")).toEqual("test");
+        expect(request.params("PAR1")).toEqual(["test"]);
 
         expect(request.cookie("UNKNOWN")).toEqual("");
         expect(request.header("UNKNOWN")).toEqual("");
         expect(request.params("UNKNOWN")).toEqual("");
 
         expect(request.allHeaders()).toEqual({ host: "localhost", version: "1.1" });
-        expect(request.allParams()).toEqual({ PAR1: "test" });
+        expect(request.allParams()).toEqual({ PAR1: ["test"] });
     });
 });

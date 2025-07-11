@@ -227,7 +227,7 @@ export class Http2Client extends AbstractHttpClient {
         });
     }
 
-    private processHeader(query: Http2Query): MapOfString {
+    private processHeader(query: Http2Query): MapOfType<string | string[] | undefined> {
         const headers = { ...this.header, ...(query.header || {}) };
 
         const cookie = HttpHelper.stringifyCookie({ ...this.cookies, ...(query.cookie || {}) });

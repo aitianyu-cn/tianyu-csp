@@ -1,7 +1,7 @@
 /** @format */
 
 import { HTTP_STATUS_CODE, HttpProtocal, IServerRequest, RequestPayloadData, RequestType } from "#interface";
-import { AreaCode, MapOfString } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE, PROJECT_NAME, PROJECT_VERSION } from "../../Common";
 
 /**
@@ -44,16 +44,16 @@ export class GlobalRequestManager implements IServerRequest {
     public cookie(_key: string): string {
         return "";
     }
-    public header(_key: string): string {
+    public header(_key: string): string | string[] {
         return "";
     }
-    public params(_key: string): string {
+    public params(_key: string): string | string[] {
         return "";
     }
-    public allHeaders(): MapOfString {
+    public allHeaders(): MapOfType<string | string[] | undefined> {
         return {};
     }
-    public allParams(): MapOfString {
+    public allParams(): MapOfStrings {
         return {};
     }
 }
@@ -75,8 +75,8 @@ export class GenericRequestManager implements IServerRequest {
     private _body: any;
 
     private _cookie: MapOfString;
-    private _headers: MapOfString;
-    private _params: MapOfString;
+    private _headers: MapOfType<string | string[] | undefined>;
+    private _params: MapOfStrings;
 
     private _responseCode: number;
 
@@ -135,16 +135,16 @@ export class GenericRequestManager implements IServerRequest {
     public cookie(key: string): string {
         return this._cookie[key] || "";
     }
-    public header(key: string): string {
+    public header(key: string): string | string[] {
         return this._headers[key] || "";
     }
-    public params(key: string): string {
+    public params(key: string): string | string[] {
         return this._params[key] || "";
     }
-    public allHeaders(): MapOfString {
+    public allHeaders(): MapOfType<string | string[] | undefined> {
         return this._headers;
     }
-    public allParams(): MapOfString {
+    public allParams(): MapOfStrings {
         return this._params;
     }
 }

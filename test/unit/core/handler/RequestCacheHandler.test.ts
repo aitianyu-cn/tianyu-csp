@@ -81,7 +81,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
                 const response = generateResponse(HTTP_STATUS_CODE.OK, "test-body");
                 CACHE.writeCache(payload, response, {
                     type: "custom",
@@ -96,7 +96,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 expect(caches?.[0].response.body).toEqual("test-body");
                 expect(caches?.[0].cookie).toEqual({ c1: "cookie-1", c2: "cookie-2" });
                 expect(caches?.[0].header).toEqual({ h1: "header-1", h2: "header-2" });
-                expect(caches?.[0].param).toEqual({ p1: "param-1", p2: "param-2" });
+                expect(caches?.[0].param).toEqual({ p1: ["param-1"], p2: ["param-2"] });
             });
 
             it("full cache", () => {
@@ -104,7 +104,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
                 const response = generateResponse(HTTP_STATUS_CODE.OK, "test-body");
                 CACHE.writeCache(payload, response, {
                     type: "full",
@@ -119,7 +119,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 expect(caches?.[0].response.body).toEqual("test-body");
                 expect(caches?.[0].cookie).toEqual({ c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" });
                 expect(caches?.[0].header).toEqual({ h1: "header-1", h2: "header-2", h3: "header-3" });
-                expect(caches?.[0].param).toEqual({ p1: "param-1", p2: "param-2", p3: "param-3" });
+                expect(caches?.[0].param).toEqual({ p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] });
             });
 
             it("update duplicated value", () => {
@@ -127,7 +127,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
                 CACHE.writeCache(payload, generateResponse(HTTP_STATUS_CODE.OK, "test-body-1"), {
                     type: "full",
                     session: true,
@@ -149,7 +149,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 expect(caches?.[0].response.body).toEqual("test-body-2");
                 expect(caches?.[0].cookie).toEqual({ c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" });
                 expect(caches?.[0].header).toEqual({ h1: "header-1", h2: "header-2", h3: "header-3" });
-                expect(caches?.[0].param).toEqual({ p1: "param-1", p2: "param-2", p3: "param-3" });
+                expect(caches?.[0].param).toEqual({ p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] });
             });
 
             it("only change full mapped item", () => {
@@ -157,7 +157,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
 
                 const checkCacheItem = (cache: RequestCacheDocument, body?: string, req?: string) => {
                     expect(cache.req).toEqual(req);
@@ -221,7 +221,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 expect(caches?.[0].response.body).toEqual("test-body-4-2");
                 expect(caches?.[0].cookie).toEqual({ c1: "cookie-1", c2: "cookie-2" });
                 expect(caches?.[0].header).toEqual({ h1: "header-1", h2: "header-2" });
-                expect(caches?.[0].param).toEqual({ p1: "param-1", p2: "param-2" });
+                expect(caches?.[0].param).toEqual({ p1: ["param-1"], p2: ["param-2"] });
             });
         });
 
@@ -255,7 +255,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
 
                 const checkCacheItem = (cache: RequestCacheDocument, body?: string, req?: string) => {
                     expect(cache.req).toEqual(req);
@@ -335,7 +335,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
 
                 CACHE["_cache"].set("test.code", [
                     {
@@ -343,7 +343,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                         req: undefined,
                         cookie: { c1: "cookie-1" },
                         header: { h1: "header-1" },
-                        param: { p1: "param-1" },
+                        param: { p1: ["param-1"] },
                         response: {
                             statusCode: HTTP_STATUS_CODE.OK,
                             headers: {},
@@ -372,7 +372,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                 payload.sessionId = "test_session";
                 payload.headers = { h1: "header-1", h2: "header-2", h3: "header-3" };
                 payload.cookie = { c1: "cookie-1", c2: "cookie-2", c3: "cookie-3" };
-                payload.param = { p1: "param-1", p2: "param-2", p3: "param-3" };
+                payload.param = { p1: ["param-1"], p2: ["param-2"], p3: ["param-3"] };
 
                 CACHE["_cache"].set("test.code", [
                     {
@@ -380,7 +380,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                         req: "req-1",
                         cookie: { c1: "cookie-1" },
                         header: { h1: "header-1" },
-                        param: { p1: "param-1" },
+                        param: { p1: ["param-1"] },
                         response: {
                             statusCode: HTTP_STATUS_CODE.OK,
                             headers: {},
@@ -392,7 +392,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                         req: undefined,
                         cookie: { c1: "cookie-1" },
                         header: { h1: "header-1" },
-                        param: { p1: "param-1" },
+                        param: { p1: ["param-1"] },
                         response: {
                             statusCode: HTTP_STATUS_CODE.OK,
                             headers: {},
@@ -404,7 +404,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestCacheHandl
                         req: "req-2",
                         cookie: { c1: "cookie-1" },
                         header: { h1: "header-1" },
-                        param: { p1: "param-1" },
+                        param: { p1: ["param-1"] },
                         response: {
                             statusCode: HTTP_STATUS_CODE.OK,
                             headers: {},

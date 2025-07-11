@@ -119,14 +119,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             });
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
 
             await client.send();
 
             const res = client.response;
-            expect(res.param["TEST"]).toEqual("true");
+            expect(res.param["TEST"]).toEqual(["true"]);
             expect(DISPATCH_SPY).toHaveBeenCalled();
         }, 50000);
 
@@ -140,7 +140,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             });
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
 
@@ -152,7 +152,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
 
         it("path not valid", async () => {
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test_not_valid", "GET");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
 
@@ -166,7 +166,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             DISPATCH_SPY.mockImplementation(() => Promise.reject());
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
 
@@ -181,7 +181,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
 
@@ -206,7 +206,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             });
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
             client.query({ body: "test-query" });
@@ -214,7 +214,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             await client.send();
 
             const res = client.response;
-            expect(res.param["TEST"]).toEqual("true");
+            expect(res.param["TEST"]).toEqual(["true"]);
             expect(res.body).toEqual("test-query");
             expect(DISPATCH_SPY).toHaveBeenCalled();
         }, 50000);
@@ -229,7 +229,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             });
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
             client.query({ body: "test-query" });
@@ -241,7 +241,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
         it("path not valid", async () => {
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test_not_valid", "POST");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
             client.query({ body: "test-query" });
@@ -256,7 +256,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             DISPATCH_SPY.mockImplementation(() => Promise.reject());
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
             client.query({ body: "test-query" });
@@ -272,7 +272,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
-            client.setParameter({ TEST: "true" });
+            client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
             client.query({ body: "test-query" });
@@ -285,7 +285,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
 
     it("invalid method", async () => {
         const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "PUT" as any);
-        client.setParameter({ TEST: "true" });
+        client.setParameter({ TEST: ["true"] });
         client.setPort(SERVICE_PORT);
         client.setOption({ rejectUnauthorized: false });
 

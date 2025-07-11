@@ -1,6 +1,6 @@
 /** @format */
 
-import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { ClientSessionRequestOptions } from "http2";
 
 /**
@@ -40,7 +40,7 @@ export interface Http2Query {
      *
      * path search will uses param which is query param combined with Http/2.0 client default param
      */
-    param?: MapOfString;
+    param?: MapOfType<string | string[]>;
     /**
      * request cookie of request
      *
@@ -52,7 +52,7 @@ export interface Http2Query {
      *
      * request header will uses param which is query header combined with Http/2.0 client default header
      */
-    header?: MapOfString;
+    header?: MapOfType<string | string[]>;
     /** Http/2.0 request option */
     option?: ClientSessionRequestOptions;
 }
@@ -69,13 +69,13 @@ export interface IHttpClient {
      *
      * @param param parameters map
      */
-    setParameter(param: MapOfString): void;
+    setParameter(param: MapOfStrings): void;
     /**
      * To set a request headers map
      *
      * @param param headers map
      */
-    setHeader(param: MapOfString): void;
+    setHeader(param: MapOfType<string | string[] | undefined>): void;
     /**
      * To set a request cookies map
      *

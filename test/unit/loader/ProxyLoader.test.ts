@@ -20,7 +20,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { createServer } from "https";
 import { Http2Service } from "#core/service/Http2Service";
 import { TimerTools } from "test/tools/TimerTools";
-import { AreaCode, MapOfString } from "@aitianyu.cn/types";
+import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { GenericRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
 import * as COMMON from "packages/Common";
@@ -38,8 +38,8 @@ function registerGlobalTIANYU(
     host: string,
     url: string,
     protocol: HttpProtocal,
-    headers: MapOfString,
-    param: MapOfString,
+    headers: MapOfType<string | string[] | undefined>,
+    param: MapOfStrings,
     body?: any,
 ): void {
     const requestPayload: RequestPayloadData = {
