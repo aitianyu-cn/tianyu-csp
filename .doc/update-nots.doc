@@ -1,6 +1,0 @@
-PHASE-1
-
-    1. build basic TIANYU global definition and basic APIs.
-    2. support a jobs pool.
-    3. support network requests processing in different threads.
-    4. support global configuration for target application built.

@@ -1,14 +1,17 @@
 # Tianyu CSP Version Updates
 
-## version 0.0.1
+## version 0.2.0
 
-1. basic structure.
-2. http service common interfaces and utils.
-3. job and job manager.
-
-## version 0.0.2
-
-1. bug fix.
+1. multiple parameters in same id for url searching
+   > decode.  
+   > encode.  
+   > array type in url search structure.
+2. support tcp/udp service and client
+3. file service
+   > file operation helper.  
+   > internal based dir.  
+   > global based dir.  
+   > binary file reader/writer object.
 
 ## version 0.1.0
 
@@ -39,15 +42,12 @@
     > https proxy.
     > http2 proxy.
 
-## version 0.2.0
+## version 0.0.2
 
-1. multiple parameters in same id for url searching
-   > decode.  
-   > encode.  
-   > array type in url search structure.
-2. support tcp/udp service and client
-3. file service
-   > file operation helper.  
-   > internal based dir.  
-   > global based dir.  
-   > binary file reader/writer object.
+1. bug fix.
+
+## version 0.0.1
+
+1. basic structure.
+2. http service common interfaces and utils.
+3. job and job manager.
