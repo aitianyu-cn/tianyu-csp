@@ -125,6 +125,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.io.file.FileStrea
         fileOp.seek(100);
         expect(fileOp.position).toEqual(24);
 
+        fileOp.seek(-1);
+        expect(fileOp.position).toEqual(0);
+
         await fileOp.close();
     });
 });

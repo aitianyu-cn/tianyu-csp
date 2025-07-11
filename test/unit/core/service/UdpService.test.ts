@@ -102,7 +102,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
 
         const response = await UdpClient(Buffer.from("Hello"), {
             remote: {
-                address: "::",
+                address: "::1",
                 port: 60000,
             },
             family: "IPv6",

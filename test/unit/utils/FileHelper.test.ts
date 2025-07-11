@@ -5,7 +5,6 @@ import { FileHelper } from "#utils";
 import path from "path";
 import {
     FILE_HELPER_DEFAULT_CREATE_DIR,
-    FILE_HELPER_DEFAULT_CREATE_DIR_FAILED,
     FILE_HELPER_DEFAULT_OPEN_FILE,
     FILE_HELPER_DEFAULT_OPEN_FILE_UNEXIST,
     FILE_HELPER_DEFAULT_READ_FILE,
@@ -297,7 +296,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.FileHelper", () => {
         });
 
         it("create new dir failed", (done) => {
-            FileHelper.mkdir(FILE_HELPER_DEFAULT_CREATE_DIR_FAILED).then(
+            jest.spyOn(fs as any, "mkdir").mockImplementation((p, o, fn: any) => {
+                fn(new Error());
+            });
+            FileHelper.mkdir(FILE_HELPER_DEFAULT_CREATE_DIR).then(
                 () => {
                     done.fail();
                 },

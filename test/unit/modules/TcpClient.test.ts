@@ -8,7 +8,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.TcpClient", () => {
         const client = new TcpClient({ log: true });
         client
             .connect({
-                host: "255.255.255.0",
+                host: "255.255.255.255",
                 port: 60004,
             })
             .then(

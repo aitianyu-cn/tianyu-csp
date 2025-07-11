@@ -27,11 +27,6 @@ export const FILE_HELPER_DEFAULT_CREATE_DIR: IOFilePath = {
     path: "test/content/file/new-dir",
 };
 
-export const FILE_HELPER_DEFAULT_CREATE_DIR_FAILED: IOFilePath = {
-    type: "external",
-    path: "0:/test/content/file/new-dir",
-};
-
 export const FILE_HELPER_DEFAULT_REMOVE_FILE_FAILED: IOFilePath = {
     type: "external",
     path: "0:/test/content/file/file",
