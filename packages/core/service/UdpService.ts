@@ -48,7 +48,8 @@ export class UdpService extends AbstractSocketService {
             if (res) {
                 this._service.send(res, rinfo.port, rinfo.address, (error) => {
                     error &&
-                        TIANYU.logger.error(
+                        TIANYU.audit.error(
+                            this.app,
                             ErrorHelper.getErrorString(
                                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
                                 `udp-server[${this.id}] error on sending to remote ${rinfo.address}:${rinfo.port} - ${error.message}`,
@@ -60,7 +61,8 @@ export class UdpService extends AbstractSocketService {
         });
 
         this._service.on("error", (error: Error) => {
-            TIANYU.logger.error(
+            TIANYU.audit.error(
+                this.app,
                 ErrorHelper.getErrorString(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
                     `tcp-server[${this.id}] error at local[${this.host}:${this.port}] - ${error.message}`,

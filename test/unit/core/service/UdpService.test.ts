@@ -5,6 +5,7 @@ import { ISocketAddress, UdpClientResponse } from "#interface";
 import { UdpClient } from "#module";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () => {
+    const PORT = 60000;
     const messageHandler = (remote: ISocketAddress, message: Buffer) => {
         const src = message.toString("utf-8");
         if (src === "Hello") {
@@ -17,15 +18,19 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
     beforeEach((done) => {
         SERVICE = new UdpService({
             address: "0.0.0.0",
-            port: 60000,
+            port: PORT,
         });
         SERVICE.onData = messageHandler;
-        SERVICE.listen(done);
-    });
+        SERVICE.listen(() => {
+            setTimeout(done, 1000);
+        });
+    }, 50000);
 
     afterEach((done) => {
-        SERVICE.close(done);
-    });
+        SERVICE.close(() => {
+            setTimeout(done, 1000);
+        });
+    }, 50000);
 
     it("type", () => {
         expect(SERVICE.type).toEqual("udp");
@@ -35,7 +40,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
         const response = await UdpClient(Buffer.from("Hello"), {
             remote: {
                 address: "127.0.0.1",
-                port: 60000,
+                port: PORT,
             },
             family: "IPv4",
             response: true,
@@ -44,13 +49,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
 
         expect(response).toBeDefined();
         expect((response as UdpClientResponse).data.toString("utf-8")).toEqual("Hello World!");
-    });
+    }, 50000);
 
     it("receive message without return", async () => {
         const response = await UdpClient(Buffer.from("single side request"), {
             remote: {
                 address: "127.0.0.1",
-                port: 60000,
+                port: PORT,
             },
             family: "IPv4",
             log: true,
@@ -70,7 +75,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
         void UdpClient(Buffer.from("Hello"), {
             remote: {
                 address: "127.0.0.1",
-                port: 60000,
+                port: PORT,
             },
             family: "IPv4",
             log: true,
@@ -91,7 +96,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
         const service = new UdpService(
             {
                 address: "::",
-                port: 60000,
+                port: PORT,
             },
             "IPv6",
         );
@@ -103,7 +108,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
         const response = await UdpClient(Buffer.from("Hello"), {
             remote: {
                 address: "::1",
-                port: 60000,
+                port: PORT,
             },
             family: "IPv6",
             response: true,

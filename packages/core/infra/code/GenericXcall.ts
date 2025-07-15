@@ -2,7 +2,7 @@
 
 import { INFRA_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
-import { MapOfString } from "@aitianyu.cn/types";
+import { LogLevel, MapOfString } from "@aitianyu.cn/types";
 import { SYSTEM_EXTERNAL_CALL } from "packages/Common";
 
 /**
@@ -25,7 +25,8 @@ export async function doXcall(
     const externalCall = SYSTEM_EXTERNAL_CALL[func]?.[method];
     if (!externalCall) {
         !noerror &&
-            TIANYU.logger.error(
+            TIANYU.audit.error(
+                `generic-xcall/${func}`,
                 ErrorHelper.getErrorString(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,
@@ -42,7 +43,8 @@ export async function doXcall(
             return (await xcall(data)) || null;
         } else {
             !noerror &&
-                TIANYU.logger.error(
+                TIANYU.audit.error(
+                    `generic-xcall/${func}`,
                     ErrorHelper.getErrorString(
                         INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                         message,
@@ -53,7 +55,8 @@ export async function doXcall(
         }
     } catch (error) {
         !noerror &&
-            TIANYU.logger.error(
+            TIANYU.audit.error(
+                `generic-xcall/${func}`,
                 ErrorHelper.getErrorString(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,

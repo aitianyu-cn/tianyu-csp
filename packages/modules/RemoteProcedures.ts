@@ -3,6 +3,7 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ProcedureCallPayload } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
+import { LogLevel } from "@aitianyu.cn/types";
 import { HTTP_CLIENT_MAP } from "./Constant";
 
 /**
@@ -39,7 +40,8 @@ export async function call<T = string>(
             try {
                 return transformer(client.raw);
             } catch (e) {
-                TIANYU.logger.warn(
+                TIANYU.audit.warn(
+                    "service/rpc",
                     ErrorHelper.getErrorString(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
                         `Convert RPC data to target structure failed`,
@@ -51,7 +53,8 @@ export async function call<T = string>(
             }
         },
         async (error) => {
-            TIANYU.logger.warn(
+            TIANYU.audit.warn(
+                "service/rpc",
                 ErrorHelper.getErrorString(
                     SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
                     `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${payload.url} failed`,

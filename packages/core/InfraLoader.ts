@@ -11,6 +11,7 @@ import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
 import { FeatureManager } from "./infra/FeatureManager";
 import { EnvironmentManager } from "./infra/EnvironmentManager";
+import { AuditManager } from "./infra/AuditManager";
 
 /** To init infra of global scope */
 export function loadInfra(): void {
@@ -42,6 +43,7 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
         fwk: {},
         import: importImpl(),
 
+        audit: new AuditManager(),
         logger: new LoggerManager(),
         request: request,
         session: sessionMgr,

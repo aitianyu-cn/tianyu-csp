@@ -6,6 +6,7 @@ import { SessionManager } from "#core/infra/SessionManager";
 import { generateInfra } from "#core/InfraLoader";
 import { HTTP_STATUS_CODE, JobWorkerExecutionEntry, JobWorkerMessageValue, OperationError, RequestPayloadData } from "#interface";
 import { ErrorHelper } from "#utils";
+import { LogLevel } from "@aitianyu.cn/types";
 import { MessagePort } from "worker_threads";
 
 export async function run_network_request(workerData: any, parentPort: MessagePort | null): Promise<void> {
@@ -28,7 +29,8 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
     await sessionMgr.loadData().catch(
         /* istanbul ignore next */ (reason) => {
             TIANYU.environment.development &&
-                TIANYU.logger.error(
+                TIANYU.audit.error(
+                    "job/runner/net",
                     JSON.stringify(
                         ErrorHelper.getError(
                             SERVICE_ERROR_CODES.INTERNAL_ERROR,

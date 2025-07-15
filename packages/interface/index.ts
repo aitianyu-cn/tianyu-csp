@@ -13,6 +13,7 @@ export * from "./Error";
 
 export * from "./api/db/database";
 export * from "./api/environment";
+export * from "./api/audit";
 export * from "./api/fwk";
 export * from "./api/logger";
 export * from "./api/importer";

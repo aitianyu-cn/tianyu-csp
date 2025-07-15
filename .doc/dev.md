@@ -1,28 +1,9 @@
-# Phase 3 dev goal
+# Phase 4 dev goal
 
-## TODO
+_Dev goal 4 will be a flexible phase of development, all dev goal will be added according to the needs._
 
-## OPTINAL
+_There will be a first release version of TIANYU-CSP in phase 4 with version "1.0.0". There will no more new features in this phase, only for the bug fix and function enhancement._
 
-1. FTP protocol and service.
-2. Streaming Media service.
-3. SMB service
-4. Plugin (interfaces) for csp modules and service
-5. Socket connection for long connection over network.
+### logger enhancement
 
-## Done
-
-1. multiple parameters in same id for url searching
-
-   - decode
-   - encode
-   - array type in url search structure.
-
-2. support tcp/udp service and client
-
-3. file service
-
-   - file operation helper
-   - internal based dir
-   - global based dir
-   - binary file reader/writer object
+<input type="checkbox" checked disabled /> add audit manager for all operation recording and logging. The logger manager will be not used normally.

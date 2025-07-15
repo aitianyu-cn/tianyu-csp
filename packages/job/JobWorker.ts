@@ -2,7 +2,7 @@
 
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessageValue, JobWorkerPayload } from "#interface";
-import { guid } from "@aitianyu.cn/types";
+import { guid, LogLevel } from "@aitianyu.cn/types";
 import { Worker } from "worker_threads";
 
 /**
@@ -92,10 +92,10 @@ export class JobWorker implements IJobWorker {
                 });
 
                 this._worker.stdout.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB info ${this.id}: ${data}`);
+                    TIANYU.audit.debug("job/worker", `JOB info ${this.id}: ${data}`);
                 });
                 this._worker.stderr.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB error ${this.id}: ${data}`);
+                    TIANYU.audit.debug("job/worker", `JOB error ${this.id}: ${data}`);
                 });
 
                 this._worker.on("error", (error: Error) => {

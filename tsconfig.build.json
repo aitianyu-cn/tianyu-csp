@@ -29,6 +29,7 @@
             "#utils": ["packages/utils/utils-export.ts"],
             "#interface": ["packages/interface/index.ts"],
             "#job": ["packages/job/index.ts"],
+            "#plugin": ["packages/plugin/index.ts"],
 
             "#install/*": ["packages/install/*"]
         }

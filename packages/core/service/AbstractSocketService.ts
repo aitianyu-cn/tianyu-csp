@@ -2,9 +2,10 @@
 
 import { CallbackAction, guid } from "@aitianyu.cn/types";
 import { DEFAULT_SOCKET_SERVICE_ADDR, ISocketAddress, ISocketService, SocketProtocal } from "#interface";
+import { AbstractService } from "./AbstractService";
 
 /** Abstract Class for all Socket Service */
-export abstract class AbstractSocketService implements ISocketService {
+export abstract class AbstractSocketService extends AbstractService<SocketProtocal> implements ISocketService {
     /** Socket Service Id */
     private _serviceId: string;
     /** Socket Service Protocal Type */
@@ -22,6 +23,8 @@ export abstract class AbstractSocketService implements ISocketService {
      * @param address local binding address and port, default socket address and port will be applied if no address assigned
      */
     public constructor(protocalType: SocketProtocal, address?: ISocketAddress) {
+        super();
+
         this._serviceId = guid();
         this._protocalType = protocalType;
         this._address = address || DEFAULT_SOCKET_SERVICE_ADDR;

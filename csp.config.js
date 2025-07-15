@@ -11,6 +11,9 @@ module.exports = {
         monitor: {
             modules: ".config/monitor-allowlist.json",
         },
+        audit: {
+            remote: "",
+        },
     },
     rest: {
         file: ".config/rest.js",

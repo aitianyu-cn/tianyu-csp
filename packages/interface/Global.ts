@@ -1,5 +1,6 @@
 /** @format */
 
+import { IAudit } from "./api/audit";
 import { IDatabaseManager } from "./api/db/database";
 import { IEnvironment } from "./api/environment";
 import { IFeature } from "./api/feature";
@@ -19,12 +20,17 @@ import { IUsage } from "./api/usage";
 export interface IGlobalDefinition {
     /** Core Trace instance */
     trace: ITrace;
-    /** Core Logger instance */
+    /**
+     * @deprecated
+     * Core Logger instance
+     */
     logger: ILogger;
     /** Core Usage Recorder instance */
     usage: IUsage;
     /** Request Session instance */
     session: ISession;
+    /** Core Audit instance */
+    audit: IAudit;
 
     /** Database Access instance */
     db: IDatabaseManager;

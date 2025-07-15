@@ -180,9 +180,7 @@ export interface HttpRestItem {
 }
 
 /** Http Service API */
-export interface IHttpService<Event extends {}> extends INetworkService, IHttpEventHandler<Event> {
-    /** network service request type */
-    type: RequestType;
+export interface IHttpService<Event extends {}> extends INetworkService<RequestType>, IHttpEventHandler<Event> {
     /**
      * To start http listening ont the binding host and port
      *

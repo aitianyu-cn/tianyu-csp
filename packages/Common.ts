@@ -10,7 +10,7 @@
 import fs from "fs";
 import path from "path";
 import { guid, parseAreaString } from "@aitianyu.cn/types";
-import { TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
+import { TianyuCSPAuditConfig, TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
 
 /** tianyu-csp node_modules root path */
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
@@ -74,3 +74,17 @@ export const SYSTEM_PRIVILEGE_MAP: TianyuCSPPrivilegeMap = raw_privileges;
 export function getInDevMode(): boolean {
     return PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development";
 }
+
+const audit_configuration_raw = raw_config?.config?.audit;
+/** Application Audit configuration */
+export const AUDIT_CONFIGURATION: TianyuCSPAuditConfig = {
+    remote: audit_configuration_raw?.remote || "",
+    path: audit_configuration_raw?.path || "",
+    header: audit_configuration_raw?.header || {},
+    port: audit_configuration_raw?.port || 514,
+    family: audit_configuration_raw?.family || "IPv4",
+    protocal: audit_configuration_raw?.protocal || "tcp",
+    log: audit_configuration_raw?.log === undefined ? true : audit_configuration_raw?.log,
+    buffer: audit_configuration_raw?.buffer || 10,
+    plugin: audit_configuration_raw?.plugin || [],
+};

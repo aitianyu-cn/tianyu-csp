@@ -10,10 +10,7 @@ export type SocketProtocal = "tcp" | "udp";
 export type SocketAddressFamily = "IPv4" | "IPv6";
 
 /** Socket Service Common Interface */
-export interface ISocketService extends INetworkService {
-    /** Socket Protocal */
-    type: SocketProtocal;
-}
+export interface ISocketService extends INetworkService<SocketProtocal> {}
 
 /** Socket Addresss */
 export interface ISocketAddress {

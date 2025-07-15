@@ -40,7 +40,10 @@ export class TcpClient {
             const connectionErrorHandler = (error: Error) => {
                 const err_msg = `connect to remote[${options.host}:${options.port}] failed - ${error.message}`;
                 this._log &&
-                    TIANYU.logger.error(ErrorHelper.getErrorString(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
+                    TIANYU.audit.error(
+                        "client/tcp",
+                        ErrorHelper.getErrorString(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack),
+                    );
 
                 reject(ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
             };
@@ -71,7 +74,8 @@ export class TcpClient {
                         this._client.remotePort
                     }] failed - source data[${msg.toString("utf-8")}] - ${error.message}`;
                     this._log &&
-                        TIANYU.logger.error(
+                        TIANYU.audit.error(
+                            "client/tcp",
                             ErrorHelper.getErrorString(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack),
                         );
 

@@ -15,12 +15,23 @@ Base structure in `csp.config.json` file:
 ```
     {
         "config": {
-            "name": "",         // your application name
-            "version": "",      // application version
-            "environment": "",  // application running mode(1)
-            "src": "",          // application execution files root path
-            "language": "",     // default language(2)
-            "roles": "",        // application license roles config file path(7)
+            "name": "",             // your application name
+            "version": "",          // application version
+            "environment": "",      // application running mode(1)
+            "src": "",              // application execution files root path
+            "language": "",         // default language(2)
+            "roles": "",            // application license roles config file path(7)
+            "audit": {              // audit setting(9)
+                "remote": "",       // audit remote server
+                "path"?: "",        // audit remote access path (http only)
+                "header"?: "",      // audit remote http headers (http only)
+                "port"?: 514,       // audit remote server port
+                "family"?: "IPv4",  // audit remote server IP family
+                "protocal"?: "udp", // audit remote server supported protocal
+                "log": true,        // audit info record in log
+                "buffer": 1,        // audit records save cache
+                "plugin": []        // list of custom audit processor
+            }
         },
         "rest": {
             "file": "",         // file of rest setting(3)
@@ -85,3 +96,5 @@ If javascript (`csp.config.js`) is used in your application instead of json file
 7. license roles define for csp application. the details configuration please see [`privilege config`](./privilege-config.md).
 
 8. csp external call is named `XCall` in code. this provides an external module to handle infra database access logic to make flexible application implementation. to see the detailed information, please to [`XCall`](./XCall.md)
+
+9. csp audit is a local server to support records log and operation data. `remote` server support IPv6 and IPv4 address and customized port and protocal. default IP `family` is "**IPv4**", suport "**IPv6**" value for IPv6 server. default `port` is "**514**". default `protocal` is "**UDP**", support "**tcp**" and "**http**"(contains http, http2.0). `log` is a boolean field with "true" value indicates the audit should print to log or not. `path` is only used for **HTTP** protocal to indicate the request target router. `header` is used for **HTTP** only. `plugin` is a list of audit data processing functions.
