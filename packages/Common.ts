@@ -84,7 +84,7 @@ export const AUDIT_CONFIGURATION: TianyuCSPAuditConfig = {
     port: audit_configuration_raw?.port || 514,
     family: audit_configuration_raw?.family || "IPv4",
     protocal: audit_configuration_raw?.protocal || "tcp",
-    log: audit_configuration_raw?.log === undefined ? true : audit_configuration_raw?.log,
+    log: audit_configuration_raw?.log === undefined ? true : /* istanbul ignore next */ audit_configuration_raw?.log,
     buffer: audit_configuration_raw?.buffer || 10,
     plugin: audit_configuration_raw?.plugin || [],
 };

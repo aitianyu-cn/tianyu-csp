@@ -58,7 +58,7 @@ export class AuditManager implements IAudit {
         this._record(app, message, LogLevel.WARNING, additionalData);
     }
 
-    public async _record(app: string, message: string, level?: LogLevel, additionalData?: any): Promise<void> {
+    private async _record(app: string, message: string, level?: LogLevel, additionalData?: any): Promise<void> {
         this._buffer.push({
             app,
             message,
