@@ -2,31 +2,9 @@
     "name": "@aitianyu.cn/tianyu-csp",
     "version": "0.2.0",
     "description": "Project for Common Service Platform of Tianyu.",
+    "types": "./dist/types/index.d.ts",
     "exports": {
-        ".": {
-            "types": "./dist/types/index.d.ts",
-            "import": "./dist/lib/index.js",
-            "require": "./dist/lib/index.js",
-            "node": "./dist/lib/index.js",
-            "default": "./dist/lib/index.js"
-        },
-        "./install": {
-            "types": "./dist/types/install.d.ts",
-            "import": "./dist/lib/install.js",
-            "require": "./dist/lib/install.js",
-            "node": "./dist/lib/install.js",
-            "default": "./dist/lib/install.js"
-        }
-    },
-    "typesVersions": {
-        "*": {
-            "*": [
-                "./dist/types/index.d.ts"
-            ],
-            "install": [
-                "./dist/types/install.d.ts"
-            ]
-        }
+        ".": "./dist/lib/index.js"
     },
     "type": "commonjs",
     "files": [

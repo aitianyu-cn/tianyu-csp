@@ -72,5 +72,7 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
 
     // return the result
     parentPort?.postMessage(result);
+    await TIANYU.audit.flush();
+
     process.exit(result.error.length ? HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR : HTTP_STATUS_CODE.OK);
 }

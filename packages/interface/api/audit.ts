@@ -71,5 +71,5 @@ export interface IAudit {
     warn(app: string, message: string, additionalData?: any): Promise<void>;
 
     /** Manually send audit data to remote service */
-    flush(): void;
+    flush(): Promise<void>;
 }

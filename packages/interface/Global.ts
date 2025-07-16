@@ -1,7 +1,6 @@
 /** @format */
 
 import { IAudit } from "./api/audit";
-import { IDatabaseManager } from "./api/db/database";
 import { IEnvironment } from "./api/environment";
 import { IFeature } from "./api/feature";
 import { ICSPFramework } from "./api/fwk";
@@ -32,8 +31,6 @@ export interface IGlobalDefinition {
     /** Core Audit instance */
     audit: IAudit;
 
-    /** Database Access instance */
-    db: IDatabaseManager;
     /** Import Manager */
     import: IImporter;
     /** Framework utils */

@@ -82,5 +82,7 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
 
     // return the result
     parentPort?.postMessage(result);
+    await TIANYU.audit.flush();
+
     process.exit(result.error.length ? SERVICE_ERROR_CODES.INTERNAL_ERROR : 0);
 }

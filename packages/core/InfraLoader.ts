@@ -2,7 +2,6 @@
 
 import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { ICSPContributorFactorProtocolMap, IGlobalDefinition, IServerRequest, ISession } from "#interface";
-import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
 import { GlobalRequestManager } from "./infra/RequestManager";
 import { GlobalSessionManager } from "./infra/SessionManager";
@@ -39,7 +38,6 @@ export function createContributor(): IContributor<ICSPContributorFactorProtocolM
  */
 export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
-        db: new DatabaseManager(),
         fwk: {},
         import: importImpl(),
 

@@ -13,13 +13,15 @@ export class AuditManager implements IAudit {
         this._buffer = [];
     }
 
-    public flush(): void {
+    public async flush(): Promise<void> {
         if (this._buffer.length > 0) {
             const transfer = this._buffer;
             this._buffer = [];
-            setTimeout(() => {
-                handleAuditRecord(transfer);
-            }, 0);
+            return new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    handleAuditRecord(transfer).then(resolve, /* istanbul ignore next */ () => resolve());
+                }, 0);
+            });
         }
     }
     public async record(app: string, message: string, level?: LogLevel, additionalData?: any): Promise<void> {
