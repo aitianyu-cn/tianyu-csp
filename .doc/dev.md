@@ -7,3 +7,5 @@ _There will be a first release version of TIANYU-CSP in phase 4 with version "1.
 <input type="checkbox" checked disabled /> **logger enhancement**: add audit manager for all operation recording and logging. The logger manager will be not used normally.
 
 <input type="checkbox" checked disabled /> remove database connections from CSP to CSP tools to clear the project structure. CSP project will only provides basic functionality of server.
+
+<input type="checkbox" checked disabled /> add global lifecycle manager to handle all services lifecycle.
