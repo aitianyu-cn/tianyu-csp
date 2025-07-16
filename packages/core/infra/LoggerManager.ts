@@ -8,8 +8,6 @@ import { doXcall } from "./code/GenericXcall";
 
 /** CSP Log Manager for global definition */
 export class LoggerManager implements ILogger {
-    public constructor() {}
-
     public async log(msg: string, level: LogLevel = LogLevel.DEBUG): Promise<void> {
         await doXcall(
             {

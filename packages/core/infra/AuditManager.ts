@@ -30,7 +30,7 @@ export class AuditManager implements IAudit {
             void TIANYU.logger.log(logMsg, level || LogLevel.LOG);
         }
 
-        this._record(app, message, level || LogLevel.LOG, additionalData);
+        await this._record(app, message, level || LogLevel.LOG, additionalData);
     }
 
     public async error(app: string, message: string, additionalData?: any): Promise<void> {
@@ -39,7 +39,7 @@ export class AuditManager implements IAudit {
             void TIANYU.logger.error(logMsg);
         }
 
-        this._record(app, message, LogLevel.ERROR, additionalData);
+        await this._record(app, message, LogLevel.ERROR, additionalData);
     }
 
     public async debug(app: string, message: string, additionalData?: any): Promise<void> {
@@ -48,7 +48,7 @@ export class AuditManager implements IAudit {
             void TIANYU.logger.debug(logMsg);
         }
 
-        this._record(app, message, LogLevel.DEBUG, additionalData);
+        await this._record(app, message, LogLevel.DEBUG, additionalData);
     }
 
     public async warn(app: string, message: string, additionalData?: any): Promise<void> {
@@ -57,7 +57,7 @@ export class AuditManager implements IAudit {
             void TIANYU.logger.warn(logMsg);
         }
 
-        this._record(app, message, LogLevel.WARNING, additionalData);
+        await this._record(app, message, LogLevel.WARNING, additionalData);
     }
 
     private async _record(app: string, message: string, level?: LogLevel, additionalData?: any): Promise<void> {
@@ -70,7 +70,7 @@ export class AuditManager implements IAudit {
         });
 
         if (this._buffer.length >= AUDIT_CONFIGURATION.buffer) {
-            this.flush();
+            void this.flush();
         }
     }
 }

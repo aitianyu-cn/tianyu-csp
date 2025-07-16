@@ -1,6 +1,6 @@
 /** @format */
 
-import { HttpProtocal, ISocketAddress, SocketAddressFamily, SocketProtocal } from "#interface";
+import { HttpProtocal, ISocketAddress, SocketAddressFamily } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 import { AUDIT_CONFIGURATION, PROJECT_NAME } from "packages/Common";
 import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
@@ -33,14 +33,21 @@ export async function handleAuditRecord(buffers: IAuditRecordBuffer[]): Promise<
 
     /* istanbul ignore next */
     switch (config.protocal) {
-        case "tcp":
-            return await audit4TCP(remote, config.family, processedBuffer);
-        case "udp" /* istanbul ignore next */:
-            return await audit4UDP(remote, config.family, processedBuffer);
+        case "tcp": {
+            await audit4TCP(remote, config.family, processedBuffer);
+            return;
+        }
         case "http": /* istanbul ignore next */
         case "https": /* istanbul ignore next */
-        case "http2" /* istanbul ignore next */:
-            return await audit4HTTP(remote, config.path, config.header, config.protocal, processedBuffer);
+        case "http2" /* istanbul ignore next */: {
+            await audit4HTTP(remote, config.path, config.header, config.protocal, processedBuffer);
+            return;
+        }
+        case "udp" /* istanbul ignore next */:
+        default: /* istanbul ignore next */ {
+            await audit4UDP(remote, config.family, processedBuffer);
+            return;
+        }
     }
 }
 
@@ -73,7 +80,7 @@ export async function audit4TCP(
     });
 
     for (const buffer of buffers) {
-        const addition = buffer.additionalData ? " --- " + JSON.stringify(buffer.additionalData) : "";
+        const addition = buffer.additionalData ? ` --- ${JSON.stringify(buffer.additionalData)}` : "";
         const msg = `[${buffer.level}] --- ${buffer.timestamp} --- ${PROJECT_NAME} --- ${buffer.app} --- ${buffer.message}${addition}`;
         await client.send(Buffer.from(msg));
     }

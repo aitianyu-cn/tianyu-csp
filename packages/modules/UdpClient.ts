@@ -3,7 +3,6 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { UdpClientOptions, UdpClientResponse } from "#interface";
 import { ErrorHelper } from "#utils";
-import { LogLevel } from "@aitianyu.cn/types";
 import dgram from "dgram";
 
 /**
@@ -32,13 +31,10 @@ export async function UdpClient(
                 const err_msg = `request to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
                     "utf-8",
                 )}] - ${error.message}`;
-                log &&
-                    TIANYU.audit.warn(
-                        "client/udp",
-                        ErrorHelper.getErrorString(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack),
-                    );
+                const err = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack);
+                log && void TIANYU.audit.warn("client/udp", err_msg, err);
 
-                reject(ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack));
+                reject(err);
             } else {
                 if (!response) {
                     client.close();
@@ -66,13 +62,10 @@ export async function UdpClient(
                 const err_msg = `UDP client to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
                     "utf-8",
                 )}] - ${error.message}`;
-                log &&
-                    TIANYU.audit.warn(
-                        "client/udp",
-                        ErrorHelper.getErrorString(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack),
-                    );
+                const err = ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack);
+                log && void TIANYU.audit.warn("client/udp", err_msg, err);
 
-                reject(ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
+                reject(err);
             },
         );
     });

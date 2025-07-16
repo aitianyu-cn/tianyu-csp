@@ -1,0 +1,6 @@
+.config
+.doc
+.vscode
+dist
+scripts
+test

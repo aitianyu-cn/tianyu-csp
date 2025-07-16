@@ -8,7 +8,6 @@
 import { MapOfType } from "@aitianyu.cn/types";
 import { ImportPackage } from "./api/importer";
 import { DefaultRequestItemsMap } from "./fwk-def/contributor/requests";
-import { SocketAddressFamily, SocketProtocal } from "./service/socket-service";
 import { TianyuCSPAuditConfig } from "./api/audit";
 
 /** Resquest cookie and search key mapping item */

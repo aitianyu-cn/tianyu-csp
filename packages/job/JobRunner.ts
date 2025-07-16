@@ -48,7 +48,7 @@ export class JobRunner {
     public async run(): Promise<void> {
         this._timer = setTimeout(this.timeoutHandler.bind(this), this._queue.overtime);
         await this._worker.run(this._queue.script, this._queue.payload, this._queue.executionId).catch((error) => {
-            TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
         });
 
         if (this._timer /** clean timer if timer is running */) {
@@ -75,7 +75,7 @@ export class JobRunner {
 
         // to clean data
         await this._worker.terminate().catch((error) => {
-            TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
         });
 
         this._result.status = "timeout";

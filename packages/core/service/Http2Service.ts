@@ -75,7 +75,9 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
             let body: any = null;
             try {
                 body = JSON.parse(decodeURI(data));
-            } catch {}
+            } catch {
+                //
+            }
 
             const payload = this.generatePayload(header[":path"], header, "POST", body);
             this._handleDispatch(payload, stream, "POST");

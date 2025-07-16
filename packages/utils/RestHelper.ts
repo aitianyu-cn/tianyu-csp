@@ -33,7 +33,9 @@ export class RestHelper {
         rest?: MapOfType<HttpRestItem>,
         fallback?: PathEntry,
     ): RestMappingResult {
-        if (!path) return null;
+        if (!path) {
+            return null;
+        }
 
         const restPath = path.startsWith("/") ? path : `/${path}`;
         const restData = (rest ?? REST)[restPath];

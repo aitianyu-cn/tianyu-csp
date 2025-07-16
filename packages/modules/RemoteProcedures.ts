@@ -3,7 +3,6 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ProcedureCallPayload } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { LogLevel } from "@aitianyu.cn/types";
 import { HTTP_CLIENT_MAP } from "./Constant";
 
 /**
@@ -40,9 +39,10 @@ export async function call<T = string>(
             try {
                 return transformer(client.raw);
             } catch (e) {
-                TIANYU.audit.warn(
+                void TIANYU.audit.warn(
                     "service/rpc",
-                    ErrorHelper.getErrorString(
+                    `Convert RPC data to target structure failed`,
+                    ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
                         `Convert RPC data to target structure failed`,
                         String(e),
@@ -53,22 +53,13 @@ export async function call<T = string>(
             }
         },
         async (error) => {
-            TIANYU.audit.warn(
-                "service/rpc",
-                ErrorHelper.getErrorString(
-                    SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                    `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${payload.url} failed`,
-                    String(error),
-                ),
-            );
+            const msg = `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${
+                payload.url
+            } failed`;
+            const rejectError = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, msg, String(error));
+            void TIANYU.audit.warn("service/rpc", msg, rejectError);
 
-            return Promise.reject(
-                ErrorHelper.getError(
-                    SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                    `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${payload.url} failed`,
-                    String(error),
-                ),
-            );
+            return Promise.reject(rejectError);
         },
     );
 }

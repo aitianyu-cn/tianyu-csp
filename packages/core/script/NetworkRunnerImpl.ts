@@ -6,7 +6,6 @@ import { SessionManager } from "#core/infra/SessionManager";
 import { generateInfra } from "#core/InfraLoader";
 import { HTTP_STATUS_CODE, JobWorkerExecutionEntry, JobWorkerMessageValue, OperationError, RequestPayloadData } from "#interface";
 import { ErrorHelper } from "#utils";
-import { LogLevel } from "@aitianyu.cn/types";
 import { MessagePort } from "worker_threads";
 
 export async function run_network_request(workerData: any, parentPort: MessagePort | null): Promise<void> {
@@ -29,14 +28,13 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
     await sessionMgr.loadData().catch(
         /* istanbul ignore next */ (reason) => {
             TIANYU.environment.development &&
-                TIANYU.audit.error(
+                void TIANYU.audit.error(
                     "job/runner/net",
-                    JSON.stringify(
-                        ErrorHelper.getError(
-                            SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                            `execute request from ${data.payload.url} failed.`,
-                            (reason as any)?.message || "Technical Error.",
-                        ),
+                    `execute request from ${data.payload.url} failed.`,
+                    ErrorHelper.getError(
+                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                        `execute request from ${data.payload.url} failed.`,
+                        (reason as any)?.message || "Technical Error.",
                     ),
                 );
         },
@@ -72,6 +70,8 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
 
     // return the result
     parentPort?.postMessage(result);
+
+    await TIANYU.lifecycle.recycle();
     await TIANYU.audit.flush();
 
     process.exit(result.error.length ? HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR : HTTP_STATUS_CODE.OK);

@@ -2,9 +2,9 @@
 
 import fs from "fs";
 import path from "path";
-import { PROJECT_ROOT_PATH, EXTERNAL_MODULE_ROOT_PATH, REST_CONFIG } from "../../Common";
+import { EXTERNAL_MODULE_ROOT_PATH, PROJECT_ROOT_PATH, REST_CONFIG } from "../../Common";
 import { MapOfType } from "@aitianyu.cn/types";
-import { DefaultRequestItemsMap, PathEntry, HttpRestItem } from "#interface";
+import { DefaultRequestItemsMap, HttpRestItem, PathEntry } from "#interface";
 
 const DEFAULT_REST_CONFIG_NAME = "rest.config.json";
 const DEFAULT_REST_FALLBACK_CONFIG = {

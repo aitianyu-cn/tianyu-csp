@@ -37,7 +37,9 @@ export class GlobalRequestManager implements IServerRequest {
     public get protocol(): HttpProtocal {
         return "http2";
     }
-    public setResponseCode(_code: number): void {}
+    public setResponseCode(_code: number): void {
+        //
+    }
     public getResponseCode(): number {
         return HTTP_STATUS_CODE.OK;
     }

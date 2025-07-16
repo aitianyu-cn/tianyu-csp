@@ -4,7 +4,6 @@ import * as Http from "http";
 import { HttpHelper } from "#utils";
 import { HTTP_STATUS_CODE } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
-import { createGunzip } from "zlib";
 
 /**
  * Http Client

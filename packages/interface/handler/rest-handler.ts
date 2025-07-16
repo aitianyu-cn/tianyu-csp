@@ -1,7 +1,7 @@
 /** @format */
 
 import { MapOfType } from "@aitianyu.cn/types";
-import { HttpRequestCacheOption, HttpRequestProxyOption, HttpRestItem } from "../service/http-service";
+import { HttpRequestCacheOption, HttpRequestProxyOption } from "../service/http-service";
 import { ImportPackage } from "../api/importer";
 
 /**

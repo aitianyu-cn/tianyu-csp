@@ -8,5 +8,5 @@ export interface INetworkService<TYPE> {
     type: TYPE;
 
     /** To close current service */
-    close(callback?: (err?: Error) => void): void;
+    close(callback?: (err?: Error) => void): Promise<void>;
 }

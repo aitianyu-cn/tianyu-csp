@@ -12,7 +12,6 @@ import {
     SchedultJobExecuteParam,
 } from "#interface";
 import { ErrorHelper } from "#utils";
-import { LogLevel } from "@aitianyu.cn/types";
 import { MessagePort } from "worker_threads";
 
 export async function run_job_scripts(workerData: any, parentPort: MessagePort | null): Promise<void> {
@@ -34,14 +33,13 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
     await sessionMgr.loadData().catch(
         /* istanbul ignore next */ (reason) => {
             TIANYU.environment.development &&
-                TIANYU.audit.error(
+                void TIANYU.audit.error(
                     "job/runner/native",
-                    JSON.stringify(
-                        ErrorHelper.getError(
-                            SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                            `execute job from ${payload.name} (${payload.id}) failed.`,
-                            (reason as any)?.message || "Technical Error.",
-                        ),
+                    `execute job from ${payload.name} (${payload.id}) failed.`,
+                    ErrorHelper.getError(
+                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                        `execute job from ${payload.name} (${payload.id}) failed.`,
+                        (reason as any)?.message || "Technical Error.",
                     ),
                 );
         },
@@ -82,6 +80,8 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
 
     // return the result
     parentPort?.postMessage(result);
+
+    await TIANYU.lifecycle.recycle();
     await TIANYU.audit.flush();
 
     process.exit(result.error.length ? SERVICE_ERROR_CODES.INTERNAL_ERROR : 0);

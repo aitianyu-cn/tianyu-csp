@@ -4,6 +4,10 @@ import { CallbackAction, guid } from "@aitianyu.cn/types";
 import { DEFAULT_SOCKET_SERVICE_ADDR, ISocketAddress, ISocketService, SocketProtocal } from "#interface";
 import { AbstractService } from "./AbstractService";
 
+export interface ISocketServiceServer {
+    close(callback?: (err?: Error) => void): void;
+}
+
 /** Abstract Class for all Socket Service */
 export abstract class AbstractSocketService extends AbstractService<SocketProtocal> implements ISocketService {
     /** Socket Service Id */
@@ -12,6 +16,9 @@ export abstract class AbstractSocketService extends AbstractService<SocketProtoc
     private _protocalType: SocketProtocal;
     /** Socket local binding address and port */
     private _address: ISocketAddress;
+
+    /** Socket service instance */
+    protected _service: ISocketServiceServer;
 
     /** Given a function to handle TCP service received data, and return the response data if need */
     public onData?: (remote: ISocketAddress, data: Buffer) => Promise<Buffer | void> | Buffer | void;
@@ -22,9 +29,10 @@ export abstract class AbstractSocketService extends AbstractService<SocketProtoc
      * @param protocalType Socket protocal type
      * @param address local binding address and port, default socket address and port will be applied if no address assigned
      */
-    public constructor(protocalType: SocketProtocal, address?: ISocketAddress) {
+    public constructor(service: ISocketServiceServer, protocalType: SocketProtocal, address?: ISocketAddress) {
         super();
 
+        this._service = service;
         this._serviceId = guid();
         this._protocalType = protocalType;
         this._address = address || DEFAULT_SOCKET_SERVICE_ADDR;
@@ -42,7 +50,20 @@ export abstract class AbstractSocketService extends AbstractService<SocketProtoc
      *
      * @param callback callback function when the service is close to call
      */
-    public abstract close(callback?: (err?: Error) => void): void;
+    public async close(callback?: (err?: Error) => void): Promise<void> {
+        TIANYU.lifecycle.leave(this.id);
+        return new Promise<void>((resolve, reject) => {
+            this._service.close((err) => {
+                callback?.(err);
+                /* istanbul ignore if */
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
     /**
      * To start a service, when the service is starting listening, the callback function will be invoked.
      *

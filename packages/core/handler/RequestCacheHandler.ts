@@ -1,7 +1,7 @@
 /** @format */
 
-import { RequestPayloadData, HttpRequestCacheOption, NetworkServiceResponseData, HttpServerCacheSetting } from "#interface";
-import { MapOfString, MapOfStrings, MapOfType, ObjectCalculater, ObjectHelper } from "@aitianyu.cn/types";
+import { HttpRequestCacheOption, HttpServerCacheSetting, NetworkServiceResponseData, RequestPayloadData } from "#interface";
+import { MapOfType, ObjectHelper } from "@aitianyu.cn/types";
 
 const DEFAULT_REQUEST_CACHE_TIMEOUT = 300000;
 const DEFAULT_REQUEST_CACHE_WATCHDOG = DEFAULT_REQUEST_CACHE_TIMEOUT * 10;
@@ -88,7 +88,10 @@ export class RequestCacheHandler {
                 clearInterval(this._timer);
             }
 
-            this._timer = setInterval(this._setting.cycle, this._setting.watch || DEFAULT_REQUEST_CACHE_WATCHDOG);
+            this._timer = setInterval(
+                this._setting.cycle.bind(this._setting),
+                this._setting.watch || DEFAULT_REQUEST_CACHE_WATCHDOG,
+            );
         }
     }
 

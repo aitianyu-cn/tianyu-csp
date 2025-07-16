@@ -138,7 +138,7 @@ export class JobManager {
             this._counter--;
             void this._dispatchInternal();
         } catch (reason: any) /* istanbul ignore next */ {
-            TIANYU.audit.error("job/manager", reason?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/manager", reason?.message || "Technical error occurs.");
         }
     }
 }

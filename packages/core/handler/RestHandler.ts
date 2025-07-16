@@ -260,6 +260,7 @@ export class RestHandler {
         }
 
         let item = maps[0];
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let index = 0; index < maps.length; ++index) {
             const next = this._rest[maps[index].id];
             const curr = this._rest[item.id];

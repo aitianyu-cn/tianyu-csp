@@ -3,12 +3,15 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { TcpClientOptions } from "#interface";
 import { ErrorHelper } from "#utils";
+import { guid } from "@aitianyu.cn/types";
 import net from "net";
+import { IReleasable } from "packages/interface/api/lifecycle";
 
 /** TCP Client */
-export class TcpClient {
+export class TcpClient implements IReleasable {
     private _client: net.Socket;
     private _log: boolean;
+    private _id: string;
 
     /** Given a function to handle client error */
     public onError?: (error: Error) => void;
@@ -23,10 +26,15 @@ export class TcpClient {
     public constructor(options: TcpClientOptions) {
         this._log = !!options.log;
 
+        this._id = guid();
         this._client = new net.Socket();
 
         this._client.on("error", this.errorHandler.bind(this));
         this._client.on("data", this.receiveHandler.bind(this));
+    }
+
+    public get id(): string {
+        return this._id;
     }
 
     /**
@@ -39,23 +47,24 @@ export class TcpClient {
         return new Promise<void>((resolve, reject) => {
             const connectionErrorHandler = (error: Error) => {
                 const err_msg = `connect to remote[${options.host}:${options.port}] failed - ${error.message}`;
-                this._log &&
-                    TIANYU.audit.error(
-                        "client/tcp",
-                        ErrorHelper.getErrorString(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack),
-                    );
+                const err = ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack);
+                this._log && void TIANYU.audit.error("client/tcp", err_msg, err);
 
-                reject(ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
+                reject(err);
             };
             this._client.once("error", connectionErrorHandler);
 
-            this._client.connect(options, resolve);
+            this._client.connect(options, () => {
+                TIANYU.lifecycle.join(this);
+                resolve();
+            });
         });
     }
 
     /** To close current connection */
     public close(): void {
         this._client.destroy();
+        TIANYU.lifecycle.leave(this.id);
     }
 
     /**
@@ -73,13 +82,10 @@ export class TcpClient {
                     const err_msg = `send to remote[${this._client.remoteAddress}:${
                         this._client.remotePort
                     }] failed - source data[${msg.toString("utf-8")}] - ${error.message}`;
-                    this._log &&
-                        TIANYU.audit.error(
-                            "client/tcp",
-                            ErrorHelper.getErrorString(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack),
-                        );
+                    const err = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack);
+                    this._log && void TIANYU.audit.error("client/tcp", err_msg, err);
 
-                    reject(ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack));
+                    reject(err);
                 }
             });
         });

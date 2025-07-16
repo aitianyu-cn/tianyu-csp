@@ -16,7 +16,7 @@ export interface NetworkServiceResponseData {
      *
      * This field is used in HTTP only
      */
-    headers: MapOfType<number | string | ReadonlyArray<string> | string[] | undefined>;
+    headers: MapOfType<number | string | readonly string[] | string[] | undefined>;
 
     /** Response Data */
     body: any;

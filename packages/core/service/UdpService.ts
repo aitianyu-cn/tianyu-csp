@@ -9,8 +9,7 @@ import dgram from "dgram";
 
 /** UDP Service */
 export class UdpService extends AbstractSocketService {
-    private _service: dgram.Socket;
-    private _family: SocketAddressFamily;
+    protected declare _service: dgram.Socket;
 
     /**
      * To create a new UDP service instance with given local binding address and IP family
@@ -20,20 +19,16 @@ export class UdpService extends AbstractSocketService {
      * @param family IP address family includes IPv4 and IPv6
      */
     public constructor(address?: ISocketAddress, family?: SocketAddressFamily) {
-        super("udp", address);
-
-        this._family = family || "IPv4";
-        this._service = dgram.createSocket(this._family === "IPv6" ? "udp6" : "udp4");
+        super(dgram.createSocket(family === "IPv6" ? "udp6" : "udp4"), "udp", address);
 
         this.handleService();
     }
 
-    public close(callback?: (err?: Error) => void): void {
-        this._service.close(callback);
-    }
-
     public listen(callback?: CallbackAction): void {
-        this._service.bind(this.port, this.host, callback);
+        this._service.bind(this.port, this.host, () => {
+            TIANYU.lifecycle.join(this);
+            callback?.();
+        });
     }
 
     private handleService(): void {
@@ -48,9 +43,10 @@ export class UdpService extends AbstractSocketService {
             if (res) {
                 this._service.send(res, rinfo.port, rinfo.address, (error) => {
                     error &&
-                        TIANYU.audit.error(
+                        void TIANYU.audit.error(
                             this.app,
-                            ErrorHelper.getErrorString(
+                            `udp-server[${this.id}] error on sending to remote ${rinfo.address}:${rinfo.port} - ${error.message}`,
+                            ErrorHelper.getError(
                                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
                                 `udp-server[${this.id}] error on sending to remote ${rinfo.address}:${rinfo.port} - ${error.message}`,
                                 error.stack,
@@ -61,9 +57,10 @@ export class UdpService extends AbstractSocketService {
         });
 
         this._service.on("error", (error: Error) => {
-            TIANYU.audit.error(
+            void TIANYU.audit.error(
                 this.app,
-                ErrorHelper.getErrorString(
+                `tcp-server[${this.id}] error at local[${this.host}:${this.port}] - ${error.message}`,
+                ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
                     `tcp-server[${this.id}] error at local[${this.host}:${this.port}] - ${error.message}`,
                     error.stack,

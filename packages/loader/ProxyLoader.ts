@@ -3,7 +3,6 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { Http2Query, HTTP_STATUS_CODE, HttpCallMethod, NetworkServiceResponseData } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { LogLevel } from "@aitianyu.cn/types";
 import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
 import { Http2Client } from "packages/modules/Http2Client";
 
@@ -54,13 +53,11 @@ export async function loader(): Promise<NetworkServiceResponseData> {
             status = error;
         }
 
-        TIANYU.audit.warn(
+        const msg = `request to proxy to ${protocol === "http" ? "http" : "https"}://${relocatHost}${url} failed`;
+        void TIANYU.audit.warn(
             "service/proxy",
-            ErrorHelper.getErrorString(
-                SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                `request to proxy to ${protocol === "http" ? "http" : "https"}://${relocatHost}${url} failed`,
-                String(error),
-            ),
+            msg,
+            ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, msg, String(error)),
         );
     });
 

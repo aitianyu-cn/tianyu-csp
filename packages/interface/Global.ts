@@ -5,6 +5,7 @@ import { IEnvironment } from "./api/environment";
 import { IFeature } from "./api/feature";
 import { ICSPFramework } from "./api/fwk";
 import { IImporter } from "./api/importer";
+import { ILifecycle } from "./api/lifecycle";
 import { ILogger } from "./api/logger";
 import { IServerRequest } from "./api/request";
 import { ISession } from "./api/session";
@@ -37,6 +38,11 @@ export interface IGlobalDefinition {
     fwk: ICSPFramework;
     /** Feature Manager instance to get a feature is active only */
     feature: IFeature;
+    /**
+     * Core Lifecycle instance
+     * This is a generic instance for service lifecycle
+     */
+    lifecycle: ILifecycle;
 
     /** Network request data */
     request: IServerRequest;

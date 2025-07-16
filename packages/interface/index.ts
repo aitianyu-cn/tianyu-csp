@@ -21,6 +21,7 @@ export * from "./api/request";
 export * from "./api/session";
 export * from "./api/trace";
 export * from "./api/usage";
+export * from "./api/lifecycle";
 
 export * from "./declares/global-declare";
 
