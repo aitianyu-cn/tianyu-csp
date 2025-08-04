@@ -42,14 +42,14 @@ module.exports = {
         handler: {
             package: "$",
             module: "default-loader",
-            method: "html",
+            method: "auto",
         },
     },
-    "/welcome/{data}": {
+    "/welcome/*": {
         handler: {
-            package: "data.welcome",
-            module: "{data}",
-            method: "",
+            package: "$",
+            module: "default-loader",
+            method: "auto",
         },
     },
 

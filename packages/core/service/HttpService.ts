@@ -97,15 +97,22 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                 response.headers[key] && res.setHeader(key, response.headers[key]);
             }
 
+            if (response.binary) {
+                res.write(Buffer.from(response.body));
+                res.end();
+                return;
+            }
             res.end(
-                this.encodeResponse(
-                    response.body
-                        ? typeof response.body === "string"
-                            ? response.body
-                            : JSON.stringify(response.body)
-                        : /* istanbul ignore next */ "",
-                    response.headers,
-                ),
+                response.binary
+                    ? response.body
+                    : this.encodeResponse(
+                          response.body
+                              ? typeof response.body === "string"
+                                  ? response.body
+                                  : JSON.stringify(response.body)
+                              : /* istanbul ignore next */ "",
+                          response.headers,
+                      ),
             );
         }, 0);
     }

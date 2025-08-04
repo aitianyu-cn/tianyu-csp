@@ -20,4 +20,6 @@ export interface NetworkServiceResponseData {
 
     /** Response Data */
     body: any;
+
+    binary?: boolean;
 }
