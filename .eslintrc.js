@@ -16,6 +16,7 @@ module.exports = {
             files: ["**/*.ts", "**/*.tsx"],
             env: {
                 browser: true,
+                node: true,
             },
             parser: "@typescript-eslint/parser",
             parserOptions: {
@@ -213,6 +214,16 @@ module.exports = {
                 "no-native-reassign": 0,
                 semi: 0,
                 "no-const-assign": 0,
+            },
+        },
+        {
+            files: ["**/*.js", "**/*.jsx", "**/*.json", "**/*.mjs"],
+            env: {
+                browser: true,
+                node: true,
+            },
+            rules: {
+                "@typescript-eslint/no-unused-vars": "off",
             },
         },
     ],

@@ -21,17 +21,20 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             };
 
             const worker = new JobWorker();
-            worker.run(file, payload, "id").then((value) => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.executionId).toEqual("id");
-                expect(worker.status).toEqual("done");
+            worker.run(file, payload, "id").then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.executionId).toEqual("id");
+                    expect(worker.status).toEqual("done");
 
-                expect(worker.exitCode).toEqual(10);
-                expect(worker.value?.data).toEqual({ inp: true, ret: "success" });
-                expect(worker.error.length).toEqual(0);
+                    expect(worker.exitCode).toEqual(10);
+                    expect(worker.value?.data).toEqual({ inp: true, ret: "success" });
+                    expect(worker.error.length).toEqual(0);
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("warning", (done) => {
@@ -46,19 +49,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             };
 
             const worker = new JobWorker();
-            worker.run(file, payload).then((value) => {
-                expect(worker.status).toEqual("done");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.status).toEqual("done");
 
-                expect(worker.exitCode).toEqual(20);
-                expect(worker.value?.data).toEqual({ inp: true, ret: "warning" });
-                expect(worker.value?.error.length).toEqual(1);
+                    expect(worker.exitCode).toEqual(20);
+                    expect(worker.value?.data).toEqual({ inp: true, ret: "warning" });
+                    expect(worker.value?.error.length).toEqual(1);
 
-                expect(worker.value?.error[0].code).toEqual("5000");
-                expect(worker.value?.error[0].message).toEqual("this is a warning");
-                expect(worker.error).toEqual("");
+                    expect(worker.value?.error[0].code).toEqual("5000");
+                    expect(worker.value?.error[0].message).toEqual("this is a warning");
+                    expect(worker.error).toEqual("");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error", (done) => {
@@ -73,18 +79,21 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             };
 
             const worker = new JobWorker();
-            worker.run(file, payload).then((value) => {
-                expect(worker.status).toEqual("error");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.status).toEqual("error");
 
-                expect(worker.exitCode).toEqual(1);
-                expect(worker.value?.data).toEqual({ inp: true, ret: "error" });
-                expect(worker.value?.error.length).toEqual(1);
-                expect(worker.value?.error[0].code).toEqual("5000");
-                expect(worker.value?.error[0].message).toEqual("this is a error");
-                expect(worker.error).toEqual("error");
+                    expect(worker.exitCode).toEqual(1);
+                    expect(worker.value?.data).toEqual({ inp: true, ret: "error" });
+                    expect(worker.value?.error.length).toEqual(1);
+                    expect(worker.value?.error[0].code).toEqual("5000");
+                    expect(worker.value?.error[0].message).toEqual("this is a error");
+                    expect(worker.error).toEqual("error");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("run in invalid status throw error", (done) => {
@@ -126,7 +135,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             const worker = new JobWorker();
 
             const runPromise = new Promise<void>((resolve, reject) => {
-                worker.run(file, payload, "id").then((value) => {
+                worker.run(file, payload, "id").then(() => {
                     expect(worker.id).not.toEqual("");
                     expect(worker.executionId).toEqual("id");
                     expect(worker.status).toEqual("done");
@@ -139,18 +148,21 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
                 }, reject);
             });
 
-            runPromise.then(() => {
-                worker.run(file, payload, "id").then(
-                    () => {
-                        done.fail();
-                    },
-                    (error) => {
-                        expect(error.message).toEqual("New job run failed, Preious job is in running or has fatal error.");
-                        expect(error.code).toEqual(SERVICE_ERROR_CODES.PRE_JOB_RUNNING);
-                        done();
-                    },
-                );
-            }, done.fail);
+            runPromise.then(
+                () => {
+                    worker.run(file, payload, "id").then(
+                        () => {
+                            done.fail();
+                        },
+                        (error) => {
+                            expect(error.message).toEqual("New job run failed, Preious job is in running or has fatal error.");
+                            expect(error.code).toEqual(SERVICE_ERROR_CODES.PRE_JOB_RUNNING);
+                            done();
+                        },
+                    );
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -170,15 +182,18 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 throw "error-test";
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("error-test");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("error-test");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error with exception", (done) => {
@@ -196,15 +211,18 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 throw "error-test";
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("error-test");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("error-test");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error with exception - worker error", (done) => {
@@ -222,19 +240,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 worker["_worker"] = {
                     threadId: 100,
-                    terminate: () => Promise.resolve(0),
+                    terminate: async () => Promise.resolve(0),
                 } as any;
                 throw "error-test";
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("error-test");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("error-test");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error with exception - worker error in exception type", (done) => {
@@ -252,19 +273,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 worker["_worker"] = {
                     threadId: 100,
-                    terminate: () => Promise.resolve(0),
+                    terminate: async () => Promise.resolve(0),
                 } as any;
                 throw new Error("error-test");
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("error-test");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("error-test");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error with exception - worker error undefined error", (done) => {
@@ -282,19 +306,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 worker["_worker"] = {
                     threadId: 100,
-                    terminate: () => Promise.resolve(0),
+                    terminate: async () => Promise.resolve(0),
                 } as any;
                 throw new Error();
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("error with exception - worker error - terminate cause an error", (done) => {
@@ -312,19 +339,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jest.spyOn(TYPES, "guid").mockImplementation(() => {
                 worker["_worker"] = {
                     threadId: 100,
-                    terminate: () => Promise.reject(),
+                    terminate: async () => Promise.reject(),
                 } as any;
                 throw "error-test";
             });
-            worker.run(file, payload).then(() => {
-                expect(worker.id).not.toEqual("");
-                expect(worker.status).toEqual("invalid");
+            worker.run(file, payload).then(
+                () => {
+                    expect(worker.id).not.toEqual("");
+                    expect(worker.status).toEqual("invalid");
 
-                expect(worker.exitCode).toEqual(40000);
-                expect(worker.error).toEqual("error-test");
+                    expect(worker.exitCode).toEqual(40000);
+                    expect(worker.error).toEqual("error-test");
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -340,26 +370,29 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
         };
 
         const worker = new JobWorker();
-        worker.run(file, payload).then((value) => {
-            expect(worker.status).toEqual("error");
+        worker.run(file, payload).then(
+            () => {
+                expect(worker.status).toEqual("error");
 
-            expect(worker.exitCode).toEqual(1);
-            expect(worker.value?.data).toEqual({ inp: true, ret: "error" });
-            expect(worker.value?.error.length).toEqual(1);
-            expect(worker.value?.error[0].code).toEqual("5000");
-            expect(worker.value?.error[0].message).toEqual("this is a error");
-            expect(worker.error).toEqual("error");
+                expect(worker.exitCode).toEqual(1);
+                expect(worker.value?.data).toEqual({ inp: true, ret: "error" });
+                expect(worker.value?.error.length).toEqual(1);
+                expect(worker.value?.error[0].code).toEqual("5000");
+                expect(worker.value?.error[0].message).toEqual("this is a error");
+                expect(worker.error).toEqual("error");
 
-            worker.reset();
+                worker.reset();
 
-            expect(worker.status).toEqual("active");
-            expect(worker.executionId).toEqual("");
-            expect(worker.error).toEqual("");
-            expect(worker.exitCode).toEqual(0);
-            expect(worker.value).toBeNull();
+                expect(worker.status).toEqual("active");
+                expect(worker.executionId).toEqual("");
+                expect(worker.error).toEqual("");
+                expect(worker.exitCode).toEqual(0);
+                expect(worker.value).toBeNull();
 
-            done();
-        }, done.fail);
+                done();
+            },
+            () => done.fail(),
+        );
     });
 
     describe("terminate", () => {
@@ -367,31 +400,31 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             const worker = new JobWorker();
             worker["_worker"] = {
                 threadId: 100,
-                terminate: () => Promise.resolve(10),
+                terminate: async () => Promise.resolve(10),
             } as any;
 
-            worker.terminate().then(done, done.fail);
+            worker.terminate().then(done, () => done.fail());
         });
 
         it("worker inited - failed", (done) => {
             const worker = new JobWorker();
             worker["_worker"] = {
                 threadId: 100,
-                terminate: () => Promise.reject(10),
+                terminate: async () => Promise.reject(10),
             } as any;
 
-            worker.terminate().then(done, done.fail);
+            worker.terminate().then(done, () => done.fail());
         });
 
         it("worker not inited", (done) => {
             const worker = new JobWorker();
-            worker.terminate().then(done, done.fail);
+            worker.terminate().then(done, () => done.fail());
         });
     });
 
     describe("run - console", () => {
         it("success", (done) => {
-            jest.spyOn(TIANYU.logger, "debug").mockImplementation(() => Promise.resolve());
+            const DEBUG_SPY = jest.spyOn(TIANYU.logger, "debug").mockImplementation(async () => Promise.resolve());
 
             const file = path.resolve(PROJECT_ROOT_PATH, "test/content/job/console.js");
             const payload: JobWorkerPayload = {
@@ -404,11 +437,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             };
 
             const worker = new JobWorker();
-            worker.run(file, payload, "id").then(() => {
-                expect(TIANYU.logger.debug).toHaveBeenCalledTimes(2);
+            worker.run(file, payload, "id").then(
+                () => {
+                    expect(DEBUG_SPY).toHaveBeenCalledTimes(2);
 
-                done();
-            }, done.fail);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 });

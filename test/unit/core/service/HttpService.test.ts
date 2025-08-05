@@ -5,13 +5,13 @@ import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { createContributor } from "#core/InfraLoader";
 import { HttpService } from "#core/service/HttpService";
 import {
-    RequestPayloadData,
-    NetworkServiceResponseData,
-    HTTP_STATUS_CODE,
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
-    REQUEST_HANDLER_MODULE_ID,
+    HTTP_STATUS_CODE,
+    NetworkServiceResponseData,
     PathEntry,
+    REQUEST_HANDLER_MODULE_ID,
+    RequestPayloadData,
 } from "#interface";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
@@ -59,10 +59,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         );
 
         process.on("unhandledRejection", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
         process.on("uncaughtException", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
@@ -110,16 +112,19 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             });
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
-            client.get().then((value) => {
-                const res = JSON.parse(value);
-                expect(res.param["TEST"]).toEqual(["true"]);
-                expect(DISPATCH_SPY).toHaveBeenCalled();
-                done();
-            }, done.fail);
+            client.get().then(
+                (value) => {
+                    const res = JSON.parse(value);
+                    expect(res.param["TEST"]).toEqual(["true"]);
+                    expect(DISPATCH_SPY).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
         }, 50000);
 
         it("get success - in string response", (done) => {
-            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
                 return {
                     statusCode: HTTP_STATUS_CODE.OK,
                     headers: {},
@@ -128,11 +133,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             });
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
-            client.get().then((value) => {
-                expect(value).toEqual("response");
-                expect(DISPATCH_SPY).toHaveBeenCalled();
-                done();
-            }, done.fail);
+            client.get().then(
+                (value) => {
+                    expect(value).toEqual("response");
+                    expect(DISPATCH_SPY).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
         }, 50000);
 
         it("path not valid", (done) => {
@@ -150,7 +158,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         }, 50000);
 
         it("execution error", (done) => {
-            DISPATCH_SPY.mockImplementation(() => Promise.reject());
+            DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.get().then(
@@ -197,16 +205,19 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             });
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
-            client.post({ data: "test-data" }).then((value) => {
-                const res = JSON.parse(value);
-                expect(res.param["TEST"]).toEqual(["true"]);
-                expect(DISPATCH_SPY).toHaveBeenCalled();
-                done();
-            }, done.fail);
+            client.post({ data: "test-data" }).then(
+                (value) => {
+                    const res = JSON.parse(value);
+                    expect(res.param["TEST"]).toEqual(["true"]);
+                    expect(DISPATCH_SPY).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
         }, 50000);
 
         it("success - in string response", (done) => {
-            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
                 return {
                     statusCode: HTTP_STATUS_CODE.OK,
                     headers: {},
@@ -215,11 +226,35 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
             });
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
-            client.post({ data: "test-data" }).then((value) => {
-                expect(value).toEqual("response");
-                expect(DISPATCH_SPY).toHaveBeenCalled();
-                done();
-            }, done.fail);
+            client.post({ data: "test-data" }).then(
+                (value) => {
+                    expect(value).toEqual("response");
+                    expect(DISPATCH_SPY).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
+        }, 50000);
+
+        it("success - in binary response", (done) => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
+                return {
+                    statusCode: HTTP_STATUS_CODE.OK,
+                    headers: {},
+                    body: Buffer.from("test binary").toString("base64"),
+                    binary: true,
+                };
+            });
+
+            const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
+            client.post({ data: "test-data" }).then(
+                (value) => {
+                    expect(value).toEqual("test binary");
+                    expect(DISPATCH_SPY).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
         }, 50000);
 
         it("path not valid", (done) => {
@@ -237,7 +272,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         }, 50000);
 
         it("execution error", (done) => {
-            DISPATCH_SPY.mockImplementation(() => Promise.reject());
+            DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
             const client = new HttpClient(`http://localhost:${SERVICE_PORT}/test?TEST=true`);
             client.post({ data: "test-data" }).then(
@@ -332,10 +367,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
 
     describe("edge case", () => {
         it("convertRequestItems - empty requires", () => {
-            jest.spyOn(contributor, "findModule");
+            const FINDMOD_SPY = jest.spyOn(contributor, "findModule");
 
             expect(SERVICE.convertRequestItems([])).toEqual([]);
-            expect(contributor.findModule).not.toHaveBeenCalled();
+            expect(FINDMOD_SPY).not.toHaveBeenCalled();
         });
 
         it("getRest - not enable advanced rest - get rest from default", () => {
@@ -377,7 +412,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
         });
 
         it("service error", () => {
-            jest.spyOn(TIANYU.logger, "error").mockImplementation(() => Promise.resolve());
+            const ERROR_SPY = jest.spyOn(TIANYU.logger, "error").mockImplementation(async () => Promise.resolve());
 
             const server = new HttpService(
                 {
@@ -389,7 +424,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () 
 
             server["onError"](new Error("test-error"));
 
-            expect(TIANYU.logger.error).toHaveBeenCalled();
+            expect(ERROR_SPY).toHaveBeenCalled();
         });
     });
 });

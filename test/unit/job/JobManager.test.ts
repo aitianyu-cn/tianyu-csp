@@ -10,6 +10,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
     const contributor = createContributor();
     const JOB_MGR_ID = guid();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let jobMgr: any = null;
 
     beforeAll(() => {
@@ -26,17 +27,15 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             return;
         }
 
-        let error = 0;
-        const jobCreater = (id: string) => {
+        const jobCreater = async (id: string) => {
             return dispatcher({
                 script: file,
                 payload: { module: "", method: "", package: "", options: { workerData: { id: id, time: 500 } } },
             }).then(
-                (value) => {
+                async (value) => {
                     return Promise.resolve(value?.value === id);
                 },
-                () => {
-                    error++;
+                async () => {
                     return Promise.resolve(false);
                 },
             );
@@ -47,10 +46,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
             jobPromises.push(jobCreater(id));
         }
 
-        Promise.all(jobPromises).then((status) => {
-            expect(status.includes(false)).toBeFalsy();
-            done();
-        }, done.fail);
+        Promise.all(jobPromises).then(
+            (status) => {
+                expect(status.includes(false)).toBeFalsy();
+                done();
+            },
+            () => done.fail(),
+        );
     }, 30000);
 
     it("run with timeout", (done) => {
@@ -71,9 +73,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
                 package: "",
                 options: { workerData: { id: "", time: 3000 }, overtime: 1000 },
             },
-        }).then((value) => {
-            expect(value.status).toEqual("timeout");
-            done();
-        }, done.fail);
+        }).then(
+            (value) => {
+                expect(value.status).toEqual("timeout");
+                done();
+            },
+            () => done.fail(),
+        );
     }, 30000);
 });

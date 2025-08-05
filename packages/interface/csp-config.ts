@@ -62,6 +62,14 @@ export interface TianyuCSPXcall extends Record<string, MapOfType<ImportPackage> 
     };
 }
 
+export interface TianyuMIMEMap {
+    [key: string]: {
+        content: string;
+        file: string;
+        binary?: boolean;
+    };
+}
+
 /** Tianyu CSP global config type define */
 export interface TianyuCSPConfig {
     /** basic config */
@@ -100,6 +108,10 @@ export interface TianyuCSPConfig {
         fallback?: ImportPackage;
         /** key name map of request default value */
         "request-map"?: DefaultRequestItemsMap;
+        errorpage?: {
+            404?: string;
+        };
+        mime?: TianyuMIMEMap;
     };
     /** external call define */
     xcall?: TianyuCSPXcall;

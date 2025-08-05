@@ -48,6 +48,7 @@ module.exports = {
         "^#module$": "<rootDir>/packages/modules/module-export.ts",
         "^#interface$": "<rootDir>/packages/interface/index.ts",
     },
+    testPathIgnorePatterns: ["<rootDir>/scripts"],
     coveragePathIgnorePatterns: ["<rootDir>/test/"],
     // transformIgnorePatterns: ["<rootDir>/node_modules/$"],
 };

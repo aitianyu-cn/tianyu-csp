@@ -151,9 +151,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
         }, 50000);
 
         afterAll(async () => {
-            HttpServer.close();
+            await HttpServer.close();
             HttpsServer.close();
-            Http2Server.close();
+            await Http2Server.close();
 
             // waiting for server closed
             await TimerTools.sleep(1000);
@@ -231,7 +231,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     };
                 });
 
-                jest.spyOn(TIANYU.logger, "warn");
+                const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
                 TIANYU.import.MODULE.RPC.call(
                     {
@@ -250,7 +250,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                         done.fail();
                     },
                     (reason: OperationError) => {
-                        expect(TIANYU.logger.warn).toHaveBeenCalled();
+                        expect(WARN_SPY).toHaveBeenCalled();
                         expect(reason.code).toEqual(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR);
                         done();
                     },
@@ -291,7 +291,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     res.end();
                 });
 
-                jest.spyOn(TIANYU.logger, "warn");
+                const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
                 TIANYU.import.MODULE.RPC.call(
                     {
@@ -310,7 +310,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                         done.fail();
                     },
                     (reason: OperationError) => {
-                        expect(TIANYU.logger.warn).toHaveBeenCalled();
+                        expect(WARN_SPY).toHaveBeenCalled();
                         expect(reason.code).toEqual(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR);
                         done();
                     },
@@ -375,7 +375,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
         });
 
         it("transformer failed", async () => {
-            jest.spyOn(TIANYU.logger, "warn");
+            const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
             const res = await TIANYU.import.MODULE.RPC.call(
                 {
@@ -394,7 +394,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
             );
 
             expect(res).toBeNull();
-            expect(TIANYU.logger.warn).toHaveBeenCalled();
+            expect(WARN_SPY).toHaveBeenCalled();
         });
     });
 });

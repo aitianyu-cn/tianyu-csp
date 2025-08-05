@@ -111,6 +111,7 @@ export class DispatchHandler {
                         : value?.statusCode || HTTP_STATUS_CODE.OK,
                 headers: value?.headers || {},
                 body: value?.body || "",
+                binary: value?.binary,
             };
             return result;
         }

@@ -73,23 +73,26 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.io.file.FileStrea
             it("no saved test", (done) => {
                 const fileOp = new FileStreamOperator(file_package, "rw_create");
 
-                fileOp.open().then(async () => {
-                    expect(fileOp.size).toEqual(0);
+                fileOp.open().then(
+                    async () => {
+                        expect(fileOp.size).toEqual(0);
 
-                    await fileOp.write(Buffer.from("1"));
-                    expect(fileOp.modified).toBeTruthy();
-                    expect(fileOp.position).toEqual(1);
+                        await fileOp.write(Buffer.from("1"));
+                        expect(fileOp.modified).toBeTruthy();
+                        expect(fileOp.position).toEqual(1);
 
-                    fileOp.close(true).then(
-                        () => {
-                            done.fail();
-                        },
-                        async () => {
-                            await fileOp.close();
-                            done();
-                        },
-                    );
-                }, done.fail);
+                        fileOp.close(true).then(
+                            () => {
+                                done.fail();
+                            },
+                            async () => {
+                                await fileOp.close();
+                                done();
+                            },
+                        );
+                    },
+                    () => done.fail(),
+                );
             });
         });
 

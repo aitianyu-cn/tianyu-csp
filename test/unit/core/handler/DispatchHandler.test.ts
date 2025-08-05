@@ -64,7 +64,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return;
             }
 
-            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, async () => {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 1000,
                     value: undefined,
@@ -98,7 +98,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return;
             }
 
-            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, async () => {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 0,
                     value: undefined,
@@ -108,10 +108,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return Promise.resolve(result);
             });
 
-            dispatcher(payload).then((value) => {
-                expect(value.statusCode).toEqual(HTTP_STATUS_CODE.NO_CONTENT);
-                done();
-            }, done.fail);
+            dispatcher(payload).then(
+                (value) => {
+                    expect(value.statusCode).toEqual(HTTP_STATUS_CODE.NO_CONTENT);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("execute success - ok", (done) => {
@@ -121,7 +124,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return;
             }
 
-            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, async () => {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 0,
                     value: { statusCode: 0 },
@@ -131,10 +134,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return Promise.resolve(result);
             });
 
-            dispatcher(payload).then((value) => {
-                expect(value.statusCode).toEqual(HTTP_STATUS_CODE.OK);
-                done();
-            }, done.fail);
+            dispatcher(payload).then(
+                (value) => {
+                    expect(value.statusCode).toEqual(HTTP_STATUS_CODE.OK);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("execute success - exit code", (done) => {
@@ -144,7 +150,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return;
             }
 
-            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, async () => {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 100,
                     value: undefined,
@@ -154,10 +160,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return Promise.resolve(result);
             });
 
-            dispatcher(payload).then((value) => {
-                expect(value.statusCode).toEqual(100);
-                done();
-            }, done.fail);
+            dispatcher(payload).then(
+                (value) => {
+                    expect(value.statusCode).toEqual(100);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("execute success - status code", (done) => {
@@ -167,7 +176,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return;
             }
 
-            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, function () {
+            contributor.exportModule("job-manager.dispatch", REQ_JOB_POOL, async () => {
                 const result: JobWorkerExecutionResult = {
                     exitCode: 100,
                     value: { statusCode: 100 },
@@ -177,10 +186,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 return Promise.resolve(result);
             });
 
-            dispatcher(payload).then((value) => {
-                expect(value.statusCode).toEqual(100);
-                done();
-            }, done.fail);
+            dispatcher(payload).then(
+                (value) => {
+                    expect(value.statusCode).toEqual(100);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -191,7 +203,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
             return;
         }
 
-        contributor.exportModule("job-manager.dispatch", SEC_JOB_POOL, function () {
+        contributor.exportModule("job-manager.dispatch", SEC_JOB_POOL, async () => {
             const result: JobWorkerExecutionResult = {
                 exitCode: 1000,
                 value: undefined,
@@ -206,23 +218,26 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
             return Promise.resolve(result);
         });
 
-        dispatcher({} as any).then((value) => {
-            expect(value.status).toEqual("done");
-            expect(value.error[0].code).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
-            expect(value.error[0].message).toEqual("error");
-            done();
-        }, done.fail);
+        dispatcher({} as any).then(
+            (value) => {
+                expect(value.status).toEqual("done");
+                expect(value.error[0].code).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
+                expect(value.error[0].message).toEqual("error");
+                done();
+            },
+            () => done.fail(),
+        );
     });
 
     it("initialize", () => {
-        const contributor = createContributor();
-        const handler = new DispatchHandler(undefined, contributor);
+        const contributor_inner = createContributor();
+        const handler = new DispatchHandler(undefined, contributor_inner);
         handler.initialize();
 
         expect(handler["_requestJobPool"]).not.toEqual("");
         expect(handler["_scheduleJobPool"]).not.toEqual("");
 
-        expect(contributor.findModule("job-manager.dispatch", handler["_requestJobPool"])).toBeDefined();
-        expect(contributor.findModule("job-manager.dispatch", handler["_scheduleJobPool"])).toBeDefined();
+        expect(contributor_inner.findModule("job-manager.dispatch", handler["_requestJobPool"])).toBeDefined();
+        expect(contributor_inner.findModule("job-manager.dispatch", handler["_scheduleJobPool"])).toBeDefined();
     });
 });

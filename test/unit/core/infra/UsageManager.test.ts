@@ -7,7 +7,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.UsageManager", () =
     const usageMgr = new UsageManager();
 
     it("record with not message", async () => {
-        jest.spyOn(XCALL, "doXcall").mockImplementation(() => Promise.resolve());
+        jest.spyOn(XCALL, "doXcall").mockImplementation(async () => Promise.resolve());
 
         await usageMgr.record("test", "module", "read");
 
@@ -15,7 +15,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.UsageManager", () =
     });
 
     it("record with message", async () => {
-        jest.spyOn(XCALL, "doXcall").mockImplementation(() => Promise.resolve());
+        jest.spyOn(XCALL, "doXcall").mockImplementation(async () => Promise.resolve());
 
         await usageMgr.record("test", "module", "read", "message");
 

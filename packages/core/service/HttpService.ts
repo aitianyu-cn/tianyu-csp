@@ -97,14 +97,9 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                 response.headers[key] && res.setHeader(key, response.headers[key]);
             }
 
-            if (response.binary) {
-                res.write(Buffer.from(response.body));
-                res.end();
-                return;
-            }
             res.end(
-                response.binary
-                    ? response.body
+                response.binary && response.body
+                    ? Buffer.from(response.body, "base64")
                     : this.encodeResponse(
                           response.body
                               ? typeof response.body === "string"

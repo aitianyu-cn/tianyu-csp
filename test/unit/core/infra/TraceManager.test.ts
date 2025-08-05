@@ -14,7 +14,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.TraceManager", () =
 
     describe("trace", () => {
         beforeEach(() => {
-            jest.spyOn(XCALL, "doXcall").mockImplementation(() => Promise.resolve());
+            jest.spyOn(XCALL, "doXcall").mockImplementation(async () => Promise.resolve());
         });
 
         it("no details and area", async () => {
@@ -30,10 +30,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.TraceManager", () =
         });
 
         it("substring", (done) => {
-            traceMgr.trace("this is a test message which the string length over 20.").then(() => {
-                expect(XCALL.doXcall).toHaveBeenCalled();
-                done();
-            }, done.fail);
+            traceMgr.trace("this is a test message which the string length over 20.").then(
+                () => {
+                    expect(XCALL.doXcall).toHaveBeenCalled();
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 });

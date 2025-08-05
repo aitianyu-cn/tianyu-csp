@@ -25,6 +25,20 @@ module.exports = {
             session: "SESSION_ID",
         },
         loader: "scripts/data",
+        errorpage: {
+            404: "https://localhost:4000/404{0}{1}",
+        },
+        mime: {
+            txt: {
+                content: "text",
+                file: "text",
+            },
+            hex: {
+                content: "text",
+                file: "hex",
+                binary: true,
+            },
+        },
     },
     xcall: {
         logger: { log: { package: "db", module: "runtime", method: "log" } },

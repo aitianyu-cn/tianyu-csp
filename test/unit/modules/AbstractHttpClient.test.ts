@@ -3,7 +3,7 @@
 import { AbstractHttpClient } from "packages/modules/AbstractHttpClient";
 
 class ClientImpl extends AbstractHttpClient {
-    public send(): Promise<void> {
+    public async send(): Promise<void> {
         throw new Error("not implentation");
     }
 }

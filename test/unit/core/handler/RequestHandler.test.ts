@@ -53,7 +53,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
             contributor.exportModule(
                 "dispatch-handler.network-dispatcher",
                 DISPATCH_HANDLER_MODULE_ID,
-                function (): Promise<NetworkServiceResponseData> {
+                async (): Promise<NetworkServiceResponseData> => {
                     const result: NetworkServiceResponseData = {
                         statusCode: HTTP_STATUS_CODE.OK,
                         headers: {},
@@ -63,7 +63,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
                 },
             );
 
-            new Promise<void>((resolve) => {
+            void new Promise<void>((resolve) => {
                 const dispatcher = contributor.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
                 expect(dispatcher).toBeDefined();
 
@@ -75,7 +75,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
                             expect(result.body).toEqual({ data: "test" });
                             resolve();
                         },
-                        (error) => {
+                        () => {
                             expect(false).toBeTruthy();
                         },
                     );

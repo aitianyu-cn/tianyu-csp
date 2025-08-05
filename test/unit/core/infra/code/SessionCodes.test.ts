@@ -24,11 +24,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
         it("query return null", (done) => {
             XCALL_SPYON.mockReturnValue(Promise.resolve(null));
 
-            handleSession(SESSION_ID).then(done.fail, (error) => {
-                expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID);
-                expect(error.message).toEqual("Session not valid.");
-                done();
-            });
+            handleSession(SESSION_ID).then(
+                () => done.fail(),
+                (error) => {
+                    expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID);
+                    expect(error.message).toEqual("Session not valid.");
+                    done();
+                },
+            );
         });
 
         it("session timeout", (done) => {
@@ -39,11 +42,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 }),
             );
 
-            handleSession(SESSION_ID).then(done.fail, (error) => {
-                expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME);
-                expect(error.message).toEqual("Session not valid.");
-                done();
-            });
+            handleSession(SESSION_ID).then(
+                () => done.fail(),
+                (error) => {
+                    expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME);
+                    expect(error.message).toEqual("Session not valid.");
+                    done();
+                },
+            );
         });
 
         it("session success", (done) => {
@@ -54,10 +60,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 }),
             );
 
-            handleSession(SESSION_ID).then((user) => {
-                expect(user).toEqual(USER_ID);
-                done();
-            }, done.fail);
+            handleSession(SESSION_ID).then(
+                (user) => {
+                    expect(user).toEqual(USER_ID);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -123,11 +132,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 }),
             );
 
-            handleSessionUser(USER_ID).then((userInfo) => {
-                expect(userInfo.name).toEqual("Test User");
-                expect(userInfo.license).toEqual(LICENSE_ID);
-                done();
-            }, done.fail);
+            handleSessionUser(USER_ID).then(
+                (userInfo) => {
+                    expect(userInfo.name).toEqual("Test User");
+                    expect(userInfo.license).toEqual(LICENSE_ID);
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -150,10 +162,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
         it("success", (done) => {
             XCALL_SPYON.mockReturnValue(Promise.resolve({ admin: true }));
 
-            handleSessionIsAdminMode(LICENSE_ID).then((adminInfo) => {
-                expect(adminInfo.admin).toBeTruthy();
-                done();
-            }, done.fail);
+            handleSessionIsAdminMode(LICENSE_ID).then(
+                (adminInfo) => {
+                    expect(adminInfo.admin).toBeTruthy();
+                    done();
+                },
+                () => done.fail(),
+            );
         });
     });
 
@@ -170,55 +185,58 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
             ]),
         );
 
-        handleSessionPrivileges(LICENSE_ID).then((result) => {
-            expect(result["p1"]).toBeDefined();
-            expect(result["p2"]).toBeDefined();
-            expect(result["p3"]).toBeDefined();
-            expect(result["p4"]).toBeDefined();
+        handleSessionPrivileges(LICENSE_ID).then(
+            (result) => {
+                expect(result["p1"]).toBeDefined();
+                expect(result["p2"]).toBeDefined();
+                expect(result["p3"]).toBeDefined();
+                expect(result["p4"]).toBeDefined();
 
-            expect(result["p1"].read).toEqual("allow");
-            expect(result["p1"].write).toEqual("allow");
-            expect(result["p1"].delete).toEqual("allow");
-            expect(result["p1"].change).toEqual("allow");
-            expect(result["p1"].execute).toEqual("allow");
+                expect(result["p1"].read).toEqual("allow");
+                expect(result["p1"].write).toEqual("allow");
+                expect(result["p1"].delete).toEqual("allow");
+                expect(result["p1"].change).toEqual("allow");
+                expect(result["p1"].execute).toEqual("allow");
 
-            expect(result["p7"].read).toEqual("avoid");
-            expect(result["p7"].write).toEqual("avoid");
-            expect(result["p7"].delete).toEqual("avoid");
-            expect(result["p7"].change).toEqual("avoid");
-            expect(result["p7"].execute).toEqual("avoid");
+                expect(result["p7"].read).toEqual("avoid");
+                expect(result["p7"].write).toEqual("avoid");
+                expect(result["p7"].delete).toEqual("avoid");
+                expect(result["p7"].change).toEqual("avoid");
+                expect(result["p7"].execute).toEqual("avoid");
 
-            expect(result["p2"].read).toEqual("non");
-            expect(result["p2"].write).toEqual("allow");
-            expect(result["p2"].delete).toEqual("allow");
-            expect(result["p2"].change).toEqual("allow");
-            expect(result["p2"].execute).toEqual("allow");
+                expect(result["p2"].read).toEqual("non");
+                expect(result["p2"].write).toEqual("allow");
+                expect(result["p2"].delete).toEqual("allow");
+                expect(result["p2"].change).toEqual("allow");
+                expect(result["p2"].execute).toEqual("allow");
 
-            expect(result["p3"].read).toEqual("non");
-            expect(result["p3"].write).toEqual("non");
-            expect(result["p3"].delete).toEqual("allow");
-            expect(result["p3"].change).toEqual("allow");
-            expect(result["p3"].execute).toEqual("allow");
+                expect(result["p3"].read).toEqual("non");
+                expect(result["p3"].write).toEqual("non");
+                expect(result["p3"].delete).toEqual("allow");
+                expect(result["p3"].change).toEqual("allow");
+                expect(result["p3"].execute).toEqual("allow");
 
-            expect(result["p4"].read).toEqual("non");
-            expect(result["p4"].write).toEqual("non");
-            expect(result["p4"].delete).toEqual("non");
-            expect(result["p4"].change).toEqual("allow");
-            expect(result["p4"].execute).toEqual("allow");
+                expect(result["p4"].read).toEqual("non");
+                expect(result["p4"].write).toEqual("non");
+                expect(result["p4"].delete).toEqual("non");
+                expect(result["p4"].change).toEqual("allow");
+                expect(result["p4"].execute).toEqual("allow");
 
-            expect(result["p5"].read).toEqual("non");
-            expect(result["p5"].write).toEqual("non");
-            expect(result["p5"].delete).toEqual("non");
-            expect(result["p5"].change).toEqual("non");
-            expect(result["p5"].execute).toEqual("allow");
+                expect(result["p5"].read).toEqual("non");
+                expect(result["p5"].write).toEqual("non");
+                expect(result["p5"].delete).toEqual("non");
+                expect(result["p5"].change).toEqual("non");
+                expect(result["p5"].execute).toEqual("allow");
 
-            expect(result["p6"].read).toEqual("non");
-            expect(result["p6"].write).toEqual("non");
-            expect(result["p6"].delete).toEqual("non");
-            expect(result["p6"].change).toEqual("non");
-            expect(result["p6"].execute).toEqual("non");
+                expect(result["p6"].read).toEqual("non");
+                expect(result["p6"].write).toEqual("non");
+                expect(result["p6"].delete).toEqual("non");
+                expect(result["p6"].change).toEqual("non");
+                expect(result["p6"].execute).toEqual("non");
 
-            done();
-        }, done.fail);
+                done();
+            },
+            () => done.fail(),
+        );
     });
 });

@@ -9,7 +9,7 @@
 
 import fs from "fs";
 import path from "path";
-import { guid, parseAreaString } from "@aitianyu.cn/types";
+import { guid, MapOfString, parseAreaString } from "@aitianyu.cn/types";
 import { TianyuCSPAuditConfig, TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
 
 /** tianyu-csp node_modules root path */
@@ -88,3 +88,33 @@ export const AUDIT_CONFIGURATION: TianyuCSPAuditConfig = {
     buffer: audit_configuration_raw?.buffer || 10,
     plugin: audit_configuration_raw?.plugin || [],
 };
+
+export const MIME_FILE_TYPE_MAP: MapOfString = {
+    css: "css",
+    js: "javascript",
+    ico: "x-icon",
+};
+
+export const MIME_FILE_CONTENT_MAP: MapOfString = {
+    css: "text",
+    js: "application",
+    gif: "image",
+    png: "image",
+    jpg: "image",
+    ico: "image",
+};
+
+export const MIME_FILE_BINARY_LIST: string[] = ["gif", "png", "jpg", "ico"];
+
+if (REST_CONFIG?.mime) {
+    for (const key of Object.keys(REST_CONFIG?.mime)) {
+        const map = REST_CONFIG.mime[key];
+
+        const mapKey = key.toLowerCase();
+        MIME_FILE_TYPE_MAP[mapKey] = map.file;
+        MIME_FILE_CONTENT_MAP[mapKey] = map.content;
+        if (map.binary) {
+            MIME_FILE_BINARY_LIST.push(mapKey);
+        }
+    }
+}

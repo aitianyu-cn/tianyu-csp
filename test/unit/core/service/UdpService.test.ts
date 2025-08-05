@@ -6,7 +6,7 @@ import { UdpClient } from "#module";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () => {
     const PORT = 60000;
-    const messageHandler = (remote: ISocketAddress, message: Buffer) => {
+    const messageHandler = (_remote: ISocketAddress, message: Buffer) => {
         const src = message.toString("utf-8");
         if (src === "Hello") {
             return Buffer.from("Hello World!");
@@ -83,13 +83,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
     });
 
     it("server has error", () => {
-        jest.spyOn(SERVICE._service, "close").mockImplementationOnce(() => {});
-        jest.spyOn(TIANYU.logger, "error");
+        jest.spyOn(SERVICE._service, "close").mockImplementationOnce(() => undefined);
+        const ERROR_SPY = jest.spyOn(TIANYU.logger, "error");
 
         SERVICE._service.emit("error", new Error());
 
         expect(SERVICE._service.close).toHaveBeenCalled();
-        expect(TIANYU.logger.error).toHaveBeenCalled();
+        expect(ERROR_SPY).toHaveBeenCalled();
     });
 
     it("test - IPv6 service", async () => {
@@ -119,7 +119,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () =
         expect((response as UdpClientResponse).data.toString("utf-8")).toEqual("Hello World!");
 
         await new Promise<void>((resolve) => {
-            service.close(() => {
+            void service.close(() => {
                 resolve();
             });
         });

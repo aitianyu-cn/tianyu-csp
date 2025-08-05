@@ -1,7 +1,7 @@
 /** @format */
 
 import { createServer } from "@aitianyu.cn/server-base";
-import { IncomingMessage, ServerResponse, Server } from "http";
+import { IncomingMessage, Server, ServerResponse } from "http";
 import { TimerTools } from "test/tools/TimerTools";
 import { gzipSync } from "zlib";
 
@@ -182,7 +182,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
             () => {
                 done.fail();
             },
-            (error) => {
+            () => {
                 expect(handler.get).not.toHaveBeenCalled();
                 done();
             },

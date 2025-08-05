@@ -4,10 +4,10 @@ import { AbstractSocketService } from "#core/service/AbstractSocketService";
 import { CallbackAction } from "@aitianyu.cn/types";
 
 class SocketServiceImpl extends AbstractSocketService {
-    public close(callback?: (err?: Error) => void): Promise<void> {
+    public async close(_callback?: (err?: Error) => void): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    public listen(callback?: CallbackAction): void {
+    public listen(_callback?: CallbackAction): void {
         throw new Error("Method not implemented.");
     }
 }

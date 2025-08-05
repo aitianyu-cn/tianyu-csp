@@ -12,7 +12,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
     it("handleAuditRecord", async () => {
         jest.spyOn(AuditCode, "audit4HTTP");
         jest.spyOn(AuditCode, "audit4UDP");
-        jest.spyOn(AuditCode, "audit4TCP").mockImplementation(() => Promise.resolve());
+        jest.spyOn(AuditCode, "audit4TCP").mockImplementation(async () => Promise.resolve());
 
         await AuditCode.handleAuditRecord([]);
     });
@@ -41,7 +41,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
             address: "127.0.0.1",
             port: 514,
         };
-        AuditCode.audit4UDP(remote, "IPv4", [
+        void AuditCode.audit4UDP(remote, "IPv4", [
             {
                 level: "DEBUG",
                 timestamp: "111",
@@ -53,7 +53,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
 
         await received;
         await new Promise<void>((resolve) => {
-            service.close(() => {
+            void service.close(() => {
                 setTimeout(() => {
                     resolve();
                 }, 1000);
@@ -86,7 +86,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
                 address: "127.0.0.1",
                 port: 514,
             };
-            AuditCode.audit4TCP(remote, "IPv4", [
+            void AuditCode.audit4TCP(remote, "IPv4", [
                 {
                     level: "DEBUG",
                     timestamp: "222",
@@ -98,7 +98,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
 
             await received;
             await new Promise<void>((resolve) => {
-                service.close(() => {
+                void service.close(() => {
                     setTimeout(() => {
                         resolve();
                     }, 1000);
@@ -130,7 +130,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
                 address: "127.0.0.1",
                 port: 514,
             };
-            AuditCode.audit4TCP(remote, "IPv4", [
+            void AuditCode.audit4TCP(remote, "IPv4", [
                 {
                     level: "DEBUG",
                     timestamp: "222",
@@ -142,7 +142,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
 
             await received;
             await new Promise<void>((resolve) => {
-                service.close(() => {
+                void service.close(() => {
                     setTimeout(() => {
                         resolve();
                     }, 1000);
@@ -190,7 +190,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
             address: "127.0.0.1",
             port: 514,
         };
-        AuditCode.audit4HTTP(remote, "/", {}, "http", [
+        void AuditCode.audit4HTTP(remote, "/", {}, "http", [
             {
                 level: "DEBUG",
                 timestamp: "111",

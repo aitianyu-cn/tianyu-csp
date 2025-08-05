@@ -63,9 +63,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.TcpService", () =
     });
 
     it("service error", async () => {
-        jest.spyOn(TIANYU.logger, "error");
+        const ERROR_SPY = jest.spyOn(TIANYU.logger, "error");
         SERVICE._service.emit("error", new Error());
-        expect(TIANYU.logger.error).toHaveBeenCalled();
+        expect(ERROR_SPY).toHaveBeenCalled();
     });
 
     it("duplicate closing not cause error", async () => {

@@ -7,11 +7,11 @@ import { Http2Service } from "#core/service/Http2Service";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
+    HTTP_STATUS_CODE,
     NetworkServiceResponseData,
     PathEntry,
-    RequestPayloadData,
-    HTTP_STATUS_CODE,
     REQUEST_HANDLER_MODULE_ID,
+    RequestPayloadData,
 } from "#interface";
 import { readFileSync } from "fs";
 import path from "path";
@@ -64,10 +64,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         );
 
         process.on("unhandledRejection", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
         process.on("uncaughtException", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
@@ -131,7 +133,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
 
         it("get success - in string response", async () => {
-            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
                 return {
                     statusCode: HTTP_STATUS_CODE.OK,
                     headers: {},
@@ -150,6 +152,27 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             expect(DISPATCH_SPY).toHaveBeenCalled();
         }, 50000);
 
+        it("get success - in binary response", async () => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
+                return {
+                    statusCode: HTTP_STATUS_CODE.OK,
+                    headers: {},
+                    body: Buffer.from("test binary").toString("base64"),
+                    binary: true,
+                };
+            });
+
+            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            client.setParameter({ TEST: ["true"] });
+            client.setPort(SERVICE_PORT);
+            client.setOption({ rejectUnauthorized: false });
+
+            await client.send();
+
+            expect(client.raw).toEqual("test binary");
+            expect(DISPATCH_SPY).toHaveBeenCalled();
+        }, 50000);
+
         it("path not valid", async () => {
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test_not_valid", "GET");
             client.setParameter({ TEST: ["true"] });
@@ -163,7 +186,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
 
         it("execution error", async () => {
-            DISPATCH_SPY.mockImplementation(() => Promise.reject());
+            DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
@@ -220,7 +243,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
 
         it("success - in string response", async () => {
-            DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
+            DISPATCH_SPY.mockImplementation(async (): Promise<NetworkServiceResponseData> => {
                 return {
                     statusCode: HTTP_STATUS_CODE.OK,
                     headers: {},
@@ -253,7 +276,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
 
         it("execution error", async () => {
-            DISPATCH_SPY.mockImplementation(() => Promise.reject());
+            DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
             const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
             client.setParameter({ TEST: ["true"] });

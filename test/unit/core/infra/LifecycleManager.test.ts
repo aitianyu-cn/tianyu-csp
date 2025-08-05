@@ -5,7 +5,9 @@ import { IReleasable } from "packages/interface/api/lifecycle";
 
 class TestObj implements IReleasable {
     public id: string = "";
-    async close(): Promise<void> {}
+    public async close(): Promise<void> {
+        //
+    }
 }
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", () => {
@@ -26,13 +28,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", 
         ins1.id = "1";
         ins2.id = "1";
 
-        jest.spyOn(ins1, "close");
+        const SPY = jest.spyOn(ins1, "close");
 
         mgr.join(ins1);
         mgr.join(ins2);
 
         expect(Object.keys(mgr["_instances"])).toEqual(["1"]);
-        expect(ins1.close).toHaveBeenCalled();
+        expect(SPY).toHaveBeenCalled();
     });
 
     it("leave", () => {
@@ -53,7 +55,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", 
         const ins1 = new TestObj();
         ins1.id = "1";
 
-        jest.spyOn(ins1, "close");
+        const SPY = jest.spyOn(ins1, "close");
 
         mgr.join(ins1);
 
@@ -62,7 +64,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", 
         await mgr.recycle();
 
         expect(Object.keys(mgr["_instances"])).toEqual([]);
-        expect(ins1.close).toHaveBeenCalled();
+        expect(SPY).toHaveBeenCalled();
     });
 
     it("recycle with error", async () => {
@@ -70,8 +72,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", 
         const ins1 = new TestObj();
         ins1.id = "1";
 
-        jest.spyOn(TIANYU.audit, "error");
-        jest.spyOn(ins1, "close").mockReturnValue(Promise.reject());
+        const ERR_SPY = jest.spyOn(TIANYU.audit, "error");
+        const CLOSE_SPY = jest.spyOn(ins1, "close").mockReturnValue(Promise.reject());
 
         mgr.join(ins1);
 
@@ -80,7 +82,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.LifecycleManager", 
         await mgr.recycle();
 
         expect(Object.keys(mgr["_instances"])).toEqual([]);
-        expect(ins1.close).toHaveBeenCalled();
-        expect(TIANYU.audit.error).toHaveBeenCalled();
+        expect(CLOSE_SPY).toHaveBeenCalled();
+        expect(ERR_SPY).toHaveBeenCalled();
     });
 });

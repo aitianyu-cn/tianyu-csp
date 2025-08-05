@@ -2,7 +2,7 @@
 
 import { readFileSync } from "fs";
 import { IncomingMessage, ServerResponse } from "http";
-import { Server, ServerOptions, createServer } from "https";
+import { createServer, Server, ServerOptions } from "https";
 import path from "path";
 import { TimerTools } from "test/tools/TimerTools";
 import { gzipSync } from "zlib";
@@ -90,11 +90,11 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
             client.setParameter({ p1: ["p1"] });
             client.setRequireAuth(false);
 
-            let path = "";
+            let path2 = "";
             let cookie = "";
 
             lisenter.mockImplementation((req, res) => {
-                path = req.url || "";
+                path2 = req.url || "";
                 cookie = req.headers["cookie"] || "";
 
                 res.statusCode = 200;
@@ -105,7 +105,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
             await client.send();
 
             expect(client.raw).toEqual("success");
-            expect(path).toEqual("/test-path?p1=p1");
+            expect(path2).toEqual("/test-path?p1=p1");
             expect(cookie).toEqual("SESSION=123456789;LANG=zh_CN;");
         });
 

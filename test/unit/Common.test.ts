@@ -5,6 +5,9 @@ import { AreaCode } from "@aitianyu.cn/types";
 import {
     EXTERNAL_MODULE_ROOT_PATH,
     INTERNAL_PROJECT_ROOT,
+    MIME_FILE_BINARY_LIST,
+    MIME_FILE_CONTENT_MAP,
+    MIME_FILE_TYPE_MAP,
     PROJECT_DEFAULT_LANGUAGE,
     PROJECT_ENVIRONMENT_MODE,
     PROJECT_NAME,
@@ -39,5 +42,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
 
         expect(Object.keys(SYSTEM_EXTERNAL_CALL).length).toEqual(9);
         expect(SYSTEM_PRIVILEGE_MAP).toEqual(PRIVILEGE);
+
+        expect(MIME_FILE_TYPE_MAP["txt"]).toEqual("text");
+        expect(MIME_FILE_CONTENT_MAP["txt"]).toEqual("text");
+
+        expect(MIME_FILE_TYPE_MAP["hex"]).toEqual("hex");
+        expect(MIME_FILE_CONTENT_MAP["hex"]).toEqual("text");
+
+        expect(MIME_FILE_BINARY_LIST.includes("txt")).toBeFalsy();
+        expect(MIME_FILE_BINARY_LIST.includes("hex")).toBeTruthy();
     });
 });

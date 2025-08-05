@@ -15,23 +15,23 @@ interface ITestEvent {
 
 class TestService extends AbstractHttpService<HttpServiceOption, ITestEvent> {
     protected createServerInstance(
-        opt?: HttpServiceOption | undefined,
+        _opt?: HttpServiceOption | undefined,
     ): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction {
         const server: IHttpServerListener & IHttpServerLifecycle & IHttpServerAction = {
             listen: (
-                port?: number,
-                hostname?: string,
-                backlog?: number,
-                listeningListener?: () => void,
+                _port?: number,
+                _hostname?: string,
+                _backlog?: number,
+                _listeningListener?: () => void,
             ): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction => {
                 return server;
             },
-            close: (callback?: (err?: Error) => void): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction => {
+            close: (_callback?: (err?: Error) => void): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction => {
                 return server;
             },
             on: (
-                event: "error",
-                listener: (err: Error) => void,
+                _event: "error",
+                _listener: (err: Error) => void,
             ): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction => {
                 return server;
             },
