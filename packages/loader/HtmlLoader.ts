@@ -4,7 +4,7 @@ import { REST_LOADER_RES_PATH } from "#core/handler/RestHandlerConstant";
 import { HTTP_STATUS_CODE, NetworkServiceResponseData } from "#interface";
 import { HttpHelper } from "#utils";
 import { StringHelper } from "@aitianyu.cn/types";
-import { REST_CONFIG } from "packages/Common";
+import { LOADER_IGNORE_PATTERN, REST_CONFIG } from "packages/Common";
 import path from "path";
 
 const DEFAULT_EMPTY_HTML = `<!DOCTYPE html><html lang="en"><head></head><body></body></html>`;
@@ -17,6 +17,25 @@ const DEFAULT_EMPTY_HTML = `<!DOCTYPE html><html lang="en"><head></head><body></
  * @returns return a html response data
  */
 export function loader(): NetworkServiceResponseData {
+    if (LOADER_IGNORE_PATTERN.test(TIANYU.request.url)) {
+        return REST_CONFIG?.errorpage?.[403]
+            ? {
+                  statusCode: HTTP_STATUS_CODE.TEMPORARY_REDIRECT,
+                  headers: {
+                      Location: StringHelper.format(REST_CONFIG?.errorpage?.[403], [
+                          TIANYU.request.url,
+                          HttpHelper.stringifyParam(TIANYU.request.allParams()),
+                      ]),
+                  },
+                  body: null,
+              }
+            : /* istanbul ignore next */ {
+                  statusCode: HTTP_STATUS_CODE.FORBIDDEN,
+                  headers: {},
+                  body: DEFAULT_EMPTY_HTML,
+              };
+    }
+
     const url_path = TIANYU.request.url || /* istanbul ignore next */ "/";
     const dir = path.join(REST_LOADER_RES_PATH, url_path);
     return htmlLoader(dir);

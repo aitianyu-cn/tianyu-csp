@@ -5,6 +5,8 @@ import { Http2Query, HTTP_STATUS_CODE, HttpCallMethod, NetworkServiceResponseDat
 import { ErrorHelper, HttpHelper } from "#utils";
 import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
 import { Http2Client } from "packages/modules/Http2Client";
+import { LOADER_IGNORE_PATTERN, REST_CONFIG } from "packages/Common";
+import { StringHelper } from "@aitianyu.cn/types";
 
 /**
  * @internal
@@ -14,6 +16,25 @@ import { Http2Client } from "packages/modules/Http2Client";
  * @returns return a network service valid response data from remote proxy returns
  */
 export async function loader(): Promise<NetworkServiceResponseData> {
+    if (LOADER_IGNORE_PATTERN.test(TIANYU.request.url)) {
+        return REST_CONFIG?.errorpage?.[403]
+            ? {
+                  statusCode: HTTP_STATUS_CODE.TEMPORARY_REDIRECT,
+                  headers: {
+                      Location: StringHelper.format(REST_CONFIG?.errorpage?.[403], [
+                          TIANYU.request.url,
+                          HttpHelper.stringifyParam(TIANYU.request.allParams()),
+                      ]),
+                  },
+                  body: null,
+              }
+            : /* istanbul ignore next */ {
+                  statusCode: HTTP_STATUS_CODE.FORBIDDEN,
+                  headers: {},
+                  body: null,
+              };
+    }
+
     const protocol = TIANYU.request.protocol;
     const relocatHost = TIANYU.request.host;
     const url = TIANYU.request.url;

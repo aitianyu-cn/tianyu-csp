@@ -25,8 +25,10 @@ module.exports = {
             session: "SESSION_ID",
         },
         loader: "scripts/data",
+        loaderIgnorePattern: ["/welcome/ignore", "/welcome/ig2/a.json", "/remote-proxy/test/ignore"],
         errorpage: {
             404: "https://localhost:4000/404{0}{1}",
+            403: "https://localhost:4000/403{0}{1}",
         },
         mime: {
             txt: {

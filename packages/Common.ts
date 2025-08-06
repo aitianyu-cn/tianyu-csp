@@ -11,6 +11,7 @@ import fs from "fs";
 import path from "path";
 import { guid, MapOfString, parseAreaString } from "@aitianyu.cn/types";
 import { TianyuCSPAuditConfig, TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
+import { Pattern } from "#global";
 
 /** tianyu-csp node_modules root path */
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
@@ -89,12 +90,14 @@ export const AUDIT_CONFIGURATION: TianyuCSPAuditConfig = {
     plugin: audit_configuration_raw?.plugin || [],
 };
 
+/** Tianyu CSP HTTP MIME file type map */
 export const MIME_FILE_TYPE_MAP: MapOfString = {
     css: "css",
     js: "javascript",
     ico: "x-icon",
 };
 
+/** Tianyu CSP HTTP MIME content map map */
 export const MIME_FILE_CONTENT_MAP: MapOfString = {
     css: "text",
     js: "application",
@@ -104,6 +107,7 @@ export const MIME_FILE_CONTENT_MAP: MapOfString = {
     ico: "image",
 };
 
+/** Tianyu CSP HTTP MIME file list of binary http response */
 export const MIME_FILE_BINARY_LIST: string[] = ["gif", "png", "jpg", "ico"];
 
 if (REST_CONFIG?.mime) {
@@ -118,3 +122,6 @@ if (REST_CONFIG?.mime) {
         }
     }
 }
+
+/** Pattern for default loader to ignore some url path */
+export const LOADER_IGNORE_PATTERN = new Pattern(REST_CONFIG?.loaderIgnorePattern || /* istanbul ignore next */ []);

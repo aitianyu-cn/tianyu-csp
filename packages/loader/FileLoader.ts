@@ -5,10 +5,29 @@ import { HTTP_STATUS_CODE, NetworkServiceResponseData } from "#interface";
 import { HttpHelper } from "#utils";
 import { StringHelper } from "@aitianyu.cn/types";
 import fs from "fs";
-import { MIME_FILE_BINARY_LIST, MIME_FILE_CONTENT_MAP, MIME_FILE_TYPE_MAP, REST_CONFIG } from "../Common";
+import { LOADER_IGNORE_PATTERN, MIME_FILE_BINARY_LIST, MIME_FILE_CONTENT_MAP, MIME_FILE_TYPE_MAP, REST_CONFIG } from "../Common";
 import path from "path";
 
 export function loader(): NetworkServiceResponseData {
+    if (LOADER_IGNORE_PATTERN.test(TIANYU.request.url)) {
+        return REST_CONFIG?.errorpage?.[403]
+            ? {
+                  statusCode: HTTP_STATUS_CODE.TEMPORARY_REDIRECT,
+                  headers: {
+                      Location: StringHelper.format(REST_CONFIG?.errorpage?.[403], [
+                          TIANYU.request.url,
+                          HttpHelper.stringifyParam(TIANYU.request.allParams()),
+                      ]),
+                  },
+                  body: null,
+              }
+            : /* istanbul ignore next */ {
+                  statusCode: HTTP_STATUS_CODE.FORBIDDEN,
+                  headers: {},
+                  body: null,
+              };
+    }
+
     const url_path = TIANYU.request.url || /* istanbul ignore next */ "/";
     const dir = path.join(REST_LOADER_RES_PATH, url_path);
 

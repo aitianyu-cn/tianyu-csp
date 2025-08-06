@@ -1,6 +1,8 @@
 /** @format */
 
+import { HTTP_STATUS_CODE } from "#interface";
 import * as FileLoader from "#loader/FileLoader";
+import { LOADER_IGNORE_PATTERN } from "packages/Common";
 import { auto } from "packages/default-loader";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.FileLoader", () => {
@@ -20,5 +22,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.FileLoader", () => {
         expect(data.body).toEqual("response");
         expect(data.headers["Content-Type"]).toEqual("text/html");
         expect(data.statusCode).toEqual(1);
+    });
+
+    it("url ignored", async () => {
+        jest.spyOn(LOADER_IGNORE_PATTERN, "test").mockReturnValue(true);
+        const data = await auto();
+        expect(data.statusCode).toEqual(HTTP_STATUS_CODE.TEMPORARY_REDIRECT);
+        expect(data.headers["Location"]).not.toEqual("");
     });
 });

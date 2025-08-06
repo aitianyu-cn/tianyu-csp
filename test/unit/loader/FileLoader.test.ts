@@ -2,6 +2,7 @@
 
 import { HTTP_STATUS_CODE } from "#interface";
 import { fileLoader, internalLoader } from "#loader/FileLoader";
+import { LOADER_IGNORE_PATTERN } from "packages/Common";
 import { file } from "packages/default-loader";
 import path from "path";
 
@@ -36,5 +37,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.FileLoader", () => {
     it("loader file of no ext-type", () => {
         const data = internalLoader(path.join(process.cwd(), "scripts/data", "/welcome/no_ext"));
         expect(data?.headers["Content-Type"]).toEqual("application/text");
+    });
+
+    it("url ignored", async () => {
+        jest.spyOn(LOADER_IGNORE_PATTERN, "test").mockReturnValue(true);
+        const data = await file();
+        expect(data.statusCode).toEqual(HTTP_STATUS_CODE.TEMPORARY_REDIRECT);
+        expect(data.headers["Location"]).not.toEqual("");
     });
 });

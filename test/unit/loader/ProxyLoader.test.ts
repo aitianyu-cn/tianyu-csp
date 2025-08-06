@@ -26,6 +26,7 @@ import { SessionManager } from "#core/infra/SessionManager";
 import * as COMMON from "packages/Common";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { proxy } from "packages/default-loader";
+import { LOADER_IGNORE_PATTERN } from "packages/Common";
 
 const PROXY_HTTP = 30010;
 const PROXY_HTTPS = 30020;
@@ -191,6 +192,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
 
         contributor_http2.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
         contributor_http2.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
+    });
+
+    it("url ignored", async () => {
+        jest.spyOn(LOADER_IGNORE_PATTERN, "test").mockReturnValue(true);
+        const data = await proxy();
+        expect(data.statusCode).toEqual(HTTP_STATUS_CODE.TEMPORARY_REDIRECT);
+        expect(data.headers["Location"]).not.toEqual("");
     });
 
     describe("http", () => {

@@ -31,6 +31,8 @@ export * from "./fwk-def/contributor/requests";
 export * from "./fwk-def/contributor/service";
 export * from "./fwk-def/contributor-protocol";
 
+export * from "./global/IPattern";
+
 export * from "./handler/dispatch-handler";
 export * from "./handler/request-handler";
 export * from "./handler/rest-handler";

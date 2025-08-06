@@ -5,6 +5,7 @@ import { AreaCode } from "@aitianyu.cn/types";
 import {
     EXTERNAL_MODULE_ROOT_PATH,
     INTERNAL_PROJECT_ROOT,
+    LOADER_IGNORE_PATTERN,
     MIME_FILE_BINARY_LIST,
     MIME_FILE_CONTENT_MAP,
     MIME_FILE_TYPE_MAP,
@@ -51,5 +52,11 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.Common", () => {
 
         expect(MIME_FILE_BINARY_LIST.includes("txt")).toBeFalsy();
         expect(MIME_FILE_BINARY_LIST.includes("hex")).toBeTruthy();
+
+        expect(LOADER_IGNORE_PATTERN.test("/welcome/ignore/a")).toBeTruthy();
+        expect(LOADER_IGNORE_PATTERN.test("/welcome/ig2/a.json")).toBeTruthy();
+        expect(LOADER_IGNORE_PATTERN.test("/remote-proxy/test/ignore")).toBeTruthy();
+
+        expect(LOADER_IGNORE_PATTERN.test("/welcome/ig2/b.json")).toBeFalsy();
     });
 });

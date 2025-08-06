@@ -2,5 +2,6 @@
 .doc
 .vscode
 dist
+build
 scripts
 __report__
