@@ -34,14 +34,20 @@ Base structure in `csp.config.json` file:
             }
         },
         "rest": {
-            "file": "",         // file of rest setting(3)
-            "request-map": {},  // definition of request item map(4)
-            "loader": ""        // path of url direction router(5)
-            "fallback": {       // default rest target, is used for rest path is not found(6)
+            "file": "",                 // file of rest setting(3)
+            "request-map": {},          // definition of request item map(4)
+            "loader": ""                // path of url direction router(5)
+            "loaderIgnorePattern": [],  // pathes should be ignored in loader and return 403 error(10)
+            "errorpage": {              // error pages redirect define
+                404: "",                // 404 error redirection url
+                403: ""                 // 403 error redirection url
+            },
+            "fallback": {               // default rest target, is used for rest path is not found(6)
                 "package": "",
                 "module": "",
                 "method": ""
-            }
+            },
+            "mime": {}                  // mime map(11)
         },
         "xcall": {              // external call define(8)
             "logger": { "log": {"package": "", "module": "", "method": ""} };
@@ -98,3 +104,43 @@ If javascript (`csp.config.js`) is used in your application instead of json file
 8. csp external call is named `XCall` in code. this provides an external module to handle infra database access logic to make flexible application implementation. to see the detailed information, please to [`XCall`](./XCall.md)
 
 9. csp audit is a local server to support records log and operation data. `remote` server support IPv6 and IPv4 address and customized port and protocal. default IP `family` is "**IPv4**", suport "**IPv6**" value for IPv6 server. default `port` is "**514**". default `protocal` is "**UDP**", support "**tcp**" and "**http**"(contains http, http2.0). `log` is a boolean field with "true" value indicates the audit should print to log or not. `path` is only used for **HTTP** protocal to indicate the request target router. `header` is used for **HTTP** only. `plugin` is a list of audit data processing functions.
+
+10. loaderIgnorePattern is a list uses for default loader to ignore some url. for example:
+
+    ```
+        loaderIgnorePattern: ["/test/ignore", "/test/ig/a.json"]
+
+        test urls:
+
+            "/test/ig2" => HTTP 200
+
+            "/test/ignore/abc" => HTTP 403
+            "/test/ignore/bdc" => HTTP 403
+
+            "/test/ig/a.json" => HTTP 403
+            "/test/ig/b.json" => HTTP 200
+    ```
+
+11. mime map is used to define the http response content type, since not all file type can be pre-defined in tianyu-csp. default content is `application`, default file is the `file extension`.
+
+    ```
+        "file extension": {
+            content: "",
+            file: "",
+            binary: true | false
+        }
+    ```
+
+    - based on the MIME map item, the HTTP `Content-Type` will be generated combine with `content` and `file`. for example:
+
+    ```
+        "abc": {
+            content: "app",
+            file: "text",
+            binary: false
+        }
+
+        HTTP Header: Content-Type => "app/text"
+    ```
+
+    - binary field indicates the file shoule be transferred with source binary array and not to convert to any other type.
