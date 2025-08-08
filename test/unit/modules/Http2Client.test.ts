@@ -7,12 +7,12 @@ import { Http2Service } from "#core/service/Http2Service";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
+    Http2Query,
+    HTTP_STATUS_CODE,
     NetworkServiceResponseData,
     PathEntry,
-    RequestPayloadData,
-    HTTP_STATUS_CODE,
     REQUEST_HANDLER_MODULE_ID,
-    Http2Query,
+    RequestPayloadData,
 } from "#interface";
 import { readFileSync } from "fs";
 import path from "path";
@@ -65,10 +65,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
         );
 
         process.on("unhandledRejection", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
         process.on("uncaughtException", (e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
 
@@ -166,6 +168,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
             };
             return {
                 statusCode: HTTP_STATUS_CODE.OK,
+                // eslint-disable-next-line quote-props
                 headers: { counter: counter++, "content-encoding": "gzip", "content-type": "application/json" },
                 body: payload,
             };

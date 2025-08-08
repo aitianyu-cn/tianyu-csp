@@ -77,6 +77,7 @@ export class HttpClient {
                 });
             });
             client.on("error", (error) => {
+                // eslint-disable-next-line no-console
                 console.log(error);
             });
             client.end();

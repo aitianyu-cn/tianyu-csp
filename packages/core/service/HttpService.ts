@@ -3,11 +3,11 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import {
     HTTP_STATUS_CODE,
-    HttpServiceOption,
-    RequestPayloadData,
-    ICSPContributorFactorProtocolMap,
-    HttpProtocal,
     HttpCallMethod,
+    HttpProtocal,
+    HttpServiceOption,
+    ICSPContributorFactorProtocolMap,
+    RequestPayloadData,
 } from "#interface";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { createServer, IncomingMessage, ServerResponse } from "http";
@@ -70,7 +70,9 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
             let body: any = null;
             try {
                 body = JSON.parse(decodeURI(data));
-            } catch {}
+            } catch {
+                //
+            }
 
             const payload = this.generatePayload(req.url, req.headers, "POST", body);
 
@@ -96,14 +98,16 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
             }
 
             res.end(
-                this.encodeResponse(
-                    response.body
-                        ? typeof response.body === "string"
-                            ? response.body
-                            : JSON.stringify(response.body)
-                        : /* istanbul ignore next */ "",
-                    response.headers,
-                ),
+                response.binary && response.body
+                    ? Buffer.from(response.body, "base64")
+                    : this.encodeResponse(
+                          response.body
+                              ? typeof response.body === "string"
+                                  ? response.body
+                                  : JSON.stringify(response.body)
+                              : /* istanbul ignore next */ "",
+                          response.headers,
+                      ),
             );
         }, 0);
     }

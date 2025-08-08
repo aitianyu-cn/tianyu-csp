@@ -1,6 +1,6 @@
 /** @format */
 
-import { IDatabaseConnectionConfig, SupportedDatabaseType } from "#interface";
+// import { IDatabaseConnectionConfig, SupportedDatabaseType } from "#interface";
 // import { DBProcessor } from "packages/install";
 
 export async function testDBHandling(): Promise<void> {

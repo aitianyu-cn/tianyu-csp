@@ -12,8 +12,6 @@ import { SUPPORTED_SUFFIX } from "./Constant";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
 
-const DEFAULT_EMPTY_HTML = `<!DOCTYPE html><html lang="en"><head></head><body></body></html>`;
-
 /** CSP Import Manager Implementation for global definition */
 export function importImpl(): IImporter {
     const importer = ((packageName: string, objectName: string) => {
@@ -40,7 +38,7 @@ export function importImpl(): IImporter {
 
         const dir = _handlePackage(file, "");
         const targetPath = _findFileWithSuffix(dir, SUPPORTED_HTML_SUFFIX);
-        const result = targetPath ? fs.readFileSync(targetPath, encoding) : DEFAULT_EMPTY_HTML;
+        const result = targetPath ? fs.readFileSync(targetPath, encoding) : "";
         return result;
     };
 

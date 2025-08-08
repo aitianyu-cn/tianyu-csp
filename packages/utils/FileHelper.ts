@@ -217,13 +217,13 @@ export class FileHelper {
     /**
      * To create a new dir, the parent dir will be created if not exist
      *
-     * @param path the dir path
+     * @param newDir the dir path
      * @returns return a value that is the new dir full path, undefined value will be returned if not created
      */
-    public static async mkdir(path: IOFilePath): Promise<string | undefined> {
-        const filePath = FileHelper.transformFilePath(path);
+    public static async mkdir(newDir: IOFilePath): Promise<string | undefined> {
+        const filePath = FileHelper.transformFilePath(newDir);
         return new Promise<string | undefined>((resolve, reject) => {
-            fs.mkdir(filePath, { recursive: true }, (err: NodeJS.ErrnoException | null, path?: string) => {
+            fs.mkdir(filePath, { recursive: true }, (err: NodeJS.ErrnoException | null, actualPath?: string) => {
                 if (err) {
                     reject(
                         ErrorHelper.getError(
@@ -233,7 +233,7 @@ export class FileHelper {
                         ),
                     );
                 } else {
-                    resolve(path);
+                    resolve(actualPath);
                 }
             });
         });
@@ -242,11 +242,11 @@ export class FileHelper {
     /**
      * Check the given file or dir does exists or not
      *
-     * @param path the file or dir path
+     * @param fileOrDir the file or dir path
      * @returns return true if the file or dir exists, otherwise false
      */
-    public static exist(path: IOFilePath): boolean {
-        const filePath = FileHelper.transformFilePath(path);
+    public static exist(fileOrDir: IOFilePath): boolean {
+        const filePath = FileHelper.transformFilePath(fileOrDir);
         return fs.existsSync(filePath);
     }
 
@@ -278,11 +278,11 @@ export class FileHelper {
     /**
      * To remove a dir from specified path
      *
-     * @param path the dir path
+     * @param dirPath the dir path
      * @returns return a promise to wait for operation done
      */
-    public static async rmdir(path: IOFilePath): Promise<void> {
-        const filePath = FileHelper.transformFilePath(path);
+    public static async rmdir(dirPath: IOFilePath): Promise<void> {
+        const filePath = FileHelper.transformFilePath(dirPath);
         return new Promise<void>((resolve, reject) => {
             fs.rmdir(filePath, (err: NodeJS.ErrnoException | null) => {
                 if (err) {

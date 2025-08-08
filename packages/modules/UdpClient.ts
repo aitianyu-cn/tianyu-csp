@@ -31,12 +31,10 @@ export async function UdpClient(
                 const err_msg = `request to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
                     "utf-8",
                 )}] - ${error.message}`;
-                log &&
-                    TIANYU.logger.warn(
-                        ErrorHelper.getErrorString(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack),
-                    );
+                const err = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack);
+                log && void TIANYU.audit.warn("client/udp", err_msg, err);
 
-                reject(ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack));
+                reject(err);
             } else {
                 if (!response) {
                     client.close();
@@ -64,9 +62,10 @@ export async function UdpClient(
                 const err_msg = `UDP client to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
                     "utf-8",
                 )}] - ${error.message}`;
-                log && TIANYU.logger.warn(ErrorHelper.getErrorString(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
+                const err = ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack);
+                log && void TIANYU.audit.warn("client/udp", err_msg, err);
 
-                reject(ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack));
+                reject(err);
             },
         );
     });

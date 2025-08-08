@@ -1,7 +1,6 @@
 /** @format */
 
 import { MapOfString, StringHelper } from "@aitianyu.cn/types";
-import { DBConfigConverter } from "./db/DBConfigConverter";
 
 const replaceMap: MapOfString = {
     '"': "{d_q}",
@@ -72,7 +71,4 @@ export class DBHelper {
         );
         return StringHelper.format(src, processedArgs);
     }
-
-    /** Database configuration converter */
-    public static converter = DBConfigConverter;
 }

@@ -8,6 +8,7 @@
 import { MapOfType } from "@aitianyu.cn/types";
 import { ImportPackage } from "./api/importer";
 import { DefaultRequestItemsMap } from "./fwk-def/contributor/requests";
+import { TianyuCSPAuditConfig } from "./api/audit";
 
 /** Resquest cookie and search key mapping item */
 export interface TianyuCSPRequestMapItem {
@@ -61,6 +62,25 @@ export interface TianyuCSPXcall extends Record<string, MapOfType<ImportPackage> 
     };
 }
 
+/** Map of custom defined HTTP MIME */
+export interface TianyuMIMEMap {
+    /** MIME file extension */
+    [key: string]: {
+        /**
+         * MIME content type
+         * e.g.: image, application, text
+         */
+        content: string;
+        /**
+         * MIME file type
+         * e.g.: jpg, css, html
+         */
+        file: string;
+        /** indicates whether the data should be transferred as binary data */
+        binary?: boolean;
+    };
+}
+
 /** Tianyu CSP global config type define */
 export interface TianyuCSPConfig {
     /** basic config */
@@ -82,6 +102,8 @@ export interface TianyuCSPConfig {
         language?: string;
         /** application privileges defines file */
         roles?: string;
+        /** application audit configuration */
+        audit?: Partial<TianyuCSPAuditConfig>;
     };
     /** network request url define */
     rest?: {
@@ -93,10 +115,28 @@ export interface TianyuCSPConfig {
          * the path is based on project root path
          */
         loader?: string;
+        /**
+         * Path list of loader
+         * indicates which path should be ignored from loader and return a 403 forbidden
+         */
+        loaderIgnorePattern?: string[];
         /** fallback handling entry */
         fallback?: ImportPackage;
         /** key name map of request default value */
         "request-map"?: DefaultRequestItemsMap;
+        /**
+         * error page redirection map
+         * '{number}' parameter can be used
+         * this is two parameters will be set: {0} is the origin url, {1} is the search list of origin url
+         */
+        errorpage?: {
+            /** 404 page redirection url */
+            404?: string;
+            /** 403 page redirection url */
+            403?: string;
+        };
+        /** HTTP MIME type custom map */
+        mime?: TianyuMIMEMap;
     };
     /** external call define */
     xcall?: TianyuCSPXcall;

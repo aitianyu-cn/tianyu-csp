@@ -1,6 +1,6 @@
 /** @format */
 
-import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
+import { AreaCode, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { RequestType } from "../fwk-def/contributor/requests";
 import { HttpProtocal } from "../service/http-service";
 

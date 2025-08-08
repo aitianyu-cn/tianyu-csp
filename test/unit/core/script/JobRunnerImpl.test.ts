@@ -6,6 +6,7 @@ import { run_job_scripts } from "#core/script/JobRunnerImpl";
 import { JobWorkerExecutionEntry, ScheduleJobPayload } from "#interface";
 import { AreaCode } from "@aitianyu.cn/types";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SESSION_ID = "session_id";
 const USER_ID = "test_user";
 const LICENSE_ID = "test_license";
@@ -67,10 +68,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 return {} as never;
             });
 
-            run_job_scripts(payload, messagePort as any);
+            void run_job_scripts(payload, messagePort as any);
         });
 
-        promise.then(done, done.fail);
+        promise.then(done, () => done.fail());
     });
 
     it("failed", (done) => {
@@ -116,10 +117,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 return {} as never;
             });
 
-            run_job_scripts(payload, messagePort as any);
+            void run_job_scripts(payload, messagePort as any);
         });
 
-        promise.then(done, done.fail);
+        promise.then(done, () => done.fail());
     });
 
     it("failed - no message", (done) => {
@@ -165,10 +166,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 return {} as never;
             });
 
-            run_job_scripts(payload, messagePort as any);
+            void run_job_scripts(payload, messagePort as any);
         });
 
-        promise.then(done, done.fail);
+        promise.then(done, () => done.fail());
     });
 
     it("import wrong module", (done) => {
@@ -213,9 +214,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 return {} as never;
             });
 
-            run_job_scripts(payload, messagePort as any);
+            void run_job_scripts(payload, messagePort as any);
         });
 
-        promise.then(done, done.fail);
+        promise.then(done, () => done.fail());
     });
 });

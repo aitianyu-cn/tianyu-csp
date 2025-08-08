@@ -4,9 +4,8 @@ import http2 from "http2";
 import { Http2Query, HttpCallMethod } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { MapOfString, MapOfType } from "@aitianyu.cn/types";
+import { MapOfType } from "@aitianyu.cn/types";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { createGunzip } from "zlib";
 
 export class Http2Client extends AbstractHttpClient {
     private _options?: http2.SecureClientSessionOptions;
@@ -170,7 +169,7 @@ export class Http2Client extends AbstractHttpClient {
             requestsPromise.push(this.transfer(index, client));
         }
         return Promise.all(requestsPromise)
-            .then(() => Promise.resolve())
+            .then(async () => Promise.resolve())
             .finally(() => {
                 client.close();
             });

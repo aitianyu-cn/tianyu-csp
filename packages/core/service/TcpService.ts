@@ -9,7 +9,7 @@ import { SERVICE_ERROR_CODES } from "#core/Constant";
 
 /** TCP service */
 export class TcpService extends AbstractSocketService {
-    private _service: net.Server;
+    protected declare _service: net.Server;
 
     /** Given a function to handle a new TCP connection is established */
     public endConnection?: (remote: ISocketAddress) => void;
@@ -30,10 +30,9 @@ export class TcpService extends AbstractSocketService {
      *                default address default is "0.0.0.0" and the port is a random number from 1024 to 65535
      */
     public constructor(address?: ISocketAddress) {
-        super("tcp", address);
+        super(net.createServer(), "tcp", address);
 
-        this._service = net.createServer(this.connectionListener.bind(this));
-
+        this._service.on("connection", this.connectionListener.bind(this));
         this._service.on("error", this.errorHandler.bind(this));
     }
 
@@ -42,17 +41,20 @@ export class TcpService extends AbstractSocketService {
         return this._service.listening;
     }
 
-    public close(callback?: (err?: Error) => void): void {
+    public override async close(callback?: (err?: Error) => void): Promise<void> {
         if (!this.listening) {
             callback?.();
             return;
         }
 
-        this._service.close(callback);
+        return super.close(callback);
     }
 
     public listen(callback?: CallbackAction): void {
-        this._service.listen(this.port, this.host, callback);
+        this._service.listen(this.port, this.host, () => {
+            TIANYU.lifecycle.join(this);
+            callback?.();
+        });
     }
 
     private connectionListener(socket: net.Socket): void {
@@ -77,12 +79,11 @@ export class TcpService extends AbstractSocketService {
         socket.on(
             "error",
             /* istanbul ignore next */ (error: Error) => {
-                TIANYU.logger.error(
-                    ErrorHelper.getErrorString(
-                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `tcp-server[${this.id}] error on connection[${remoteHost.address}:${remoteHost.port}] - ${error.message}`,
-                        error.stack,
-                    ),
+                const msg = `tcp-server[${this.id}] error on connection[${remoteHost.address}:${remoteHost.port}] - ${error.message}`;
+                void TIANYU.audit.error(
+                    this.app,
+                    msg,
+                    ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack),
                 );
                 this.onError?.(remoteHost, error);
             },
@@ -92,8 +93,10 @@ export class TcpService extends AbstractSocketService {
     private sendResponse(socket: net.Socket, data: Buffer): void {
         socket.write(data, (error?: Error) => {
             error &&
-                /* istanbul ignore next */ TIANYU.logger.error(
-                    ErrorHelper.getErrorString(
+                /* istanbul ignore next */ void TIANYU.audit.error(
+                    this.app,
+                    `tcp-server[${this.id}] error on sending to remote[${socket.remoteAddress}:${socket.remotePort}] - ${error.message}`,
+                    ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
                         `tcp-server[${this.id}] error on sending to remote[${socket.remoteAddress}:${socket.remotePort}] - ${error.message}`,
                         error.stack,
@@ -103,8 +106,10 @@ export class TcpService extends AbstractSocketService {
     }
 
     private errorHandler(error: Error): void {
-        TIANYU.logger.error(
-            ErrorHelper.getErrorString(
+        void TIANYU.audit.error(
+            this.app,
+            `tcp-server[${this.id}] error - ${error.message}`,
+            ErrorHelper.getError(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
                 `tcp-server[${this.id}] error - ${error.message}`,
                 error.stack,

@@ -62,9 +62,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.FileHelper", () => {
         });
 
         it("open exist file", (done) => {
-            FileHelper.open(FILE_HELPER_DEFAULT_OPEN_FILE, "read").then((fd: number) => {
-                FileHelper.close(fd).then(done, done.fail);
-            }, done.fail);
+            FileHelper.open(FILE_HELPER_DEFAULT_OPEN_FILE, "read").then(
+                (fd: number) => {
+                    FileHelper.close(fd).then(done, () => done.fail());
+                },
+                () => done.fail(),
+            );
         });
 
         it("open unexist file", (done) => {
@@ -90,30 +93,39 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.FileHelper", () => {
                     length: 3,
                 },
                 3,
-            ).then((bytes) => {
-                expect(bytes).toEqual(3);
-                expect(buffer.toString("utf-8", 0, 3)).toEqual("def");
-                done();
-            }, done.fail);
+            ).then(
+                (bytes) => {
+                    expect(bytes).toEqual(3);
+                    expect(buffer.toString("utf-8", 0, 3)).toEqual("def");
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("read file with fd", (done) => {
-            FileHelper.open(FILE_HELPER_DEFAULT_READ_FILE, "read").then((fd) => {
-                const buffer = Buffer.alloc(12, 0x00);
-                FileHelper.read(
-                    fd,
-                    {
-                        buffer,
-                        start: 0,
-                        length: 3,
-                    },
-                    6,
-                ).then((bytes) => {
-                    expect(bytes).toEqual(3);
-                    expect(buffer.toString("utf-8", 0, 3)).toEqual("ghi");
-                    done();
-                }, done.fail);
-            }, done.fail);
+            FileHelper.open(FILE_HELPER_DEFAULT_READ_FILE, "read").then(
+                (fd) => {
+                    const buffer = Buffer.alloc(12, 0x00);
+                    FileHelper.read(
+                        fd,
+                        {
+                            buffer,
+                            start: 0,
+                            length: 3,
+                        },
+                        6,
+                    ).then(
+                        (bytes) => {
+                            expect(bytes).toEqual(3);
+                            expect(buffer.toString("utf-8", 0, 3)).toEqual("ghi");
+                            done();
+                        },
+                        () => done.fail(),
+                    );
+                },
+                () => done.fail(),
+            );
         });
 
         it("read with invalid fd", (done) => {
@@ -154,25 +166,34 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.FileHelper", () => {
         it("write file with path", (done) => {
             FileHelper.write(FILE_HELPER_DEFAULT_WRITE_FILE, {
                 buffer,
-            }).then(() => {
-                const filePath = FileHelper.transformFilePath(FILE_HELPER_DEFAULT_WRITE_FILE);
-                const read = fs.readFileSync(filePath).toString("utf-8");
-                expect(read).toEqual("abcdef");
-                done();
-            }, done.fail);
+            }).then(
+                () => {
+                    const filePath = FileHelper.transformFilePath(FILE_HELPER_DEFAULT_WRITE_FILE);
+                    const read = fs.readFileSync(filePath).toString("utf-8");
+                    expect(read).toEqual("abcdef");
+                    done();
+                },
+                () => done.fail(),
+            );
         });
 
         it("write file with fd", (done) => {
-            FileHelper.open(FILE_HELPER_DEFAULT_WRITE_FILE, "rw_create").then((fd) => {
-                FileHelper.write(fd, {
-                    buffer,
-                }).then(async () => {
-                    const readBuf = Buffer.alloc(12, 0x00);
-                    const length = await FileHelper.read(fd, { buffer: readBuf }, 0);
-                    expect(readBuf.toString("utf-8", 0, length)).toEqual("abcdef");
-                    done();
-                }, done.fail);
-            }, done.fail);
+            FileHelper.open(FILE_HELPER_DEFAULT_WRITE_FILE, "rw_create").then(
+                (fd) => {
+                    FileHelper.write(fd, {
+                        buffer,
+                    }).then(
+                        async () => {
+                            const readBuf = Buffer.alloc(12, 0x00);
+                            const length = await FileHelper.read(fd, { buffer: readBuf }, 0);
+                            expect(readBuf.toString("utf-8", 0, length)).toEqual("abcdef");
+                            done();
+                        },
+                        () => done.fail(),
+                    );
+                },
+                () => done.fail(),
+            );
         });
 
         it("write file failed", (done) => {

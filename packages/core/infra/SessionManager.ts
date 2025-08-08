@@ -8,7 +8,7 @@ import {
     OperationActions,
     TianyuCSPPrivilegeType,
 } from "#interface";
-import { AreaCode, getBoolean, MapOfType } from "@aitianyu.cn/types";
+import { AreaCode, MapOfType } from "@aitianyu.cn/types";
 import { PROJECT_DEFAULT_LANGUAGE } from "../../Common";
 import { handleSession, handleSessionIsAdminMode, handleSessionPrivileges, handleSessionUser } from "./code/SessionCodes";
 

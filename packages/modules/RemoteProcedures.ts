@@ -39,8 +39,10 @@ export async function call<T = string>(
             try {
                 return transformer(client.raw);
             } catch (e) {
-                TIANYU.logger.warn(
-                    ErrorHelper.getErrorString(
+                void TIANYU.audit.warn(
+                    "service/rpc",
+                    `Convert RPC data to target structure failed`,
+                    ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
                         `Convert RPC data to target structure failed`,
                         String(e),
@@ -51,21 +53,13 @@ export async function call<T = string>(
             }
         },
         async (error) => {
-            TIANYU.logger.warn(
-                ErrorHelper.getErrorString(
-                    SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                    `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${payload.url} failed`,
-                    String(error),
-                ),
-            );
+            const msg = `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${
+                payload.url
+            } failed`;
+            const rejectError = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, msg, String(error));
+            void TIANYU.audit.warn("service/rpc", msg, rejectError);
 
-            return Promise.reject(
-                ErrorHelper.getError(
-                    SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                    `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${payload.url} failed`,
-                    String(error),
-                ),
-            );
+            return Promise.reject(rejectError);
         },
     );
 }

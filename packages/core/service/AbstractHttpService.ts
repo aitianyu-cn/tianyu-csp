@@ -28,6 +28,13 @@ import { DISPATCH_ERROR_RESPONSES } from "./HttpServiceConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { IncomingHttpHeaders } from "http";
 import { gzipSync } from "zlib";
+import { AbstractService } from "./AbstractService";
+
+const RESPONSE_ENCODE_MAP: MapOfType<(src: string) => string | Buffer> = {
+    gzip: (src: string) => {
+        return gzipSync(src);
+    },
+};
 
 export interface IHttpServerListener {
     listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void): this;
@@ -46,7 +53,10 @@ interface IEventMapItem {
     watches: MapOfType<CallbackActionT<any>>;
 }
 
-export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event extends {} = {}> implements IHttpService<Event> {
+export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event extends {} = {}>
+    extends AbstractService<HttpProtocal>
+    implements IHttpService<Event>
+{
     protected _server: IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
 
     private _id: string;
@@ -62,6 +72,8 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
 
     public constructor(options?: OPT, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
+        super();
+
         this._id = guid();
         this._host = options?.host || /* istanbul ignore next */ DEFAULT_HTTP_HOST;
         this._port = options?.port || /* istanbul ignore next */ DEFAULT_HTTP_PORT;
@@ -131,12 +143,26 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
 
     public listen(callback?: () => void): void {
         this._cacheHandler?.start();
-        this._server.listen(this._port, this._host, undefined, callback);
+        this._server.listen(this._port, this._host, undefined, () => {
+            TIANYU.lifecycle.join(this);
+            callback?.();
+        });
     }
 
-    public close(callback?: (err?: Error) => void): void {
+    public async close(callback?: (err?: Error) => void): Promise<void> {
         this._cacheHandler?.destroy();
-        this._server.close(callback);
+        TIANYU.lifecycle.leave(this.id);
+        return new Promise<void>((resolve, reject) => {
+            this._server.close((err) => {
+                callback?.(err);
+                /* istanbul ignore if */
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     protected async dispatch(payload: RequestPayloadData, method: HttpCallMethod): Promise<NetworkServiceResponseData> {
@@ -147,14 +173,14 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
 
         const rest = this.getRest(payload.url, method);
         RestHelper.transmit(payload, rest?.proxy);
-        let response = rest
+        const response = rest
             ? (await this._cacheHandler?.readCache(payload, rest?.cache)) ||
               (await dispatcher({ rest: RestHelper.toPathEntry(rest), payload }).then(
-                  (response) => {
-                      if (response.statusCode === HTTP_STATUS_CODE.OK) {
-                          this._cacheHandler?.writeCache(payload, response, rest.cache);
+                  (res) => {
+                      if (res.statusCode === HTTP_STATUS_CODE.OK) {
+                          this._cacheHandler?.writeCache(payload, res, rest.cache);
                       }
-                      return response;
+                      return res;
                   },
                   (error) => DISPATCH_ERROR_RESPONSES["dispatch-request-error"](payload, error),
               ))
@@ -208,13 +234,8 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     }
 
     private onError(error: Error): void {
-        TIANYU.logger.error(
-            ErrorHelper.getErrorString(
-                SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `http server error on ${this._host}:${this._port} - ${error.message}`,
-                error.stack,
-            ),
-        );
+        const msg = `http server error on ${this._host}:${this._port} - ${error.message}`;
+        void TIANYU.audit.error(this.app, msg, ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack));
     }
 
     private getRest(url: string, method: HttpCallMethod): RestMappingResult {
@@ -238,15 +259,13 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     protected abstract createServerInstance(opt?: OPT): IHttpServerListener & IHttpServerLifecycle & IHttpServerAction;
     protected abstract protocol: HttpProtocal;
 
-    protected encodeResponse(
-        src: string,
-        header: MapOfType<string | readonly string[] | undefined | number>,
-    ): string | Buffer<ArrayBufferLike> {
-        switch (header["content-encoding"]) {
-            case "gzip":
-                return gzipSync(src);
-        }
-
-        return src;
+    protected encodeResponse(src: string, header: MapOfType<string | readonly string[] | undefined | number>): string | Buffer {
+        return (
+            RESPONSE_ENCODE_MAP[
+                Array.isArray(header["content-encoding"])
+                    ? /* istanbul ignore next */ header["content-encoding"][0]
+                    : header["content-encoding"]
+            ]?.(src) || src
+        );
     }
 }

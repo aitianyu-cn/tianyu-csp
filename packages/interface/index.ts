@@ -11,8 +11,8 @@ export type { IGlobalDefinition };
 
 export * from "./Error";
 
-export * from "./api/db/database";
 export * from "./api/environment";
+export * from "./api/audit";
 export * from "./api/fwk";
 export * from "./api/logger";
 export * from "./api/importer";
@@ -21,6 +21,7 @@ export * from "./api/request";
 export * from "./api/session";
 export * from "./api/trace";
 export * from "./api/usage";
+export * from "./api/lifecycle";
 
 export * from "./declares/global-declare";
 
@@ -29,6 +30,8 @@ export * from "./fwk-def/contributor/job";
 export * from "./fwk-def/contributor/requests";
 export * from "./fwk-def/contributor/service";
 export * from "./fwk-def/contributor-protocol";
+
+export * from "./global/IPattern";
 
 export * from "./handler/dispatch-handler";
 export * from "./handler/request-handler";

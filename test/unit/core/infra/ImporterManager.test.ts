@@ -56,7 +56,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ImporterManager", (
 
         it("file not exist", () => {
             const html = TIANYU.import.html("scripts/data/noexist");
-            expect(html).toEqual(`<!DOCTYPE html><html lang="en"><head></head><body></body></html>`);
+            expect(html).toEqual("");
         });
 
         it("get file with file name", () => {

@@ -11,6 +11,9 @@ module.exports = {
         monitor: {
             modules: ".config/monitor-allowlist.json",
         },
+        audit: {
+            remote: "",
+        },
     },
     rest: {
         file: ".config/rest.js",
@@ -22,6 +25,22 @@ module.exports = {
             session: "SESSION_ID",
         },
         loader: "scripts/data",
+        loaderIgnorePattern: ["/welcome/ignore", "/welcome/ig2/a.json", "/remote-proxy/test/ignore"],
+        errorpage: {
+            404: "https://localhost:4000/404{0}{1}",
+            403: "https://localhost:4000/403{0}{1}",
+        },
+        mime: {
+            txt: {
+                content: "text",
+                file: "text",
+            },
+            hex: {
+                content: "text",
+                file: "hex",
+                binary: true,
+            },
+        },
     },
     xcall: {
         logger: { log: { package: "db", module: "runtime", method: "log" } },

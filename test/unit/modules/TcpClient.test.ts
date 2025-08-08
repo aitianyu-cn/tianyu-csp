@@ -4,7 +4,7 @@ import { TcpClient } from "#module";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.TcpClient", () => {
     it("connect with error", (done) => {
-        jest.spyOn(TIANYU.logger, "error");
+        const ERR_SPY = jest.spyOn(TIANYU.logger, "error");
         const client = new TcpClient({ log: true });
         client
             .connect({
@@ -16,21 +16,21 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.TcpClient", () => {
                     done.fail();
                 },
                 () => {
-                    expect(TIANYU.logger.error).toHaveBeenCalled();
+                    expect(ERR_SPY).toHaveBeenCalled();
                     done();
                 },
             );
     });
 
     it("send with error", (done) => {
-        jest.spyOn(TIANYU.logger, "error");
+        const ERR_SPY = jest.spyOn(TIANYU.logger, "error");
         const client = new TcpClient({ log: true });
         client.send(Buffer.from("test")).then(
             () => {
                 done.fail();
             },
             () => {
-                expect(TIANYU.logger.error).toHaveBeenCalled();
+                expect(ERR_SPY).toHaveBeenCalled();
                 done();
             },
         );

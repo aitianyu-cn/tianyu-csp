@@ -1,8 +1,7 @@
 /** @format */
 
-import { IContributor, Contributor } from "@aitianyu.cn/tianyu-app-fwk";
+import { Contributor, IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { ICSPContributorFactorProtocolMap, IGlobalDefinition, IServerRequest, ISession } from "#interface";
-import { DatabaseManager } from "./infra/DatabaseManager";
 import { importImpl } from "./infra/ImporterManager";
 import { GlobalRequestManager } from "./infra/RequestManager";
 import { GlobalSessionManager } from "./infra/SessionManager";
@@ -11,6 +10,8 @@ import { UsageManager } from "./infra/UsageManager";
 import { TraceManager } from "./infra/TraceManager";
 import { FeatureManager } from "./infra/FeatureManager";
 import { EnvironmentManager } from "./infra/EnvironmentManager";
+import { AuditManager } from "./infra/AuditManager";
+import { LifecycleManager } from "./infra/LifecycleManager";
 
 /** To init infra of global scope */
 export function loadInfra(): void {
@@ -38,10 +39,10 @@ export function createContributor(): IContributor<ICSPContributorFactorProtocolM
  */
 export function generateInfra(sessionMgr: ISession, request: IServerRequest): IGlobalDefinition {
     const tianyu_infra: IGlobalDefinition = {
-        db: new DatabaseManager(),
         fwk: {},
         import: importImpl(),
 
+        audit: new AuditManager(),
         logger: new LoggerManager(),
         request: request,
         session: sessionMgr,
@@ -49,6 +50,7 @@ export function generateInfra(sessionMgr: ISession, request: IServerRequest): IG
         trace: new TraceManager(),
         feature: new FeatureManager(),
         environment: new EnvironmentManager(),
+        lifecycle: new LifecycleManager(),
     };
 
     return tianyu_infra;

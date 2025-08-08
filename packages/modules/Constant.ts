@@ -1,6 +1,6 @@
 /** @format */
 
-import { HttpProtocal, HttpCallMethod } from "#interface";
+import { HttpCallMethod, HttpProtocal } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
 
 export const HTTP_CLIENT_MAP: {

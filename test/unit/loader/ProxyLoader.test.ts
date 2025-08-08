@@ -8,24 +8,25 @@ import { createContributor, generateInfra } from "#core/InfraLoader";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
+    HTTP_STATUS_CODE,
+    HttpProtocal,
     NetworkServiceResponseData,
     PathEntry,
-    RequestPayloadData,
-    HTTP_STATUS_CODE,
     REQUEST_HANDLER_MODULE_ID,
-    HttpProtocal,
+    RequestPayloadData,
 } from "#interface";
 import { HttpService } from "#core/service/HttpService";
 import { IncomingMessage, ServerResponse } from "http";
 import { createServer } from "https";
 import { Http2Service } from "#core/service/Http2Service";
 import { TimerTools } from "test/tools/TimerTools";
-import { AreaCode, MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
+import { AreaCode, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { GenericRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
 import * as COMMON from "packages/Common";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { proxy } from "packages/default-loader";
+import { LOADER_IGNORE_PATTERN } from "packages/Common";
 
 const PROXY_HTTP = 30010;
 const PROXY_HTTPS = 30020;
@@ -159,9 +160,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
     }, 50000);
 
     afterAll(async () => {
-        HttpServer.close();
+        await HttpServer.close();
         HttpsServer.close();
-        Http2Server.close();
+        await Http2Server.close();
 
         // waiting for server closed
         await TimerTools.sleep(1000);
@@ -193,6 +194,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
         contributor_http2.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
     });
 
+    it("url ignored", async () => {
+        jest.spyOn(LOADER_IGNORE_PATTERN, "test").mockReturnValue(true);
+        const data = await proxy();
+        expect(data.statusCode).toEqual(HTTP_STATUS_CODE.TEMPORARY_REDIRECT);
+        expect(data.headers["Location"]).not.toEqual("");
+    });
+
     describe("http", () => {
         it("success", async () => {
             registerGlobalTIANYU("localhost:30010", "/", "http", {}, {});
@@ -219,12 +227,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
                 };
             });
 
-            jest.spyOn(TIANYU.logger, "warn");
+            const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
             const res = await proxy();
 
             expect(res.statusCode).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
-            expect(TIANYU.logger.warn).toHaveBeenCalled();
+            expect(WARN_SPY).toHaveBeenCalled();
         });
 
         it("http not safe", async () => {
@@ -261,12 +269,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
                 res.end();
             });
 
-            jest.spyOn(TIANYU.logger, "warn");
+            const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
             const res = await proxy();
 
             expect(res.statusCode).toEqual(HTTP_STATUS_CODE.NOT_FOUND);
-            expect(TIANYU.logger.warn).toHaveBeenCalled();
+            expect(WARN_SPY).toHaveBeenCalled();
         });
     });
 
@@ -299,11 +307,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.loader.ProxyLoader", () => {
             );
 
             let counter = 0;
-            HTTP2_DISPATCH_SPY.mockImplementation(async (data: any): Promise<NetworkServiceResponseData> => {
-                const { payload } = data as {
-                    rest: PathEntry;
-                    payload: RequestPayloadData;
-                };
+            HTTP2_DISPATCH_SPY.mockImplementation(async (_data: any): Promise<NetworkServiceResponseData> => {
                 return {
                     statusCode: HTTP_STATUS_CODE.OK,
                     headers: {},

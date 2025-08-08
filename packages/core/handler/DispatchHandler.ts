@@ -6,12 +6,12 @@ import {
     DISPATCH_HANDLER_MODULE_ID,
     DispatchHandlerOption,
     HTTP_STATUS_CODE,
+    ICSPContributorFactorProtocolMap,
     JobWorkerExecutionResult,
     JobWorkerPayload,
     NetworkServiceResponseData,
-    RequestPayloadData,
-    ICSPContributorFactorProtocolMap,
     PathEntry,
+    RequestPayloadData,
 } from "#interface";
 import { createJobManager } from "#job";
 import { ErrorHelper } from "#utils";
@@ -111,6 +111,7 @@ export class DispatchHandler {
                         : value?.statusCode || HTTP_STATUS_CODE.OK,
                 headers: value?.headers || {},
                 body: value?.body || "",
+                binary: value?.binary,
             };
             return result;
         }

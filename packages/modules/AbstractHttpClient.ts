@@ -3,7 +3,7 @@
 import { HttpCallMethod, IHttpClient } from "#interface";
 import { MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { EventEmitter, Stream } from "stream";
-import { createGunzip, Gunzip } from "zlib";
+import { createGunzip } from "zlib";
 
 export abstract class AbstractHttpClient implements IHttpClient {
     protected locate: string;

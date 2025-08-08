@@ -43,8 +43,8 @@ export class JobWorker implements IJobWorker {
     public async terminate(): Promise<void> {
         return this._worker?.threadId
             ? this._worker.terminate().then(
-                  () => Promise.resolve(),
-                  () => Promise.resolve(),
+                  async () => Promise.resolve(),
+                  async () => Promise.resolve(),
               )
             : Promise.resolve();
     }
@@ -91,11 +91,11 @@ export class JobWorker implements IJobWorker {
                     stderr: true,
                 });
 
-                this._worker.stdout.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB info ${this.id}: ${data}`);
+                this._worker.stdout.on("data", (d: any) => {
+                    void TIANYU.audit.debug("job/worker", `JOB info ${this.id}: ${d}`);
                 });
-                this._worker.stderr.on("data", (data) => {
-                    TIANYU.logger.debug(`JOB error ${this.id}: ${data}`);
+                this._worker.stderr.on("data", (d: any) => {
+                    void TIANYU.audit.debug("job/worker", `JOB error ${this.id}: ${d}`);
                 });
 
                 this._worker.on("error", (error: Error) => {
@@ -117,7 +117,9 @@ export class JobWorker implements IJobWorker {
             } catch (e) {
                 const workerTerminate = this._worker?.threadId ? this._worker.terminate() : Promise.resolve(0);
                 workerTerminate
-                    .catch(() => {}) // there is nothing to do since should not have any error
+                    .catch(() => {
+                        // there is nothing to do since should not have any error
+                    })
                     .finally(() => {
                         this._exitCode = Number(SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED);
                         this._status = "invalid";

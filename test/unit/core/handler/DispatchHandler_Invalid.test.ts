@@ -42,17 +42,20 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler_I
         expect(dispatcher).toBeDefined();
 
         if (dispatcher) {
-            dispatcher({} as any).then((result) => {
-                expect(result.exitCode.toString()).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
-                expect(result.status).toEqual("error");
+            dispatcher({} as any).then(
+                (result) => {
+                    expect(result.exitCode.toString()).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
+                    expect(result.status).toEqual("error");
 
-                expect(result.error[0].code).toEqual(SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED);
-                expect(result.error[0].message).toEqual("error occurs when job processing.");
-                expect(result.error[0].error).toEqual(
-                    "job could not be handled internally due to some technical errors (JobManager is not valid).",
-                );
-                done();
-            }, done.fail);
+                    expect(result.error[0].code).toEqual(SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED);
+                    expect(result.error[0].message).toEqual("error occurs when job processing.");
+                    expect(result.error[0].error).toEqual(
+                        "job could not be handled internally due to some technical errors (JobManager is not valid).",
+                    );
+                    done();
+                },
+                () => done.fail(),
+            );
         }
     });
 });

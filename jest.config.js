@@ -42,11 +42,14 @@ module.exports = {
         "^#install/(.*)$": "<rootDir>/packages/install/$1",
         "^test/(.*)$": "<rootDir>/test/$1",
 
+        "^#global$": "<rootDir>/packages/global/index.ts",
         "^#job$": "<rootDir>/packages/job/index.ts",
+        "^#plugin$": "<rootDir>/packages/plugin/index.ts",
         "^#utils$": "<rootDir>/packages/utils/utils-export.ts",
         "^#module$": "<rootDir>/packages/modules/module-export.ts",
         "^#interface$": "<rootDir>/packages/interface/index.ts",
     },
+    testPathIgnorePatterns: ["<rootDir>/scripts"],
     coveragePathIgnorePatterns: ["<rootDir>/test/"],
     // transformIgnorePatterns: ["<rootDir>/node_modules/$"],
 };

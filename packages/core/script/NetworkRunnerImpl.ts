@@ -28,13 +28,13 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
     await sessionMgr.loadData().catch(
         /* istanbul ignore next */ (reason) => {
             TIANYU.environment.development &&
-                TIANYU.logger.error(
-                    JSON.stringify(
-                        ErrorHelper.getError(
-                            SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                            `execute request from ${data.payload.url} failed.`,
-                            (reason as any)?.message || "Technical Error.",
-                        ),
+                void TIANYU.audit.error(
+                    "job/runner/net",
+                    `execute request from ${data.payload.url} failed.`,
+                    ErrorHelper.getError(
+                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                        `execute request from ${data.payload.url} failed.`,
+                        (reason as any)?.message || "Technical Error.",
                     ),
                 );
         },
@@ -70,5 +70,9 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
 
     // return the result
     parentPort?.postMessage(result);
+
+    await TIANYU.lifecycle.recycle();
+    await TIANYU.audit.flush();
+
     process.exit(result.error.length ? HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR : HTTP_STATUS_CODE.OK);
 }

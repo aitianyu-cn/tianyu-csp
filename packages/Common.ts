@@ -9,8 +9,9 @@
 
 import fs from "fs";
 import path from "path";
-import { guid, parseAreaString } from "@aitianyu.cn/types";
-import { TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
+import { guid, MapOfString, parseAreaString } from "@aitianyu.cn/types";
+import { TianyuCSPAuditConfig, TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
+import { Pattern } from "#global";
 
 /** tianyu-csp node_modules root path */
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
@@ -74,3 +75,53 @@ export const SYSTEM_PRIVILEGE_MAP: TianyuCSPPrivilegeMap = raw_privileges;
 export function getInDevMode(): boolean {
     return PROJECT_ENVIRONMENT_MODE.toLowerCase() === "development";
 }
+
+const audit_configuration_raw = raw_config?.config?.audit;
+/** Application Audit configuration */
+export const AUDIT_CONFIGURATION: TianyuCSPAuditConfig = {
+    remote: audit_configuration_raw?.remote || "",
+    path: audit_configuration_raw?.path || "",
+    header: audit_configuration_raw?.header || {},
+    port: audit_configuration_raw?.port || 514,
+    family: audit_configuration_raw?.family || "IPv4",
+    protocal: audit_configuration_raw?.protocal || "tcp",
+    log: audit_configuration_raw?.log === undefined ? true : /* istanbul ignore next */ audit_configuration_raw?.log,
+    buffer: audit_configuration_raw?.buffer || 10,
+    plugin: audit_configuration_raw?.plugin || [],
+};
+
+/** Tianyu CSP HTTP MIME file type map */
+export const MIME_FILE_TYPE_MAP: MapOfString = {
+    css: "css",
+    js: "javascript",
+    ico: "x-icon",
+};
+
+/** Tianyu CSP HTTP MIME content map map */
+export const MIME_FILE_CONTENT_MAP: MapOfString = {
+    css: "text",
+    js: "application",
+    gif: "image",
+    png: "image",
+    jpg: "image",
+    ico: "image",
+};
+
+/** Tianyu CSP HTTP MIME file list of binary http response */
+export const MIME_FILE_BINARY_LIST: string[] = ["gif", "png", "jpg", "ico"];
+
+if (REST_CONFIG?.mime) {
+    for (const key of Object.keys(REST_CONFIG?.mime)) {
+        const map = REST_CONFIG.mime[key];
+
+        const mapKey = key.toLowerCase();
+        MIME_FILE_TYPE_MAP[mapKey] = map.file;
+        MIME_FILE_CONTENT_MAP[mapKey] = map.content;
+        if (map.binary) {
+            MIME_FILE_BINARY_LIST.push(mapKey);
+        }
+    }
+}
+
+/** Pattern for default loader to ignore some url path */
+export const LOADER_IGNORE_PATTERN = new Pattern(REST_CONFIG?.loaderIgnorePattern || /* istanbul ignore next */ []);

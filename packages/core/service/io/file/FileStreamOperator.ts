@@ -4,9 +4,11 @@ import fs from "fs";
 import { IOFileFlags, IOFilePath } from "#interface";
 import { ErrorHelper, FileHelper } from "#utils";
 import { IO_ERROR_CODES } from "#core/Constant";
+import { IReleasable } from "packages/interface/api/lifecycle";
+import { guid } from "@aitianyu.cn/types";
 
 /** File Binary Stream Operator */
-export class FileStreamOperator {
+export class FileStreamOperator implements IReleasable {
     private _file: IOFilePath;
     private _flag: IOFileFlags;
 
@@ -15,6 +17,8 @@ export class FileStreamOperator {
     private _size: number;
 
     private _changed: boolean;
+
+    private _id: string;
 
     /**
      * To create a Binary File Stream instance
@@ -26,6 +30,7 @@ export class FileStreamOperator {
         this._file = file;
         this._flag = flag || "read_write";
 
+        this._id = guid();
         this._fd = -1;
         this._position = -1;
         this._size = -1;
@@ -48,6 +53,9 @@ export class FileStreamOperator {
     public get modified(): boolean {
         return this._changed;
     }
+    public get id(): string {
+        return this._id;
+    }
 
     /** To open the file */
     public async open(): Promise<void> {
@@ -55,6 +63,7 @@ export class FileStreamOperator {
             this._fd = await FileHelper.open(this._file, this._flag);
             this._position = 0;
             this._size = fs.fstatSync(this._fd, {}).size;
+            TIANYU.lifecycle.join(this);
         }
     }
 
@@ -65,6 +74,8 @@ export class FileStreamOperator {
      *                  if the file is modified and "forceSave" is set to "true", an exception will be throw.
      */
     public async close(forceSave?: boolean): Promise<void> {
+        TIANYU.lifecycle.leave(this.id);
+
         if (this.modified) {
             if (forceSave) {
                 return Promise.reject(

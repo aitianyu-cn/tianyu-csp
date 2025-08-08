@@ -1,14 +1,31 @@
 # Tianyu CSP Version Updates
 
-## version 0.0.1
-
-1. basic structure.
-2. http service common interfaces and utils.
-3. job and job manager.
-
-## version 0.0.2
+## version 0.3.0
 
 1. bug fix.
+2. support global module to be used out of TIANYU environment.
+3. support all types of default loader: file-loader, html-loader, proxy-loader and auto-loader(auto search file and html).
+4. support ignore pattern for default loader. ignored patterns will return 403 http status when required.
+
+## version 0.2.1
+
+1. bug fix.
+2. support global lifecycle manager.
+3. remove database connections, please use `npm install @aitianyu.cn/tianyu-csp-tools` to use new external modules.
+4. add audit manager to records all operation. logger should not be used normally.
+
+## version 0.2.0
+
+1. multiple parameters in same id for url searching
+   > decode.  
+   > encode.  
+   > array type in url search structure.
+2. support tcp/udp service and client
+3. file service
+   > file operation helper.  
+   > internal based dir.  
+   > global based dir.  
+   > binary file reader/writer object.
 
 ## version 0.1.0
 
@@ -39,15 +56,12 @@
     > https proxy.
     > http2 proxy.
 
-## version 0.2.0
+## version 0.0.2
 
-1. multiple parameters in same id for url searching
-   > decode.  
-   > encode.  
-   > array type in url search structure.
-2. support tcp/udp service and client
-3. file service
-   > file operation helper.  
-   > internal based dir.  
-   > global based dir.  
-   > binary file reader/writer object.
+1. bug fix.
+
+## version 0.0.1
+
+1. basic structure.
+2. http service common interfaces and utils.
+3. job and job manager.

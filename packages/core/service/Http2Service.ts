@@ -75,7 +75,9 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
             let body: any = null;
             try {
                 body = JSON.parse(decodeURI(data));
-            } catch {}
+            } catch {
+                //
+            }
 
             const payload = this.generatePayload(header[":path"], header, "POST", body);
             this._handleDispatch(payload, stream, "POST");
@@ -111,14 +113,16 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
 
             stream.respond(header);
             stream.end(
-                this.encodeResponse(
-                    response.body
-                        ? typeof response.body === "string"
-                            ? response.body
-                            : JSON.stringify(response.body)
-                        : /* istanbul ignore next */ "",
-                    header,
-                ),
+                response.binary && response.body
+                    ? Buffer.from(response.body, "base64")
+                    : this.encodeResponse(
+                          response.body
+                              ? typeof response.body === "string"
+                                  ? response.body
+                                  : JSON.stringify(response.body)
+                              : /* istanbul ignore next */ "",
+                          response.headers,
+                      ),
             );
         }, 0);
     }

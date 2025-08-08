@@ -25,8 +25,10 @@ export async function doXcall(
     const externalCall = SYSTEM_EXTERNAL_CALL[func]?.[method];
     if (!externalCall) {
         !noerror &&
-            TIANYU.logger.error(
-                ErrorHelper.getErrorString(
+            void TIANYU.audit.error(
+                `generic-xcall/${func}`,
+                message,
+                ErrorHelper.getError(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,
                     `system external function '${func}.${method}' is not configurated`,
@@ -42,8 +44,10 @@ export async function doXcall(
             return (await xcall(data)) || null;
         } else {
             !noerror &&
-                TIANYU.logger.error(
-                    ErrorHelper.getErrorString(
+                void TIANYU.audit.error(
+                    `generic-xcall/${func}`,
+                    message,
+                    ErrorHelper.getError(
                         INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                         message,
                         `system external function '${externalCall.package}.${externalCall.module}.${externalCall.method}' could not to access.`,
@@ -53,8 +57,10 @@ export async function doXcall(
         }
     } catch (error) {
         !noerror &&
-            TIANYU.logger.error(
-                ErrorHelper.getErrorString(
+            void TIANYU.audit.error(
+                `generic-xcall/${func}`,
+                message,
+                ErrorHelper.getError(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,
                     (error as any)?.message || "Technical error occurs.",
