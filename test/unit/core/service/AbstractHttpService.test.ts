@@ -51,6 +51,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.AbstractHttpServi
         expect(Object.keys(SERVICE["_eventMap"]).length).toEqual(0);
     });
 
+    it("setDispatcher", () => {
+        expect(SERVICE["_dispatcher"]).toBeUndefined();
+        SERVICE.setDispatcher(async () => ({ statusCode: 200, headers: {}, body: null }));
+        expect(SERVICE["_dispatcher"]).toBeDefined();
+    });
+
     it("watch & unwatch", () => {
         SERVICE.watch("test", "w", () => undefined);
 

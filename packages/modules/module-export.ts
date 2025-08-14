@@ -7,11 +7,5 @@
  * All the modules only can be used by infra->importer.MODULE
  */
 
-export * from "./HttpClient";
-export * from "./HttpsClient";
-export * from "./Http2Client";
-export * from "./TcpClient";
-export * from "./UdpClient";
-
-/** Remote procedures call */
-export * as RPC from "./RemoteProcedures";
+export * as Net from "./net";
+export * as Auth from "./auth";

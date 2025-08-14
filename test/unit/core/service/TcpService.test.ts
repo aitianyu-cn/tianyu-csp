@@ -2,7 +2,7 @@
 
 import { TcpService } from "#core/service/TcpService";
 import { ISocketAddress } from "#interface";
-import { TcpClient } from "#module";
+import { Net } from "#module";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.TcpService", () => {
     const dataHanler = async (remote: ISocketAddress, data: Buffer) => {
@@ -42,7 +42,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.TcpService", () =
     it("has response message", async () => {
         let dataStr = "";
 
-        const client = new TcpClient({ log: true });
+        const client = new Net.TcpClient({ log: true });
         const receivePromise = new Promise<void>((resolve) => {
             const onData = (data: Buffer) => {
                 dataStr = data.toString("utf-8");

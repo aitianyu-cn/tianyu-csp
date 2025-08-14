@@ -71,6 +71,8 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     private _cacheHandler?: RequestCacheHandler;
     private _contributor?: IContributor<ICSPContributorFactorProtocolMap>;
 
+    private _dispatcher?: (request: { rest: PathEntry; payload: RequestPayloadData }) => Promise<NetworkServiceResponseData>;
+
     public constructor(options?: OPT, contributor?: IContributor<ICSPContributorFactorProtocolMap>) {
         super();
 
@@ -103,6 +105,12 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
         }
 
         this._eventMap[event].on = callback;
+    }
+
+    public setDispatcher(
+        dispatcher: (request: { rest: PathEntry; payload: RequestPayloadData }) => Promise<NetworkServiceResponseData>,
+    ): void {
+        this._dispatcher = dispatcher;
     }
 
     public emit<EK extends keyof Event, EV = EK extends keyof Event ? Event[EK] : undefined>(event: EK, value: EV): void {
@@ -166,7 +174,8 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     }
 
     protected async dispatch(payload: RequestPayloadData, method: HttpCallMethod): Promise<NetworkServiceResponseData> {
-        const dispatcher = this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
+        const dispatcher =
+            this._dispatcher || this._contributor?.findModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
         if (!dispatcher) {
             return DISPATCH_ERROR_RESPONSES["dispatch-invalid"](payload);
         }

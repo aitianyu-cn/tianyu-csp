@@ -3,8 +3,8 @@
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { Http2Query, HTTP_STATUS_CODE, HttpCallMethod, NetworkServiceResponseData } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
-import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
-import { Http2Client } from "packages/modules/Http2Client";
+import { HTTP_CLIENT_MAP } from "packages/modules/net/Constant";
+import { Http2Client } from "packages/modules/net/Http2Client";
 import { LOADER_IGNORE_PATTERN, REST_CONFIG } from "packages/Common";
 import { StringHelper } from "@aitianyu.cn/types";
 

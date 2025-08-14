@@ -3,7 +3,7 @@
 import { HttpProtocal, ISocketAddress, SocketAddressFamily } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 import { AUDIT_CONFIGURATION, PROJECT_NAME } from "packages/Common";
-import { HTTP_CLIENT_MAP } from "packages/modules/Constant";
+import { HTTP_CLIENT_MAP } from "packages/modules/net/Constant";
 import { PluginHandler } from "packages/utils/handler/PluginHandler";
 
 export interface IAuditRecordBuffer {
@@ -58,7 +58,7 @@ export async function audit4UDP(
 ): Promise<void> {
     for (const buffer of buffers) {
         const msg = `[${buffer.level}] --- ${buffer.timestamp} --- ${PROJECT_NAME} --- ${buffer.app} --- ${buffer.message}`;
-        void TIANYU.import.MODULE.UdpClient(Buffer.from(msg), {
+        void TIANYU.import.MODULE.Net.UdpClient(Buffer.from(msg), {
             remote,
             family,
             response: false,
@@ -72,7 +72,7 @@ export async function audit4TCP(
     family: SocketAddressFamily,
     buffers: IAuditRecordBuffer[],
 ): Promise<void> {
-    const client = new TIANYU.import.MODULE.TcpClient({ log: false });
+    const client = new TIANYU.import.MODULE.Net.TcpClient({ log: false });
     await client.connect({
         family: family === "IPv4" ? 4 : /* istanbul ignore next */ 6,
         port: remote.port,

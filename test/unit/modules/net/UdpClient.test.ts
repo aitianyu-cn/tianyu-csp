@@ -1,10 +1,10 @@
 /** @format */
 
-import { UdpClient } from "#module";
+import { Net } from "#module";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.UdpClient", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.UdpClient", () => {
     it("send with error", (done) => {
-        UdpClient(Buffer.from("test"), {
+        Net.UdpClient(Buffer.from("test"), {
             remote: {
                 address: "255.255.255.255",
                 port: 60003,

@@ -1,6 +1,6 @@
 /** @format */
 
-import { AbstractHttpClient } from "packages/modules/AbstractHttpClient";
+import { AbstractHttpClient } from "packages/modules/net/AbstractHttpClient";
 
 class ClientImpl extends AbstractHttpClient {
     public async send(): Promise<void> {
@@ -8,7 +8,7 @@ class ClientImpl extends AbstractHttpClient {
     }
 }
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.AbstractHttpClient", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.AbstractHttpClient", () => {
     it("raw", () => {
         const client = new ClientImpl("localhost", "/", "GET");
 

@@ -19,7 +19,7 @@ import path from "path";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { TimerTools } from "test/tools/TimerTools";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.Http2Client", () => {
     const key = readFileSync(path.join(process.cwd(), ".config/localhost+2-key.pem"), "utf-8");
     const cert = readFileSync(path.join(process.cwd(), ".config/localhost+2.pem"), "utf-8");
     const contributor = createContributor();
@@ -96,7 +96,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
     });
 
     it("invalid getter result", () => {
-        const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+        const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
 
         expect(client.raw).toEqual("");
         expect(client.response).toBeNull();
@@ -124,14 +124,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
     });
 
     it("invalid response", () => {
-        const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+        const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
         client["querys"].push({ query: {}, result: "test", status: -1, headers: {} });
 
         expect(client.response).toBeNull();
     });
 
     it("setOption", () => {
-        const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+        const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
 
         expect(client["_options"]).toBeUndefined();
 
@@ -174,7 +174,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.Http2Client", () => {
             };
         });
 
-        const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+        const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
         client.setPort(SERVICE_PORT);
         client.setOption({ rejectUnauthorized: false });
 

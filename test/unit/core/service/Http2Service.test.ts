@@ -120,7 +120,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
                 };
             });
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -141,7 +141,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
                 };
             });
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -162,7 +162,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
                 };
             });
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -174,7 +174,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         }, 50000);
 
         it("path not valid", async () => {
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test_not_valid", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test_not_valid", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -188,7 +188,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         it("execution error", async () => {
             DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -203,7 +203,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "GET");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "GET");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -228,7 +228,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
                 };
             });
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "POST");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -251,7 +251,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
                 };
             });
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "POST");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -263,7 +263,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             expect(DISPATCH_SPY).toHaveBeenCalled();
         }, 50000);
         it("path not valid", async () => {
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test_not_valid", "POST");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test_not_valid", "POST");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -278,7 +278,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
         it("execution error", async () => {
             DISPATCH_SPY.mockImplementation(async () => Promise.reject());
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "POST");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -294,7 +294,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
             contributor.unexportModule("request-handler.dispatcher", REQUEST_HANDLER_MODULE_ID);
             contributor.unexportModule("request-handler.items-getter", REQUEST_HANDLER_MODULE_ID);
 
-            const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "POST");
+            const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "POST");
             client.setParameter({ TEST: ["true"] });
             client.setPort(SERVICE_PORT);
             client.setOption({ rejectUnauthorized: false });
@@ -307,7 +307,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", ()
     });
 
     it("invalid method", async () => {
-        const client = new TIANYU.import.MODULE.Http2Client("localhost", "/test", "PUT" as any);
+        const client = new TIANYU.import.MODULE.Net.Http2Client("localhost", "/test", "PUT" as any);
         client.setParameter({ TEST: ["true"] });
         client.setPort(SERVICE_PORT);
         client.setOption({ rejectUnauthorized: false });

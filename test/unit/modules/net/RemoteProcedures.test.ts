@@ -30,11 +30,11 @@ const PROXY_HTTP2 = 30030;
 const SEC_CERT = readFileSync(path.join(process.cwd(), ".config/localhost+2.pem"), "utf-8");
 const SEC_KEY = readFileSync(path.join(process.cwd(), ".config/localhost+2-key.pem"), "utf-8");
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.RemoteProcedures", () => {
     it("http not safe", (done) => {
         jest.spyOn(COMMON, "getInDevMode").mockReturnValue(false);
 
-        TIANYU.import.MODULE.RPC.call(
+        TIANYU.import.MODULE.Net.RPC.call(
             {
                 host: "",
                 url: "",
@@ -206,7 +206,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     };
                 });
 
-                const res = await TIANYU.import.MODULE.RPC.call(
+                const res = await TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30010",
                         url: "/",
@@ -233,7 +233,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
 
                 const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
-                TIANYU.import.MODULE.RPC.call(
+                TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30010",
                         url: "/",
@@ -267,7 +267,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     res.end();
                 });
 
-                const res = await TIANYU.import.MODULE.RPC.call(
+                const res = await TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30020",
                         url: "/",
@@ -293,7 +293,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
 
                 const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
-                TIANYU.import.MODULE.RPC.call(
+                TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30020",
                         url: "/",
@@ -328,7 +328,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     };
                 });
 
-                const res = await TIANYU.import.MODULE.RPC.call(
+                const res = await TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30030",
                         url: "/",
@@ -357,7 +357,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
                     };
                 });
 
-                const res = await TIANYU.import.MODULE.RPC.call(
+                const res = await TIANYU.import.MODULE.Net.RPC.call(
                     {
                         host: "localhost:30030",
                         url: "/",
@@ -377,7 +377,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.RemoteProcedures", () 
         it("transformer failed", async () => {
             const WARN_SPY = jest.spyOn(TIANYU.logger, "warn");
 
-            const res = await TIANYU.import.MODULE.RPC.call(
+            const res = await TIANYU.import.MODULE.Net.RPC.call(
                 {
                     host: "localhost:30010",
                     url: "/",

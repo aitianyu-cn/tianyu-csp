@@ -5,7 +5,7 @@ import { IncomingMessage, Server, ServerResponse } from "http";
 import { TimerTools } from "test/tools/TimerTools";
 import { gzipSync } from "zlib";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.HttpClient", () => {
     let server: Server;
 
     const handler = {
@@ -30,7 +30,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     }, 50000);
 
     it("http success 1", async () => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "", "GET");
         client.setPort(32000);
 
         handler.get.mockImplementation((req: IncomingMessage, res: ServerResponse) => {
@@ -46,7 +46,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("http success 2", async () => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "/test-path", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "/test-path", "GET");
         client.setPort(32000);
         client.setCookie({ LANG: "zh_CN" });
         client.setHeader({ cookie: "SESSION=123456789;" });
@@ -72,7 +72,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("http success 3 - post", async () => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "/test-path", "POST");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "/test-path", "POST");
         client.setPort(32000);
         client.setBody({ test: "test" });
 
@@ -97,7 +97,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("http success 4 - post", async () => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "/test-path", "POST");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "/test-path", "POST");
         client.setPort(32000);
 
         let body = "";
@@ -121,7 +121,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("http success 5 - gzip", async () => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "/test-path", "POST");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "/test-path", "POST");
         client.setPort(32000);
         client.setHeader({ "accept-encoding": "gzip" });
 
@@ -147,7 +147,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("failed 1", (done) => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "", "GET");
         client.setPort(32000);
 
         handler.get.mockImplementation((req: IncomingMessage, res: ServerResponse) => {
@@ -169,7 +169,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpClient", () => {
     });
 
     it("failed 2", (done) => {
-        const client = new TIANYU.import.MODULE.HttpClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpClient("localhost", "", "GET");
         client.setPort(10000);
 
         handler.get.mockImplementation((req: IncomingMessage, res: ServerResponse) => {

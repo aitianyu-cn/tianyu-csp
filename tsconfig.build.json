@@ -22,6 +22,7 @@
         "outDir": "./build",
         "paths": {
             "packages/*": ["packages/*"],
+            "#base/*": ["packages/base/*"],
             "#core/*": ["packages/core/*"],
             "#loader/*": ["packages/loader/*"],
 

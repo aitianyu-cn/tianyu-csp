@@ -37,6 +37,7 @@ module.exports = {
         // "^infra/(.*)$": "<rootDir>/packages/infra/$1",
         // "^test/(.*)$": "<rootDir>/__test__/$1",
         "^packages/(.*)$": "<rootDir>/packages/$1",
+        "^#base/(.*)$": "<rootDir>/packages/base/$1",
         "^#core/(.*)$": "<rootDir>/packages/core/$1",
         "^#loader/(.*)$": "<rootDir>/packages/loader/$1",
         "^#install/(.*)$": "<rootDir>/packages/install/$1",

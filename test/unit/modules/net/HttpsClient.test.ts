@@ -7,9 +7,9 @@ import path from "path";
 import { TimerTools } from "test/tools/TimerTools";
 import { gzipSync } from "zlib";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.HttpsClient", () => {
     it("addCert", () => {
-        const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
         client.addCert("cert1");
         client.addCert("cert2");
         client.addCert("cert3");
@@ -18,7 +18,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
     });
 
     it("addCa", () => {
-        const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
         client.addCa("ca1");
         client.addCa("ca2");
         client.addCa("ca3");
@@ -27,7 +27,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
     });
 
     it("setRequireAuth", () => {
-        const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+        const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
         expect(client["authorization"]).toBeTruthy();
 
         client.setRequireAuth(false);
@@ -64,7 +64,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         }, 500000);
 
         it("http success 1", async () => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
             client.setPort(32001);
             client.addCert(cert);
             client.addCa(cert);
@@ -83,7 +83,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("http success 2", async () => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "/test-path", "GET");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "/test-path", "GET");
             client.setPort(32001);
             client.setCookie({ LANG: "zh_CN" });
             client.setHeader({ cookie: "SESSION=123456789;" });
@@ -110,7 +110,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("http success 3 - post", async () => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "/test-path", "POST");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "/test-path", "POST");
             client.setPort(32001);
             client.setBody({ test: "test" });
             client.setRequireAuth(false);
@@ -136,7 +136,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("http success 4 - post", async () => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "/test-path", "POST");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "/test-path", "POST");
             client.setPort(32001);
             client.setRequireAuth(false);
 
@@ -161,7 +161,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("http success 4 - gzip", async () => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "/test-path", "POST");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "/test-path", "POST");
             client.setPort(32001);
             client.setRequireAuth(false);
 
@@ -187,7 +187,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("failed 1", (done) => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
             client.setPort(32001);
             client.setRequireAuth(false);
 
@@ -210,7 +210,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.HttpsClient", () => {
         });
 
         it("failed 2", (done) => {
-            const client = new TIANYU.import.MODULE.HttpsClient("localhost", "", "GET");
+            const client = new TIANYU.import.MODULE.Net.HttpsClient("localhost", "", "GET");
             client.setPort(10000);
             client.setRequireAuth(false);
 

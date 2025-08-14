@@ -12,12 +12,15 @@ import path from "path";
 import { guid, MapOfString, parseAreaString } from "@aitianyu.cn/types";
 import { TianyuCSPAuditConfig, TianyuCSPConfig, TianyuCSPPrivilegeMap } from "#interface";
 import { Pattern } from "#global";
+import { commander } from "./Commander";
+
+const COMMANDER = commander();
 
 /** tianyu-csp node_modules root path */
 export const INTERNAL_PROJECT_ROOT: string = __dirname;
 
 /** Tianyu CSP application project root path */
-export const PROJECT_ROOT_PATH: string = process.cwd();
+export const PROJECT_ROOT_PATH: string = COMMANDER.homedir || process.cwd();
 
 const DEFAULT_CSP_CONFIG_NAME: string = "csp.config";
 const DEFAULT_EXTERNAL_MODULE_PATH: string = "src";
