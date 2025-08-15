@@ -1,5 +1,6 @@
 /** @format */
 
+import { Json } from "#base/object/Json";
 import { HttpCallMethod, IHttpClient } from "#interface";
 import { MapOfString, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { EventEmitter, Stream } from "stream";
@@ -45,11 +46,7 @@ export abstract class AbstractHttpClient implements IHttpClient {
     }
 
     public get response(): any {
-        try {
-            return JSON.parse(this.result);
-        } catch {
-            return null;
-        }
+        return Json.parseSafe(this.result);
     }
 
     public setParameter(param: MapOfStrings): void {

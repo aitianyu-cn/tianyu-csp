@@ -1,5 +1,6 @@
 /** @format */
 
+import { StringObj } from "#base/object/String";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { GenericRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
@@ -58,7 +59,7 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute job '${payload.name}' failed with payload: ${JSON.stringify(payload.payload)}.`,
+                    `execute job '${payload.name}' failed with payload: ${StringObj.stringifySafe(payload.payload)}.`,
                     (e as any)?.message || "Technical Error.",
                 ),
             );
@@ -69,7 +70,7 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute job '${payload.name}' failed with payload: ${JSON.stringify(payload.payload)}.`,
+                    `execute job '${payload.name}' failed with payload: ${StringObj.stringifySafe(payload.payload)}.`,
                     (e as any)?.message || "Technical Error.",
                 ),
             );

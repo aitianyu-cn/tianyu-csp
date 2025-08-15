@@ -12,6 +12,8 @@ import {
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
+import { StringObj } from "#base/object/String";
+import { Json } from "#base/object/Json";
 
 /** Http 1.0 service */
 export class HttpService extends AbstractHttpService<HttpServiceOption> {
@@ -69,7 +71,7 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
         req.on("end", () => {
             let body: any = null;
             try {
-                body = JSON.parse(decodeURI(data));
+                body = Json.parseSafe(decodeURI(data));
             } catch {
                 //
             }
@@ -104,7 +106,7 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                           response.body
                               ? typeof response.body === "string"
                                   ? response.body
-                                  : JSON.stringify(response.body)
+                                  : StringObj.stringifySafe(response.body)
                               : /* istanbul ignore next */ "",
                           response.headers,
                       ),
@@ -128,7 +130,7 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                 ],
             };
             res.statusCode = HTTP_STATUS_CODE.METHOD_NOT_ALLOWED;
-            res.end(JSON.stringify(resBody));
+            res.end(StringObj.stringifySafe(resBody));
         }, 0);
     }
 }

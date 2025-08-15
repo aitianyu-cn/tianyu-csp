@@ -6,6 +6,8 @@ import { AbstractHttpClient } from "./AbstractHttpClient";
 import { ErrorHelper, HttpHelper } from "#utils";
 import { MapOfType } from "@aitianyu.cn/types";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { StringObj } from "#base/object/String";
+import { Json } from "#base/object/Json";
 
 export class Http2Client extends AbstractHttpClient {
     private _options?: http2.SecureClientSessionOptions;
@@ -85,11 +87,7 @@ export class Http2Client extends AbstractHttpClient {
             return null;
         }
 
-        try {
-            return JSON.parse(this.querys[index].result);
-        } catch {
-            return null;
-        }
+        return Json.parseSafe(this.querys[index].result);
     }
 
     /**
@@ -210,7 +208,7 @@ export class Http2Client extends AbstractHttpClient {
                 );
 
                 if (query.body && (method as HttpCallMethod) === "POST") {
-                    req.write(JSON.stringify(query.body));
+                    req.write(StringObj.stringifySafe(query.body));
                 }
 
                 req.end();

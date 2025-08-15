@@ -1,5 +1,6 @@
 /** @format */
 
+import { StringObj } from "#base/object/String";
 import { HTTP_STATUS_CODE, JobExecutionStatus, OperationError } from "#interface";
 
 const HTTP_JOB_STATUES_MAP: {
@@ -45,7 +46,7 @@ export class ErrorHelper {
      * @returns return a JSON string stringified by operation error define
      */
     public static getErrorString(code: string, message: string, errorDetails?: string): string {
-        return JSON.stringify({
+        return StringObj.stringifySafe({
             code,
             message,
             traceId: TIANYU?.trace?.getId() || undefined,

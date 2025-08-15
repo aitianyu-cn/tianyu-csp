@@ -7,6 +7,7 @@ import { HTTP_CLIENT_MAP } from "packages/modules/net/Constant";
 import { Http2Client } from "packages/modules/net/Http2Client";
 import { LOADER_IGNORE_PATTERN, REST_CONFIG } from "packages/Common";
 import { StringHelper } from "@aitianyu.cn/types";
+import { StringObj } from "#base/object/String";
 
 /**
  * @internal
@@ -125,6 +126,6 @@ function getResponseFromHttp2(client: Http2Client): NetworkServiceResponseData {
     return {
         statusCode: HTTP_STATUS_CODE.OK,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(queryResponses),
+        body: StringObj.stringifySafe(queryResponses),
     };
 }

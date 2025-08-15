@@ -23,7 +23,6 @@ const rest_file_path = path.resolve(PROJECT_ROOT_PATH, REST_CONFIG_FILE || /* is
 let raw_rest: MapOfType<HttpRestItem> = {};
 if (fs.existsSync(rest_file_path)) {
     try {
-        // raw_rest = JSON.parse(fs.readFileSync(rest_file_path, "utf-8"));
         raw_rest = require(rest_file_path);
     } catch {
         /* istanbul ignore next */ raw_rest = {};

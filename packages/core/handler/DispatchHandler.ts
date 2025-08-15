@@ -1,5 +1,6 @@
 /** @format */
 
+import { StringObj } from "#base/object/String";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { findActualModule } from "#core/infra/ImporterManager";
 import {
@@ -101,7 +102,11 @@ export class DispatchHandler {
         if (error.length) {
             return Promise.reject({
                 status,
-                error: ErrorHelper.getError(exitCode.toString(), "error occurs when request processing.", JSON.stringify(error)),
+                error: ErrorHelper.getError(
+                    exitCode.toString(),
+                    "error occurs when request processing.",
+                    StringObj.stringifySafe(error),
+                ),
             });
         } else {
             const result: NetworkServiceResponseData = {

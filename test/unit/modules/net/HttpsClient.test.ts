@@ -157,7 +157,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.HttpsClient", () =
             await client.send();
 
             expect(client.raw).toEqual("success");
-            expect(body).toEqual(JSON.stringify(""));
+            expect(body).toEqual("");
         });
 
         it("http success 4 - gzip", async () => {
@@ -183,7 +183,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.HttpsClient", () =
             await client.send();
 
             expect(client.raw).toEqual("success");
-            expect(body).toEqual(JSON.stringify(""));
+            expect(body).toEqual("");
         });
 
         it("failed 1", (done) => {

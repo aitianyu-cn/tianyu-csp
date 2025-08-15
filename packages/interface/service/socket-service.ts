@@ -1,7 +1,7 @@
 /** @format */
 
-import { randomInt } from "crypto";
 import { INetworkService } from "./service";
+import { Integer } from "#base/index";
 
 /** Socket Protocal Type: TCP or UDP */
 export type SocketProtocal = "tcp" | "udp";
@@ -28,5 +28,5 @@ export interface ISocketAddress {
  */
 export const DEFAULT_SOCKET_SERVICE_ADDR: ISocketAddress = {
     address: "0.0.0.0",
-    port: randomInt(1024, 65535),
+    port: Integer.random(1024, 65535),
 };

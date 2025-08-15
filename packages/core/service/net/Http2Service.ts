@@ -14,6 +14,8 @@ import { createSecureServer, Http2SecureServer, IncomingHttpHeaders, OutgoingHtt
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { StringObj } from "#base/object/String";
+import { Json } from "#base/object/Json";
 
 export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2Events> {
     protected declare _server: Http2SecureServer;
@@ -74,7 +76,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
         stream.on("end", () => {
             let body: any = null;
             try {
-                body = JSON.parse(decodeURI(data));
+                body = Json.parseSafe(decodeURI(data)) || data;
             } catch {
                 //
             }
@@ -98,7 +100,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
                 ":status": HTTP_STATUS_CODE.METHOD_NOT_ALLOWED,
                 "content-type": "application/json; charset=utf-8",
             });
-            stream.end(JSON.stringify(resBody));
+            stream.end(StringObj.stringifySafe(resBody));
         }, 0);
     }
 
@@ -119,7 +121,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
                           response.body
                               ? typeof response.body === "string"
                                   ? response.body
-                                  : JSON.stringify(response.body)
+                                  : StringObj.stringifySafe(response.body)
                               : /* istanbul ignore next */ "",
                           response.headers,
                       ),

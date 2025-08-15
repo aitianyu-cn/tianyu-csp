@@ -1,5 +1,6 @@
 /** @format */
 
+import { StringObj } from "#base/object/String";
 import { HttpProtocal, ISocketAddress, SocketAddressFamily } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 import { AUDIT_CONFIGURATION, PROJECT_NAME } from "packages/Common";
@@ -80,7 +81,7 @@ export async function audit4TCP(
     });
 
     for (const buffer of buffers) {
-        const addition = buffer.additionalData ? ` --- ${JSON.stringify(buffer.additionalData)}` : "";
+        const addition = buffer.additionalData ? ` --- ${StringObj.stringifySafe(buffer.additionalData)}` : "";
         const msg = `[${buffer.level}] --- ${buffer.timestamp} --- ${PROJECT_NAME} --- ${buffer.app} --- ${buffer.message}${addition}`;
         await client.send(Buffer.from(msg));
     }

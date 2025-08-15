@@ -4,6 +4,7 @@ import * as Https from "https";
 import { HttpHelper } from "#utils";
 import { HTTP_STATUS_CODE, HttpCallMethod } from "#interface";
 import { AbstractHttpClient } from "./AbstractHttpClient";
+import { StringObj } from "#base/object/String";
 
 /**
  * Https Client
@@ -92,7 +93,7 @@ export class HttpsClient extends AbstractHttpClient {
             client.on("error", reject);
 
             if (this.method === "POST") {
-                client.write(JSON.stringify(this.body || ""));
+                client.write(StringObj.stringifySafe(this.body || ""));
             }
 
             client.end();
