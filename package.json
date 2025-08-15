@@ -1,6 +1,6 @@
 {
     "name": "@aitianyu.cn/tianyu-csp",
-    "version": "0.3.0",
+    "version": "0.3.10",
     "description": "Project for Common Service Platform of Tianyu.",
     "types": "./dist/types/index.d.ts",
     "exports": {
