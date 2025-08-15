@@ -44,13 +44,13 @@ export {
     GlobalExport as TianyuCSPGlobal,
 };
 
-export namespace BCP {
-    /** BCP utils */
+export namespace CSP {
+    /** CSP utils */
     export import Utils = UtilsExport;
-    /** BCP Common Data */
+    /** CSP Common Data */
     export import Common = CommonExport;
-    /** BCP Infra components */
+    /** CSP Infra components */
     export import Infra = InfraExport;
-    /** BCP Global usable modules */
+    /** CSP Global usable modules */
     export import Global = GlobalExport;
 }

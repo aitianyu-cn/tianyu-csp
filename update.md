@@ -1,5 +1,14 @@
 # Tianyu CSP Version Updates
 
+## version 0.3.10
+
+1. bug fix
+2. re-structure some internal files to enchange the project structure.
+3. deprecate `TianyuCSP` namespace and create new namespace `CSP` for feature `BCP` project.
+4. add basic libs for base data type and crypto.
+5. add auth modules and support TOTP calculation.
+6. enhance job execution payload.
+
 ## version 0.3.0
 
 1. bug fix.
