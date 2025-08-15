@@ -1,10 +1,10 @@
 /** @format */
 
-import { UdpService } from "#core/service/UdpService";
+import { UdpService } from "#core/service/net/UdpService";
 import { ISocketAddress, UdpClientResponse } from "#interface";
 import { Net } from "#module";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.UdpService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.UdpService", () => {
     const PORT = 60000;
     const messageHandler = (_remote: ISocketAddress, message: Buffer) => {
         const src = message.toString("utf-8");

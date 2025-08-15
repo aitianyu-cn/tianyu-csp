@@ -3,7 +3,7 @@
 import { REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { createContributor } from "#core/InfraLoader";
-import { Http2Service } from "#core/service/Http2Service";
+import { Http2Service } from "#core/service/net/Http2Service";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
@@ -18,7 +18,7 @@ import path from "path";
 import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { TimerTools } from "test/tools/TimerTools";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.Http2Service", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.Http2Service", () => {
     const key = readFileSync(path.join(process.cwd(), ".config/localhost+2-key.pem"), "utf-8");
     const cert = readFileSync(path.join(process.cwd(), ".config/localhost+2.pem"), "utf-8");
     const contributor = createContributor();

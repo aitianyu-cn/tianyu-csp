@@ -26,7 +26,15 @@ export class Base32 {
             bits += 8;
 
             while (bits >= 5) {
-                output += alphabet[Integer.and(Integer.rightUnsigned(value, bits - 5), 31)];
+                const index = Integer.and(Integer.rightUnsigned(value, bits - 5), 31);
+                const char = alphabet[index];
+                if (char === undefined) {
+                    throw ErrorHelper.getError(
+                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                        `Invalid index: ${index} in alphabet "${alphabet}"`,
+                    );
+                }
+                output += char;
                 bits -= 5;
             }
         }
@@ -35,15 +43,19 @@ export class Base32 {
             output += alphabet[Integer.and(Integer.left(value, 5 - bits), 31)];
         }
 
-        while (output.length % 8 !== 0) {
-            output += "=";
+        if (encoding !== "Crockford") {
+            while (output.length % 8 !== 0) {
+                output += "=";
+            }
         }
 
         return output;
     }
 
-    public static decode(data: string, encoding: EncodingType): ArrayBuffer {
+    public static decode(input: string, encoding: EncodingType): ArrayBuffer {
         const alphabet = Base32.getAlphabet(encoding);
+        const data =
+            encoding !== "Crockford" ? input.replace(/=+$/, "") : input.toUpperCase().replace(/O/g, "0").replace(/[IL]/g, "1");
         const length = data.length;
 
         let bits = 0;

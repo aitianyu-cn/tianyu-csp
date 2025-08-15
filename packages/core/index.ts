@@ -5,11 +5,8 @@ import { createContributor } from "./InfraLoader";
 export * from "./handler/DispatchHandler";
 export * from "./handler/RequestHandler";
 
-export * from "./service/AbstractHttpService";
-export * from "./service/HttpService";
-export * from "./service/Http2Service";
-export * from "./service/TcpService";
-export * from "./service/UdpService";
+export * as Basic from "#base/index";
+export * as Net from "./service/net";
 export * as IO from "./service/io";
 
 export { loadInfra as load } from "./InfraLoader";

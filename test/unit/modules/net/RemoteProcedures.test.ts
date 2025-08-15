@@ -4,8 +4,8 @@ import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { createContributor } from "#core/InfraLoader";
-import { Http2Service } from "#core/service/Http2Service";
-import { HttpService } from "#core/service/HttpService";
+import { Http2Service } from "#core/service/net/Http2Service";
+import { HttpService } from "#core/service/net/HttpService";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,

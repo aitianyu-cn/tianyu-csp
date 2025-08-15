@@ -26,6 +26,7 @@ export class TOTP {
             Integer.and(HS[offset + 3], 0xff),
         );
         let code = bytes.toString().slice(-6);
+        /* istanbul ignore next */
         for (let i = 0; i > 6 - code.length; i++) {
             code = `0${code}`;
         }

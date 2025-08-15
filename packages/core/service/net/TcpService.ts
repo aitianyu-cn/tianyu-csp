@@ -91,7 +91,7 @@ export class TcpService extends AbstractSocketService {
     }
 
     private sendResponse(socket: net.Socket, data: Buffer): void {
-        socket.write(data, (error?: Error) => {
+        socket.write(data, (error?: Error | null) => {
             error &&
                 /* istanbul ignore next */ void TIANYU.audit.error(
                     this.app,

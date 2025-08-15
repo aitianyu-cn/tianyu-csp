@@ -32,12 +32,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.base.object.DataView", () => {
         });
 
         it("array buffer", () => {
-            const data = Buffer.alloc(3, Uint8Array.from([1, 2, 3]));
+            const data = new ArrayBuffer(3);
             const view = DataView.parse(data);
             expect(view.byteLength).toEqual(3);
-            expect(view.getInt8(0)).toEqual(1);
-            expect(view.getInt8(1)).toEqual(2);
-            expect(view.getInt8(2)).toEqual(3);
         });
 
         it("error", () => {

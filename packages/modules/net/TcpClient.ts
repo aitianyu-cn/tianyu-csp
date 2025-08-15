@@ -75,7 +75,7 @@ export class TcpClient implements IReleasable {
      */
     public async send(msg: Buffer): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._client.write(msg, (error?: Error) => {
+            this._client.write(msg, (error?: Error | null) => {
                 if (!error) {
                     resolve();
                 } else {

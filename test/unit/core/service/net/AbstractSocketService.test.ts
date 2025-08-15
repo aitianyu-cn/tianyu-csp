@@ -1,6 +1,6 @@
 /** @format */
 
-import { AbstractSocketService } from "#core/service/AbstractSocketService";
+import { AbstractSocketService } from "#core/service/net/AbstractSocketService";
 import { CallbackAction } from "@aitianyu.cn/types";
 
 class SocketServiceImpl extends AbstractSocketService {
@@ -12,7 +12,7 @@ class SocketServiceImpl extends AbstractSocketService {
     }
 }
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.AbstractSocketService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.AbstractSocketService", () => {
     it("default address", () => {
         const service = new SocketServiceImpl(
             {

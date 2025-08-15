@@ -6,7 +6,7 @@ import {
     IHttpServerAction,
     IHttpServerLifecycle,
     IHttpServerListener,
-} from "#core/service/AbstractHttpService";
+} from "#core/service/net/AbstractHttpService";
 import { HttpProtocal, HttpServiceOption } from "#interface";
 
 interface ITestEvent {
@@ -42,7 +42,7 @@ class TestService extends AbstractHttpService<HttpServiceOption, ITestEvent> {
     protected protocol: HttpProtocal = "http";
 }
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.AbstractHttpService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.AbstractHttpService", () => {
     let SERVICE: TestService;
 
     beforeEach(() => {

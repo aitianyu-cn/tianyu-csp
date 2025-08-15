@@ -3,7 +3,7 @@
 import { REST_REQUEST_ITEM_MAP } from "#core/handler/RestHandlerConstant";
 import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { createContributor } from "#core/InfraLoader";
-import { HttpService } from "#core/service/HttpService";
+import { HttpService } from "#core/service/net/HttpService";
 import {
     DefaultRequestItemsMap,
     DefaultRequestItemTargetType,
@@ -17,7 +17,7 @@ import { SERVICE_HOST, SERVICE_PORT } from "test/content/HttpConstant";
 import { HttpClient } from "test/tools/HttpClient";
 import { TimerTools } from "test/tools/TimerTools";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.HttpService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.HttpService", () => {
     const contributor = createContributor();
     const Mock_RequestHandler = {
         item: (payload: { name: keyof DefaultRequestItemsMap; type: DefaultRequestItemTargetType }): string => {

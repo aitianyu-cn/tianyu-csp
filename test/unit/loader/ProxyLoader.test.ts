@@ -15,10 +15,10 @@ import {
     REQUEST_HANDLER_MODULE_ID,
     RequestPayloadData,
 } from "#interface";
-import { HttpService } from "#core/service/HttpService";
+import { HttpService } from "#core/service/net/HttpService";
 import { IncomingMessage, ServerResponse } from "http";
 import { createServer } from "https";
-import { Http2Service } from "#core/service/Http2Service";
+import { Http2Service } from "#core/service/net/Http2Service";
 import { TimerTools } from "test/tools/TimerTools";
 import { AreaCode, MapOfStrings, MapOfType } from "@aitianyu.cn/types";
 import { GenericRequestManager } from "#core/infra/RequestManager";

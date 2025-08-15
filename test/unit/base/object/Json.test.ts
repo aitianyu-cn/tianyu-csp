@@ -22,8 +22,13 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.base.object.Json", () => {
             expect(ERROR_SPY).not.toHaveBeenCalled();
         });
 
-        it("failed", () => {
+        it("failed - 1", () => {
             expect(Json.parseSafe("")).toEqual(null);
+            expect(ERROR_SPY).toHaveBeenCalled();
+        });
+
+        it("failed - 2", () => {
+            expect(Json.parseSafe("abcde123456789012345678901234567890")).toEqual(null);
             expect(ERROR_SPY).toHaveBeenCalled();
         });
     });

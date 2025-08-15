@@ -1,10 +1,10 @@
 /** @format */
 
-import { TcpService } from "#core/service/TcpService";
+import { TcpService } from "#core/service/net/TcpService";
 import { ISocketAddress } from "#interface";
 import { Net } from "#module";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.TcpService", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", () => {
     const dataHanler = async (remote: ISocketAddress, data: Buffer) => {
         const src = data.toString("utf-8");
         if (src === "Hello") {

@@ -12,7 +12,7 @@ export class SHA {
         return SHA.sha("sha512", data, encoding);
     }
 
-    private static sha(algorithm: "sha256" | "sha512", data: string | Buffer, encoding: NodeJS.BufferEncoding = "utf-8"): Buffer {
+    private static sha(algorithm: "sha256" | "sha512", data: string | Buffer, encoding: NodeJS.BufferEncoding): Buffer {
         const buffer = typeof data === "string" ? Buffer.from(data, encoding) : data;
         const hash = crypto.createHash(algorithm);
         hash.update(buffer);
