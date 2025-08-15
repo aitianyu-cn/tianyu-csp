@@ -58,6 +58,7 @@ function registerGlobalTIANYU(
         type: "http",
         language: AreaCode.unknown,
         cookie: {},
+        timestamp: Date.now(),
     };
     const reqMgr = new GenericRequestManager(requestPayload);
     const sessMgr = new SessionManager(reqMgr);

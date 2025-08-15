@@ -2,7 +2,7 @@
 
 import { StringObj } from "#base/object/String";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { GenericRequestManager } from "#core/infra/RequestManager";
+import { GlobalRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
 import { generateInfra } from "#core/InfraLoader";
 import {
@@ -18,8 +18,8 @@ import { MessagePort } from "worker_threads";
 export async function run_job_scripts(workerData: any, parentPort: MessagePort | null): Promise<void> {
     const { payload, script } = workerData as { payload: ScheduleJobPayload; script: JobWorkerExecutionEntry };
 
-    const requestMgr = new GenericRequestManager(payload.req);
-    const sessionMgr = new SessionManager(requestMgr);
+    const requestMgr = new GlobalRequestManager();
+    const sessionMgr = new SessionManager(payload);
 
     const infra = generateInfra(sessionMgr, requestMgr);
     (global as any).TIANYU = infra;

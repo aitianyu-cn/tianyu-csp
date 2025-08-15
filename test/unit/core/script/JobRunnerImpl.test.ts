@@ -32,6 +32,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 id: "",
                 name: "",
                 payload: undefined,
+                userId: "test_admin",
+                language: AreaCode.zh_CN,
                 req: {
                     host: "",
                     url: "",
@@ -47,6 +49,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     headers: {},
                     disableCache: true,
                     protocol: "http",
+                    timestamp: Date.now(),
                 },
             },
             script: {
@@ -80,6 +83,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 id: "",
                 name: "",
                 payload: undefined,
+                userId: "test_admin",
+                language: AreaCode.zh_CN,
                 req: {
                     host: "",
                     url: "",
@@ -95,6 +100,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     headers: {},
                     disableCache: true,
                     protocol: "http",
+                    timestamp: Date.now(),
                 },
             },
             script: {
@@ -129,6 +135,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 id: "",
                 name: "",
                 payload: undefined,
+                userId: "test_admin",
+                language: AreaCode.zh_CN,
                 req: {
                     host: "",
                     url: "",
@@ -144,6 +152,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     headers: {},
                     disableCache: true,
                     protocol: "http",
+                    timestamp: Date.now(),
                 },
             },
             script: {
@@ -178,6 +187,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                 id: "",
                 name: "",
                 payload: undefined,
+                userId: "test_admin",
+                language: AreaCode.zh_CN,
                 req: {
                     host: "",
                     url: "",
@@ -193,6 +204,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
                     headers: {},
                     disableCache: true,
                     protocol: "http",
+                    timestamp: Date.now(),
                 },
             },
             script: {

@@ -237,6 +237,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
             type: "http",
             traceId: TraceHelper.generateTraceId(),
             disableCache: getBoolean(param[items[3] || DEFAULT_REST_REQUEST_ITEM_MAP.disableCache]),
+            timestamp: Date.now(),
         };
 
         return payload;

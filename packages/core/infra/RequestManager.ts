@@ -37,6 +37,9 @@ export class GlobalRequestManager implements IServerRequest {
     public get protocol(): HttpProtocal {
         return "http2";
     }
+    public get timestamp(): Date {
+        return new Date();
+    }
     public setResponseCode(_code: number): void {
         //
     }
@@ -73,6 +76,7 @@ export class GenericRequestManager implements IServerRequest {
     private _version: HttpProtocal;
     private _language: AreaCode;
     private _session: string;
+    private _timestamp: number;
 
     private _body: any;
 
@@ -90,6 +94,7 @@ export class GenericRequestManager implements IServerRequest {
         this._version = req.protocol;
         this._language = req.language;
         this._session = req.sessionId;
+        this._timestamp = req.timestamp;
 
         this._body = req.body;
 
@@ -133,6 +138,9 @@ export class GenericRequestManager implements IServerRequest {
     }
     public get protocol(): HttpProtocal {
         return this._version;
+    }
+    public get timestamp(): Date {
+        return new Date(this._timestamp);
     }
     public cookie(key: string): string {
         return this._cookie[key] || "";

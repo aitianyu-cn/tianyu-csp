@@ -28,6 +28,8 @@ export interface IServerRequest {
     body: any;
     /** request based http protocol */
     protocol: HttpProtocal;
+    /** request time stamp */
+    timestamp: Date;
 
     /**
      * to set a response code

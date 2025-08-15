@@ -10,16 +10,28 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.auth.TOTP", () => {
         expect(SPY).toHaveBeenCalled();
     });
 
-    it("code", async () => {
-        const key = "AQEYJRS7CJLLMKX5HTWNZ75VJEFYXFD5";
-        const time = new Date("2025-8-15 18:02:15").getTime();
-        const code = "224390";
+    describe("code", () => {
+        it("generate in current", async () => {
+            const key = "AQEYJRS7CJLLMKX5HTWNZ75VJEFYXFD5";
+            const time = new Date("2025-8-15 18:02:15").getTime();
+            const code = "224390";
 
-        jest.spyOn(Date, "now").mockReturnValue(time);
+            jest.spyOn(Date, "now").mockReturnValue(time);
 
-        const gen = TOTP.code(key);
+            const gen = TOTP.code(key);
 
-        expect(gen).toEqual(code);
+            expect(gen).toEqual(code);
+        });
+
+        it("generate with given time", async () => {
+            const key = "AQEYJRS7CJLLMKX5HTWNZ75VJEFYXFD5";
+            const time = new Date("2025-8-15 18:02:15").getTime();
+            const code = "224390";
+
+            const gen = TOTP.code(key, time);
+
+            expect(gen).toEqual(code);
+        });
     });
 
     it("getUrl", () => {

@@ -6,14 +6,26 @@ import { Integer } from "#base/object/Integer";
 import { DataView } from "#base/object/DataView";
 import { PROJECT_NAME } from "packages/Common";
 
+/** TOTP Lib */
 export class TOTP {
+    /**
+     * To generate a new TOTP secret key
+     *
+     * @returns TOTP secret key
+     */
     public static generate(): string {
         return Base32.random(20);
     }
 
-    public static code(key: string): string {
+    /**
+     * Generate TOTP random code
+     *
+     * @param key TOTP secret key
+     * @returns return TOTP random code
+     */
+    public static code(key: string, time?: number): string {
         const K = Base32.decode(key.toUpperCase(), "RFC4648");
-        const T = Math.floor(Date.now() / 1000 / 30);
+        const T = Math.floor((time || Date.now()) / 1000 / 30);
 
         const hmac = crypto.createHmac("sha1", DataView.parse(K));
         const T1 = Buffer.from(Integer.toBytes(T));
@@ -33,6 +45,12 @@ export class TOTP {
         return code;
     }
 
+    /**
+     * Generate a key and TOTP register URL from given user
+     *
+     * @param user user name
+     * @returns return the secret key and url
+     */
     public static getUrl(user: string): { key: string; url: string } {
         const key = TOTP.generate();
         const url = `otpauth://totp/${user}?secret=${key}&issuer=${PROJECT_NAME}`;

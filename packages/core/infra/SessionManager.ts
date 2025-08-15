@@ -6,6 +6,7 @@ import {
     ISession,
     ISessionUser,
     OperationActions,
+    ScheduleJobPayload,
     TianyuCSPPrivilegeType,
 } from "#interface";
 import { AreaCode, MapOfType } from "@aitianyu.cn/types";
@@ -26,19 +27,19 @@ export class SessionManager implements ISession {
 
     private _privileges: MapOfType<FunctionalityPrivilegeMap>;
 
-    public constructor(requests: IServerRequest) {
-        this._sessionId = requests.session;
+    public constructor(requests: IServerRequest | ScheduleJobPayload) {
+        this._sessionId = (requests as any).session || "";
 
         this._adminMode = false;
         this._language = requests.language;
-        this._userId = "";
+        this._userId = (requests as any).userId || "";
         this._userDpname = "";
         this._privileges = {};
     }
 
     /** To load data from database */
     public async loadData(): Promise<void> {
-        const userId = await handleSession(this.sessionId);
+        const userId = this._userId || (await handleSession(this.sessionId));
         const { name, license } = await handleSessionUser(userId);
         const { admin } = await handleSessionIsAdminMode(license);
         const privileges = await handleSessionPrivileges(license);

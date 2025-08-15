@@ -76,6 +76,8 @@ export interface RequestPayloadData {
     param: MapOfStrings;
     /** Headers */
     headers: MapOfType<string | string[] | undefined>;
+    /** request timestamp */
+    timestamp: number;
 }
 
 /** Request response payload data */

@@ -42,6 +42,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 headers: {},
                 disableCache: true,
                 protocol: "http",
+                timestamp: Date.now(),
             },
             script: {
                 package: "test",
@@ -85,6 +86,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 headers: {},
                 disableCache: true,
                 protocol: "http",
+                timestamp: Date.now(),
             },
             script: {
                 package: "test",
@@ -129,6 +131,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 headers: {},
                 disableCache: true,
                 protocol: "http",
+                timestamp: Date.now(),
             },
             script: {
                 package: "test",
@@ -173,6 +176,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.NetworkRunnerImpl"
                 headers: {},
                 disableCache: true,
                 protocol: "http",
+                timestamp: Date.now(),
             },
             script: {
                 package: "test",

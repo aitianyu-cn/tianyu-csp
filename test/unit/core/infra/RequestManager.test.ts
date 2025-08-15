@@ -18,6 +18,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.session).toEqual("");
         expect(request.body).toBeNull();
         expect(request.protocol).toEqual("http2");
+        expect(request.timestamp.getTime()).not.toEqual(0);
 
         expect(() => {
             request.setResponseCode(0);
@@ -48,6 +49,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
             headers: { host: "localhost", version: "1.1" },
             disableCache: true,
             protocol: "http2",
+            timestamp: new Date("2025-1-1").getTime(),
         };
         const request = new GenericRequestManager(req);
 
@@ -60,6 +62,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.RequestManager", ()
         expect(request.session).toEqual("123456789");
         expect(request.body).toEqual(req.body);
         expect(request.protocol).toEqual("http2");
+        expect(request.timestamp.getTime()).toEqual(new Date("2025-1-1").getTime());
 
         expect(() => {
             request.setResponseCode(HTTP_STATUS_CODE.CONTINUE);

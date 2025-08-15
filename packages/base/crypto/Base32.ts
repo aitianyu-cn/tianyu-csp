@@ -6,13 +6,29 @@ import { Integer } from "#base/object/Integer";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 
+/**
+ * Base32 Encoding Type
+ *
+ * @field RFC3548
+ * @field RFC4648
+ * @field RFC4648-HEX
+ * @field Crockford
+ */
 export type EncodingType = "RFC3548" | "RFC4648" | "RFC4648-HEX" | "Crockford";
 
+/** Base32 Encoding Lib */
 export class Base32 {
     private static RFC4648_CHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     private static RFC4648_HEX_CHS = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
     private static CROCKFORD_CHS = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
+    /**
+     * To encode the buffer to be a Base32 encoded string
+     *
+     * @param data input source buffer
+     * @param encoding encoding type
+     * @returns return the encoded string
+     */
     public static encode(data: ArrayBuffer | Int8Array | Uint8Array | Uint8ClampedArray, encoding: EncodingType): string {
         const alphabet = Base32.getAlphabet(encoding);
         const view = DataView.parse(data);
@@ -52,6 +68,13 @@ export class Base32 {
         return output;
     }
 
+    /**
+     * Decode the input string to be an array buffer
+     *
+     * @param input source string
+     * @param encoding encoding type
+     * @returns return the target array buffer
+     */
     public static decode(input: string, encoding: EncodingType): ArrayBuffer {
         const alphabet = Base32.getAlphabet(encoding);
         const data =
@@ -78,6 +101,13 @@ export class Base32 {
         return output.buffer;
     }
 
+    /**
+     * Get a random string which is encoded by given encoding type
+     *
+     * @param size random bytes size
+     * @param encoding encoding type
+     * @returns return encoded random string
+     */
     public static random(size: number, encoding: EncodingType = "RFC4648"): string {
         const bytes = Bytes.random(size);
         return Base32.encode(bytes, encoding);
