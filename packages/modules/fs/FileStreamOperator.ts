@@ -1,10 +1,9 @@
 /** @format */
 
 import fs from "fs";
-import { IOFileFlags, IOFilePath } from "#interface";
+import { IOFileFlags, IOFilePath, IReleasable } from "#interface";
 import { ErrorHelper, FileHelper } from "#utils";
 import { IO_ERROR_CODES } from "#core/Constant";
-import { IReleasable } from "packages/interface/api/lifecycle";
 import { guid } from "@aitianyu.cn/types";
 
 /** File Binary Stream Operator */

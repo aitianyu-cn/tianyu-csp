@@ -1,10 +1,10 @@
 /** @format */
 
-import { FileStreamOperator } from "#core/service/io/file";
 import { IOFilePath } from "#interface";
 import { FileHelper } from "#utils";
+import { FileStreamOperator } from "packages/modules/fs/FileStreamOperator";
 
-describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.io.file.FileStreamOperator", () => {
+describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.file.FileStreamOperator", () => {
     const STATIC_FILE: IOFilePath = {
         type: "internal",
         path: "test/content/file/file-stream-operator-test.txt",

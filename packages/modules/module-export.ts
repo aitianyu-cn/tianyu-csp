@@ -9,3 +9,4 @@
 
 export * as Net from "./net";
 export * as Auth from "./auth";
+export * as FS from "./fs";

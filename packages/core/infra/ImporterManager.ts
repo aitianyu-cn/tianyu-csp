@@ -9,8 +9,10 @@ import { DataEncoding, IImporter } from "#interface";
 
 import * as MODULE_IMPORT from "#module";
 import { SUPPORTED_SUFFIX } from "./Constant";
+import { ImportCache } from "./tools/ImporterCache";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
+const IMPORT_CACHE = new ImportCache();
 
 /** CSP Import Manager Implementation for global definition */
 export function importImpl(): IImporter {
@@ -19,16 +21,30 @@ export function importImpl(): IImporter {
             throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `import package and Object should not be empty`);
         }
 
-        const dir = _handlePackage(packageName, objectName, PROJECT_ROOT_RELATION_PATH);
-        const targetPath = findActualModule(dir);
+        let targetPath = IMPORT_CACHE.get(packageName, objectName);
+
         if (!targetPath) {
-            throw ErrorHelper.getError(
-                SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `import package '${packageName}' and Object '${objectName}' from path ${dir} not found`,
-            );
+            const dir = _handlePackage(packageName, objectName, PROJECT_ROOT_RELATION_PATH);
+            targetPath = findActualModule(dir);
+            if (!targetPath) {
+                throw ErrorHelper.getError(
+                    SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                    `import package '${packageName}' and Object '${objectName}' from path ${dir} not found`,
+                );
+            }
+
+            IMPORT_CACHE.cache(packageName, objectName, targetPath);
         }
 
-        return require(targetPath);
+        try {
+            return require(targetPath);
+        } catch (e) /* istanbul ignore next */ {
+            IMPORT_CACHE.remove(packageName, objectName);
+            throw ErrorHelper.getError(
+                SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                `import package '${packageName}' and Object '${objectName}' failed, it might be deleted or moved.`,
+            );
+        }
     }) as IImporter;
     importer.MODULE = MODULE_IMPORT;
     importer.html = (file: string, encoding: DataEncoding = "utf-8"): string => {
