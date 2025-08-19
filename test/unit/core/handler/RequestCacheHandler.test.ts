@@ -20,6 +20,7 @@ function generatePayload(host?: string, url?: string, disableCache?: boolean): R
         cookie: {},
         param: {},
         headers: {},
+        timestamp: Date.now(),
     };
 }
 

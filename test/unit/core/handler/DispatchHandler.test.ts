@@ -55,6 +55,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler",
                 headers: {},
                 disableCache: true,
                 protocol: "http",
+                timestamp: Date.now(),
             },
         };
         it("execute witch error", (done) => {

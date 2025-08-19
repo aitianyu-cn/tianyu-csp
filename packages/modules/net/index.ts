@@ -8,3 +8,4 @@ export * from "./UdpClient";
 
 /** Remote procedures call */
 export * as RPC from "./RemoteProcedures";
+export { WebsocketClient as WSClient } from "./WebsocketClient";

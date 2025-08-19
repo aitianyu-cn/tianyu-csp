@@ -107,6 +107,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
                 cookie: {},
                 param: {},
                 headers: {},
+                timestamp: Date.now(),
             };
 
             RestHelper.transmit(payload);
@@ -139,6 +140,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.utils.RestHelper", () => {
                 cookie: {},
                 param: {},
                 headers: { host: "test.com" },
+                timestamp: Date.now(),
             });
 
             const fnTest = (url: string, target: string) => {
