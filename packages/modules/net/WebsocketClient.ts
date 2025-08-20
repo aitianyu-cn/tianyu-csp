@@ -1,20 +1,28 @@
 /** @format */
 
-import { IReleasable } from "#interface";
+import { IReleasable, IWSClientSendOption } from "#interface";
 import { guid } from "@aitianyu.cn/types";
 import { ClientRequestArgs } from "http";
 import { ClientOptions, RawData, WebSocket } from "ws";
 
+/** Web Socket Client */
 export class WebsocketClient implements IReleasable {
     private _id: string;
     private _socket: WebSocket;
     private _connecting: Promise<void>;
 
     public onData?: (data: RawData, isBinary: boolean) => void;
-    public onPing?: (data: RawData) => void;
-    public onPong?: (data: RawData) => void;
+    public onPing?: () => void;
+    public onPong?: () => void;
     public onError?: (error: Error) => void;
 
+    /**
+     * Create a Web Socket Instance
+     *
+     * @param address remote server address
+     * @param protocols connection protocols defines
+     * @param options client options
+     */
     public constructor(address: string | URL, protocols?: string | string[], options?: ClientOptions | ClientRequestArgs) {
         this._id = guid();
         this._socket = new WebSocket(address, protocols, options);
@@ -38,6 +46,11 @@ export class WebsocketClient implements IReleasable {
         return this._id;
     }
 
+    /**
+     * Waiting for client connection established
+     *
+     * @returns return a waiting promise
+     */
     public async connect(): Promise<void> {
         await this._connecting;
     }
@@ -46,9 +59,54 @@ export class WebsocketClient implements IReleasable {
         this._socket.close();
     }
 
-    public async send(data: Buffer): Promise<void> {
+    /**
+     * To send data to server
+     *
+     * @param data data to send
+     * @param options sending options
+     * @returns return a promise for sending done
+     */
+    public async send(data: Buffer, options?: IWSClientSendOption): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._socket.send(data, (error?: Error) => {
+            this._socket.send(data, options || {}, (error?: Error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
+     * To send a connection ping
+     *
+     * @param data ping data
+     * @param mask flag to enabld the data encrypto
+     * @returns return a promise for pinging done
+     */
+    public async ping(data?: any, mask?: boolean): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._socket.ping(data, mask, (error?: Error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
+     * To send a connection pong
+     *
+     * @param data pong data
+     * @param mask flag to enabld the data encrypto
+     * @returns return a promise for ponging done
+     */
+    public async pong(data?: any, mask?: boolean): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._socket.pong(data, mask, (error?: Error) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -63,13 +121,13 @@ export class WebsocketClient implements IReleasable {
     }
 
     /* istanbul ignore next */
-    private onping(data: RawData): void {
-        this.onPing?.(data);
+    private onping(): void {
+        this.onPing?.();
     }
 
     /* istanbul ignore next */
-    private onpong(data: RawData): void {
-        this.onPong?.(data);
+    private onpong(): void {
+        this.onPong?.();
     }
 
     /* istanbul ignore next */

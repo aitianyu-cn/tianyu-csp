@@ -22,30 +22,105 @@ export interface ISocketAddress {
     port: number;
 }
 
+/** Web Socket Server Connection Instance */
 export interface IWSServerConnection {
-    on(event: "message", cb: (id: string, message: RawData, isBinary: boolean) => void): this;
-    on(event: "error", cb: (id: string, error: Error) => void): this;
-    on(event: "ping", cb: (id: string, data: Buffer) => void): this;
-    post(message: any): Promise<void>;
+    status: 0 | 1 | 2 | 3;
+    /**
+     * Setup a listener for message and the callback function will be invoked when server receives client data
+     *
+     * @param event message
+     * @param cb callback function
+     */
+    on(event: "message", cb: (message: RawData, isBinary: boolean) => void): this;
+    /**
+     * Setup a listener for error and the callback function will be invoked when server receives an error
+     *
+     * @param event error
+     * @param cb callback function
+     */
+    on(event: "error", cb: (error: Error) => void): this;
+    /**
+     * Setup a listener for ping and the callback function will be invoked when server receives client ping
+     *
+     * @param event ping
+     * @param cb callback function
+     */
+    on(event: "ping", cb: (data: Buffer) => void): this;
+    /**
+     * Setup a listener for pong and the callback function will be invoked when server receives client pong
+     *
+     * @param event pong
+     * @param cb callback function
+     */
+    on(event: "pong", cb: (data: Buffer) => void): this;
+    /**
+     * Setup a listener for connection closed and the callback function will be invoked when server connection closed
+     *
+     * @param event close
+     * @param cb callback function
+     */
+    on(event: "close", cb: (code: number, reason: Buffer) => void): this;
+    /**
+     * interface to post a message to client
+     *
+     * @param message message data to post
+     * @param option data sending option
+     */
+    post(message: any, option?: IWSClientSendOption): Promise<void>;
+    /**
+     * interface to post a message to client
+     *
+     * @param data message data to post
+     * @param mask enable data encrypto
+     */
+    ping(data?: any, mask?: boolean): Promise<void>;
+    /**
+     * interface to post a message to client
+     *
+     * @param data message data to post
+     * @param mask enable data encrypto
+     */
+    pong(data?: any, mask?: boolean): Promise<void>;
+    /**
+     * To close a socket connection.
+     * When invoke this close function, the manager unregister will be invoked.
+     */
+    close(): void;
 }
 
-export interface IWSServerRegister {
-    (id: string, server: IWSServerConnection): void;
+/** Option for Web Socket Client Sending */
+export interface IWSClientSendOption {
+    /** flag to enabld the data encrypto */
+    mask?: boolean | undefined;
+    /** transferred data is binary */
+    binary?: boolean | undefined;
+    /** support the data zip */
+    compress?: boolean | undefined;
+    fin?: boolean | undefined;
 }
 
-export interface IWSServerUnregister {
-    (id: string): void;
-}
-
-export interface IWebsocketOption<V extends typeof IncomingMessage = typeof IncomingMessage> {
+/** Web Socket Server Options */
+export interface IWebsocketServerOption<V extends typeof IncomingMessage = typeof IncomingMessage> {
+    /** Path to allow client to connect */
     path?: string | undefined;
+    /** Set auto response the pong when server receives an client ping */
     autoPong?: boolean | undefined;
+    /** Set auto to ping the client for keeping long connection life */
+    autoPing?: boolean;
+    /** Support the server not to start a network listening */
     noServer?: boolean | undefined;
+    /** Support the message zip */
     perMessageDeflate?: boolean | PerMessageDeflateOptions | undefined;
+    /** Function to verify a client connection when connecting */
     verifyClient?: VerifyClientCallbackAsync<InstanceType<V>> | VerifyClientCallbackSync<InstanceType<V>> | undefined;
+    /** Function to handle the connection protocol */
     handleProtocols?: (protocols: Set<string>, request: InstanceType<V>) => string | false;
+    /** Function to generate client id */
     clientIdGenerator?: (remote: ISocketAddress, req: IncomingMessage) => string;
-    error?: (remote: ISocketAddress | null, error: Error) => void;
+    /** Function to handle error */
+    error?: (remote: ISocketAddress | string | null, error: Error) => void;
+    /** Connection keeplive time for sending ping message timely */
+    timeout?: number;
 }
 
 /**
