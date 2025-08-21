@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobWorkerExecutionResult, JobWorkerPayload } from "#interface";
 
@@ -48,7 +49,7 @@ export class JobRunner {
     public async run(): Promise<void> {
         this._timer = setTimeout(this.timeoutHandler.bind(this), this._queue.overtime);
         await this._worker.run(this._queue.script, this._queue.payload, this._queue.executionId).catch((error) => {
-            void TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/runner", error?.message || MessageBundle.text("ERROR_GENERAL_ERROR"));
         });
 
         if (this._timer /** clean timer if timer is running */) {
@@ -75,13 +76,13 @@ export class JobRunner {
 
         // to clean data
         await this._worker.terminate().catch((error) => {
-            void TIANYU.audit.error("job/runner", error?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/runner", error?.message || MessageBundle.text("ERROR_GENERAL_ERROR"));
         });
 
         this._result.status = "timeout";
         this._result.error.push({
             code: SERVICE_ERROR_CODES.JOB_EXECUTION_TIMEOUT,
-            message: `Job ${this._worker.executionId} ran not done over ${this._queue.overtime / 1000} seconds`,
+            message: MessageBundle.text("ERROR_JOB_RUNNER_TIMEOUT", this._worker.executionId, this._queue.overtime / 1000),
             traceId: this._queue.payload.traceId,
         });
 

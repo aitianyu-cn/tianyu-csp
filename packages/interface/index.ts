@@ -23,6 +23,8 @@ export * from "./api/trace";
 export * from "./api/usage";
 export * from "./api/lifecycle";
 
+export * from "./base/message-bundles";
+
 export * from "./declares/global-declare";
 
 export * from "./fwk-def/contributor/dispatcher";

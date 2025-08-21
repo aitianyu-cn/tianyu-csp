@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { IJobWorker, JobExecutionStatus, JobWorkerExecutionEntry, JobWorkerMessageValue, JobWorkerPayload } from "#interface";
 import { guid } from "@aitianyu.cn/types";
@@ -52,7 +53,7 @@ export class JobWorker implements IJobWorker {
     public async run(script: string, payload: JobWorkerPayload, executionId?: string): Promise<void> {
         if (this._status === "invalid" || this._worker) {
             return Promise.reject({
-                message: "New job run failed, Preious job is in running or has fatal error.",
+                message: MessageBundle.text("ERROR_JOB_WORKER_INVALID"),
                 code: this._status === "invalid" ? SERVICE_ERROR_CODES.PRE_JOB_INVALID : SERVICE_ERROR_CODES.PRE_JOB_RUNNING,
             });
         }

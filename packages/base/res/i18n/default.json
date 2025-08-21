@@ -1,0 +1,110 @@
+{
+    "ERROR_GENERAL_ERROR": "Technical error occurs.",
+
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX": "Invalid index: {0} in alphabet \"{1}\"",
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER": "Invalid character found: {0}",
+
+    "ERROR_BASE_OBJECT_DATAVIEW_PARSE_TYPE_ERRORY": "Expected `data` to be an ArrayBuffer, Buffer, Int8Array, Uint8Array or Uint8ClampedArray",
+
+    "ERROR_BASE_OBJECT_JSON_PARSE_EXCEPTION": "could not safety parse string ({0}...) to be an object.",
+
+    "ERROR_BASE_OBJECT_STRING_OBJ_PARSE_FUNCTION": "Could not stringify a 'function' type object",
+    "ERROR_BASE_OBJECT_STRING_OBJ_PARSE_EXCEPTION": "could not safety stringify an object.",
+
+    "ERROR_CORE_HANDLER_DISPATCH_PROCESS": "error occurs when {0} processing.",
+    "ERROR_CORE_HANDLER_DISPATCH_REQUEST_PROCESS_DET": "network request could not be handled internally due to some technical errors.",
+    "ERROR_CORE_HANDLER_DISPATCH_JOB_PROCESS_DET": "job could not be handled internally due to some technical errors (JobManager is not valid).",
+
+    "ERROR_CORE_HANDLER_REQUEST_UNHANDLED": "request could not be handled",
+    "ERROR_CORE_HANDLER_REQUEST_UNHANDLED_DET": "network dispatcher is not inited or not exist.",
+
+    "STRING_CORE_INFRA_CODE_AUDIT_UDP_MSG": "[{0}] --- {1} --- {2} --- {3} --- {4}",
+    "STRING_CORE_INFRA_CODE_AUDIT_TCP_MSG": "[{0}] --- {1} --- {2} --- {3} --- {4}{5}",
+
+    "ERROR_CORE_INFRA_CODE_FEATURE_FAILED": "Could not to read enablement status for feature '{0}'.",
+    "ERROR_CORE_INFRA_CODE_XCALL_UNEXIST": "system external function '{0}.{1}' is not configurated",
+    "ERROR_CORE_INFRA_CODE_XCALL_NO_METHOD": "system external function '{0}.{1}.{2}' could not to access.",
+    "ERROR_CORE_INFRA_CODE_SESSION_ID_ERROR": "Could not to read session info for session '{0}'.",
+    "ERROR_CORE_INFRA_CODE_SESSION_INVALID": "Session not valid.",
+    "ERROR_CORE_INFRA_CODE_SESSION_USER_ID_ERROR": "Could not to read session info for session '{0}'.",
+    "ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID": "User not valid.",
+    "ERROR_CORE_INFRA_CODE_SESSION_LICENSE_ERROR": "Could not to read license info for license '{0}'.",
+    "ERROR_CORE_INFRA_CODE_SESSION_LICENSE_INVALID": "license not valid.",
+    "ERROR_CORE_INFRA_CODE_SESSION_PRIVILEGE_ERROR": "Could not to read role info for license '{0}'.",
+
+    "STRING_CORE_INFRA_AUDIT_MGR_LOG_MSG": "[AUDIT][{0}] --- {1}",
+
+    "ERROR_CORE_INFRA_IMPORTER_MGR_EMPTY_PACK": "import package and Object should not be empty",
+    "ERROR_CORE_INFRA_IMPORTER_MGR_PACK_UNDIRECT": "import package '{0}' and Object '{1}' from path {2} not found",
+    "ERROR_CORE_INFRA_IMPORTER_MGR_PACK_MOVED": "import package '{0}' and Object '{1}' failed, it might be deleted or moved.",
+
+    "ERROR_CORE_INFRA_LIFECYCLE_MGR_FAILED": "object lifecyle failed.",
+
+    "ERROR_CORE_INFRA_LOG_MGR_FAILED": "Could not to record the '{0}' for '{1}'.",
+
+    "ERROR_CORE_INFRA_TRACE_MGR_FAILED": "Could not to record the trace for '{0}'.",
+
+    "ERROR_CORE_INFRA_USAGE_MGR_FAILED": "Could not to record the usage for function '{0}' in '{1}' project.",
+
+    "ERROR_CORE_SCRIPT_JOBRUNNER_LOADING_FAILED": "execute job from {0} ({1}) failed.",
+    "ERROR_CORE_SCRIPT_JOBRUNNER_RUNTIME_FAILED": "execute job '{0}' failed with payload: {1}.",
+
+    "ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED": "execute request from {0} failed.",
+
+    "ERROR_CORE_SERVICE_NET_ABS_HTTP_ERROR": "http server error on {0}:{1} - {2}",
+    "ERROR_CORE_SERVICE_NET_HTTP_INVALID_CALL": "Request method handler is not found, please ensure your http request uses correct method.",
+    "ERROR_CORE_SERVICE_NET_HTTP_REST_NOT_FOUND": "Request '{0}' is not accessiable, please check url and retry later.",
+    "ERROR_CODE_SERVICE_NET_HTTP_REST_NOT_FOUND_DET": "Request '{0}' => '{1}{2}' could not be executed due to request url handler does not exist or the method handler of this url is not configered.",
+    "ERROR_CODE_SERVICE_NET_HTTP_GENERAL_ERROR": "Technical error occurs when processing request.",
+
+    "ERROR_CORE_SERVICE_NET_TCP_SOCKET_ERROR": "tcp-server[{0}] error on connection[{1}:{2}] - {3}",
+    "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR": "tcp-server[{0}] error on sending to remote[{1}:{2}] - {3}",
+    "ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR": "tcp-server[{0}] error - {1}",
+
+    "ERROR_CORE_SERVICE_NET_UDP_WRITE_RESPONSE_ERROR": "udp-server[{0}] error on sending to remote {1}:{2} - {3}",
+    "ERROR_CORE_SERVICE_NET_UDP_GENERAL_ERROR": "udp-server[{0}] error at local[{1}:{2}] - {3}",
+
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION": "websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on duplicated link.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_DET": "please ensure the connection link is not used.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_ERR": "duplicated connection for same id: {0}",
+
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER": "websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on current user.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_DET": "please ensure the connection user is valid.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_ERR": "user connection cannot be validated",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_ERROR": "websocket-server[{0}] error - {1}",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN": "websocket-server[{0}] error - the instance is running on ${`[{1}]:{2}`} already.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN_DET": "websocket server will be automatically running when the instance is created, not needs to explicitly start it.",
+
+    "ERROR_JOB_MGR_START_FAILED": "start job failed",
+    "ERROR_JOB_RUNNER_TIMEOUT": "Job {0} ran not done over {1} seconds",
+    "ERROR_JOB_WORKER_INVALID": "New job run failed, Preious job is in running or has fatal error.",
+
+    "ERROR_LOADER_PROXY_PROTOCOL_INVALID": "proxy to http://{0}{1} failed",
+    "ERROR_LOADER_PROXY_PROTOCOL_INVALID_DET": "Due to security requirement, 'HTTP/1.1 no SSL/TSL' protocol is not supported in production application anymore, please provide a security host.",
+    "ERROR_LOADER_PROXY_REQUEST_FAILED": "request to proxy to {0}://{1}{0} failed",
+
+    "ERROR_MODULES_FS_FILE_OPTER_FAILED": "[FileStreamOperator] try to close a file failed, due to the file is modified but not saved.",
+    "ERROR_MODULES_FS_FILE_OPTER_FAILED_DET": "file: {0}\naction: you can save the file by call <insance>.flush or set forceSave of <instance>.close() parameter to be false, and try again",
+
+    "ERROR_MODULES_NET_HTTP2_TRANSFER": "request data from {0} failed",
+
+    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID": "Connect remote '${payload.host} ${payload.url}' in HTTP failed",
+    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID_DET": "Could not connect remote in HTTP protocol outside of Development environment.",
+    "ERROR_MODULES_NET_RPC_RESPONSE_CONVERTION_FAILED": "Convert RPC data to target structure failed",
+    "ERROR_MODULES_NET_RPC_REQUEST_FAILED": "request to remote to {0}://{1}{0} failed",
+
+    "ERROR_MODULES_NET_TCP_CONNECTION_ERROR": "tcp client connect to remote[{0}:{1}] failed - {2}",
+    "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED": "send to remote[{0}:{1}] failed - source data[{2}] - {3}",
+    "ERROR_MODULES_NET_UDP_CONNECTION_ERROR": "udp client connect to remote[{0}:{1}] failed - {2}",
+
+    "ERROR_UTILS_FILE_HELPER_OPEN_FAILED": "open file[{0}] in mode[{1}] failed - error: {2}",
+    "ERROR_UTILS_FILE_HELPER_READ_FAILED": "read file[{0}] failed - error: {1}",
+    "ERROR_UTILS_FILE_HELPER_WRITE_FAILED": "write file[{0}] with data[{1}{2}] failed - error: {3}",
+    "ERROR_UTILS_FILE_HELPER_WRITE_DATA_LOST": "write file[{0}] with data[{1}{2}] failed - error: expect write data {3} bytes, but only written {4} bytes",
+    "ERROR_UTILS_FILE_HELPER_FLUSH_FAILED": "flush file[{0}] failed - error: {1}",
+    "ERROR_UTILS_FILE_HELPER_CLOSE_FAILED": "close file[{0}] failed - error: {1}",
+    "ERROR_UTILS_FILE_HELPER_SET_LENGHT_FAILED": "set length of file[{0}] to {1} failed - error: {2}",
+    "ERROR_UTILS_FILE_HELPER_MKDIR_FAILED": "create dir[{0}] failed - error: {1}",
+    "ERROR_UTILS_FILE_HELPER_RMFILE_FAILED": "remove file[{0}] failed - error: {1}",
+    "ERROR_UTILS_FILE_HELPER_RMDIR_FAILED": "remove dir[{0}] failed - error: {1}"
+}

@@ -7,3 +7,5 @@ export * from "./object/DataView";
 export * from "./object/Integer";
 export * from "./object/Json";
 export * from "./object/String";
+
+export * as Res from "./res";

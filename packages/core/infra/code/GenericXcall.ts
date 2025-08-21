@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { INFRA_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 import { MapOfString } from "@aitianyu.cn/types";
@@ -31,7 +32,7 @@ export async function doXcall(
                 ErrorHelper.getError(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,
-                    `system external function '${func}.${method}' is not configurated`,
+                    MessageBundle.text("ERROR_CORE_INFRA_CODE_XCALL_UNEXIST", func, method),
                 ),
             );
         return null;
@@ -50,7 +51,12 @@ export async function doXcall(
                     ErrorHelper.getError(
                         INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                         message,
-                        `system external function '${externalCall.package}.${externalCall.module}.${externalCall.method}' could not to access.`,
+                        MessageBundle.text(
+                            "ERROR_CORE_INFRA_CODE_XCALL_NO_METHOD",
+                            String(externalCall.package),
+                            String(externalCall.module),
+                            String(externalCall.method),
+                        ),
                     ),
                 );
             return null;
@@ -63,7 +69,7 @@ export async function doXcall(
                 ErrorHelper.getError(
                     INFRA_ERROR_CODES.EXTERNAL_SYSTEM_API_CALL_FAILED,
                     message,
-                    (error as any)?.message || "Technical error occurs.",
+                    (error as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                 ),
             );
         return null;

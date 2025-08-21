@@ -6,6 +6,7 @@ import { ISocketAddress } from "#interface";
 import { CallbackAction } from "@aitianyu.cn/types";
 import { AbstractSocketService } from "./AbstractSocketService";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /** TCP service */
 export class TcpService extends AbstractSocketService {
@@ -79,7 +80,13 @@ export class TcpService extends AbstractSocketService {
         socket.on(
             "error",
             /* istanbul ignore next */ (error: Error) => {
-                const msg = `tcp-server[${this.id}] error on connection[${remoteHost.address}:${remoteHost.port}] - ${error.message}`;
+                const msg = MessageBundle.text(
+                    "ERROR_CORE_SERVICE_NET_TCP_SOCKET_ERROR",
+                    this.id,
+                    remoteHost.address,
+                    remoteHost.port,
+                    error.message,
+                );
                 void TIANYU.audit.error(
                     this.app,
                     msg,
@@ -95,10 +102,22 @@ export class TcpService extends AbstractSocketService {
             error &&
                 /* istanbul ignore next */ void TIANYU.audit.error(
                     this.app,
-                    `tcp-server[${this.id}] error on sending to remote[${socket.remoteAddress}:${socket.remotePort}] - ${error.message}`,
+                    MessageBundle.text(
+                        "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR",
+                        this.id,
+                        String(socket.remoteAddress),
+                        String(socket.remotePort),
+                        error.message,
+                    ),
                     ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `tcp-server[${this.id}] error on sending to remote[${socket.remoteAddress}:${socket.remotePort}] - ${error.message}`,
+                        MessageBundle.text(
+                            "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR",
+                            this.id,
+                            String(socket.remoteAddress),
+                            String(socket.remotePort),
+                            error.message,
+                        ),
                         error.stack,
                     ),
                 );
@@ -108,10 +127,10 @@ export class TcpService extends AbstractSocketService {
     private errorHandler(error: Error): void {
         void TIANYU.audit.error(
             this.app,
-            `tcp-server[${this.id}] error - ${error.message}`,
+            MessageBundle.text("ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR", this.id, error.message),
             ErrorHelper.getError(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `tcp-server[${this.id}] error - ${error.message}`,
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR", this.id, error.message),
                 error.stack,
             ),
         );

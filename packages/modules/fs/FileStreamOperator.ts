@@ -5,6 +5,7 @@ import { IOFileFlags, IOFilePath, IReleasable } from "#interface";
 import { ErrorHelper, FileHelper } from "#utils";
 import { IO_ERROR_CODES } from "#core/Constant";
 import { guid } from "@aitianyu.cn/types";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /** File Binary Stream Operator */
 export class FileStreamOperator implements IReleasable {
@@ -80,11 +81,8 @@ export class FileStreamOperator implements IReleasable {
                 return Promise.reject(
                     ErrorHelper.getError(
                         IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                        `[FileStreamOperator] try to close a file failed, due to the file is modified but not saved.`,
-                        `
-                        file: ${FileHelper.transformFilePath(this._file)}\n
-                        action: you can save the file by call <insance>.flush or set forceSave of <instance>.close() parameter to be false, and try again
-                        `,
+                        MessageBundle.text("ERROR_MODULES_FS_FILE_OPTER_FAILED"),
+                        MessageBundle.text("ERROR_MODULES_FS_FILE_OPTER_FAILED_DET", FileHelper.transformFilePath(this._file)),
                     ),
                 );
             }

@@ -8,6 +8,7 @@ import { MapOfType } from "@aitianyu.cn/types";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { StringObj } from "#base/object/String";
 import { Json } from "#base/object/Json";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 export class Http2Client extends AbstractHttpClient {
     private _options?: http2.SecureClientSessionOptions;
@@ -200,7 +201,7 @@ export class Http2Client extends AbstractHttpClient {
                         reject(
                             ErrorHelper.getError(
                                 SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                                `request data from ${headers[":path"]} failed`,
+                                MessageBundle.text("ERROR_MODULES_NET_HTTP2_TRANSFER", String(headers[":path"])),
                                 String(error),
                             ),
                         );
@@ -216,7 +217,7 @@ export class Http2Client extends AbstractHttpClient {
                 reject(
                     ErrorHelper.getError(
                         SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                        `request data from ${headers[":path"]} failed`,
+                        MessageBundle.text("ERROR_MODULES_NET_HTTP2_TRANSFER", String(headers[":path"])),
                         String(e),
                     ),
                 );

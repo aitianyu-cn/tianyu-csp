@@ -5,6 +5,7 @@ import { getBoolean, MapOfType } from "@aitianyu.cn/types";
 import { SYSTEM_PRIVILEGE_MAP } from "../../../Common";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { doXcall } from "./GenericXcall";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 export async function handleSession(sessionId: string): Promise<string> {
     const xcallResult = await doXcall(
@@ -13,7 +14,7 @@ export async function handleSession(sessionId: string): Promise<string> {
         },
         "session",
         "get",
-        `Could not to read session info for session '${sessionId}'.`,
+        MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_ID_ERROR", sessionId),
     );
 
     const userId = xcallResult?.userId || "";
@@ -21,13 +22,13 @@ export async function handleSession(sessionId: string): Promise<string> {
     if (!userId) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID,
-            message: "Session not valid.",
+            message: MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_INVALID"),
         });
     }
     if (!valid) {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME,
-            message: "Session not valid.",
+            message: MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_INVALID"),
         });
     }
 
@@ -41,7 +42,7 @@ export async function handleSessionUser(user: string): Promise<{ name: string; l
         },
         "user",
         "get",
-        `Could not to read user info for user '${user}'.`,
+        MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_USER_ID_ERROR", user),
     );
 
     const userName = xcallResult?.name;
@@ -49,7 +50,7 @@ export async function handleSessionUser(user: string): Promise<{ name: string; l
     if (typeof userName !== "string" || typeof license !== "string") {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.USER_NOT_FOUND,
-            message: "User not valid.",
+            message: MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID"),
         });
     }
 
@@ -63,14 +64,14 @@ export async function handleSessionIsAdminMode(license: string): Promise<{ admin
         },
         "license",
         "get",
-        `Could not to read license info for license '${license}'.`,
+        MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_LICENSE_ERROR", license),
     );
 
     const isAdmin = xcallResult?.admin;
     if (typeof isAdmin !== "boolean") {
         return Promise.reject({
             code: SERVICE_ERROR_CODES.LICENSE_ERROR,
-            message: "license not valid.",
+            message: MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_LICENSE_INVALID"),
         });
     }
 
@@ -83,7 +84,7 @@ export async function handleSessionPrivileges(license: string): Promise<MapOfTyp
         },
         "role",
         "get",
-        `Could not to read role info for license '${license}'.`,
+        MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_PRIVILEGE_ERROR", license),
     );
 
     const privileges: MapOfType<FunctionalityPrivilegeMap> = {};

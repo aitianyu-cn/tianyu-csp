@@ -1,6 +1,7 @@
 /** @format */
 
 import { StringObj } from "#base/object/String";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { findActualModule } from "#core/infra/ImporterManager";
 import {
@@ -79,8 +80,8 @@ export class DispatchHandler {
                 status: "error",
                 error: ErrorHelper.getError(
                     HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString(),
-                    "error occurs when request processing.",
-                    "network request could not be handled internally due to some technical errors.",
+                    MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_PROCESS", "request"),
+                    MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_REQUEST_PROCESS_DET"),
                 ),
             });
         }
@@ -104,7 +105,7 @@ export class DispatchHandler {
                 status,
                 error: ErrorHelper.getError(
                     exitCode.toString(),
-                    "error occurs when request processing.",
+                    MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_PROCESS", "request"),
                     StringObj.stringifySafe(error),
                 ),
             });
@@ -137,8 +138,8 @@ export class DispatchHandler {
                 error: [
                     ErrorHelper.getError(
                         SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED,
-                        "error occurs when job processing.",
-                        "job could not be handled internally due to some technical errors (JobManager is not valid).",
+                        MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_PROCESS", "job"),
+                        MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_JOB_PROCESS_DET"),
                     ),
                 ],
                 status: "error",

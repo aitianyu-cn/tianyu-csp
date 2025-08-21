@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { UdpClientOptions, UdpClientResponse } from "#interface";
 import { ErrorHelper } from "#utils";
@@ -28,9 +29,13 @@ export async function UdpClient(
             if (error) {
                 client.close();
 
-                const err_msg = `request to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
-                    "utf-8",
-                )}] - ${error.message}`;
+                const err_msg = MessageBundle.text(
+                    "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED",
+                    remote.address,
+                    remote.port,
+                    data.toString("utf-8"),
+                    error.message,
+                );
                 const err = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack);
                 log && void TIANYU.audit.warn("client/udp", err_msg, err);
 
@@ -59,9 +64,12 @@ export async function UdpClient(
             /* istanbul ignore next */ (error: Error) => {
                 client.close();
 
-                const err_msg = `UDP client to remote[${remote.address}:${remote.port}] failed - source data[${data.toString(
-                    "utf-8",
-                )}] - ${error.message}`;
+                const err_msg = MessageBundle.text(
+                    "ERROR_MODULES_NET_UDP_CONNECTION_ERROR",
+                    remote.address,
+                    remote.port,
+                    error.message,
+                );
                 const err = ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack);
                 log && void TIANYU.audit.warn("client/udp", err_msg, err);
 

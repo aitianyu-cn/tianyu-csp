@@ -1,5 +1,7 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
+
 /** Json Lib */
 export class Json {
     /**
@@ -28,7 +30,7 @@ export class Json {
         } catch (e) {
             void TIANYU.audit.error(
                 "base/object/Json",
-                `could not safety parse string (${src.substring(0, src.length > 20 ? 20 : src.length)}...) to be an object.`,
+                MessageBundle.text("ERROR_BASE_OBJECT_JSON_PARSE_EXCEPTION", src.substring(0, src.length > 20 ? 20 : src.length)),
                 String(e),
             );
             return failed;

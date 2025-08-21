@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ProcedureCallPayload } from "#interface";
 import { ErrorHelper, HttpHelper } from "#utils";
@@ -20,8 +21,8 @@ export async function call<T = string>(
         return Promise.reject(
             ErrorHelper.getError(
                 SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                `Connect remote '${payload.host} ${payload.url}' in HTTP failed`,
-                `Could not connect remote in HTTP protocol outside of Development environment.`,
+                MessageBundle.text("ERROR_MODULES_NET_RPC_PROTOCOL_INVALID", payload.host, payload.url),
+                MessageBundle.text("ERROR_MODULES_NET_RPC_PROTOCOL_INVALID_DET"),
             ),
         );
     }
@@ -39,23 +40,23 @@ export async function call<T = string>(
             try {
                 return transformer(client.raw);
             } catch (e) {
+                const msg = MessageBundle.text("ERROR_MODULES_NET_RPC_RESPONSE_CONVERTION_FAILED");
                 void TIANYU.audit.warn(
                     "service/rpc",
-                    `Convert RPC data to target structure failed`,
-                    ErrorHelper.getError(
-                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `Convert RPC data to target structure failed`,
-                        String(e),
-                    ),
+                    msg,
+                    ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, String(e)),
                 );
 
                 return null;
             }
         },
         async (error) => {
-            const msg = `request to remote ${payload.protocol === "http" ? "http" : "https"}://${payload.host} ${
-                payload.url
-            } failed`;
+            const msg = MessageBundle.text(
+                "ERROR_MODULES_NET_RPC_REQUEST_FAILED",
+                payload.protocol === "http" ? "http" : "https",
+                payload.host,
+                payload.url,
+            );
             const rejectError = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, msg, String(error));
             void TIANYU.audit.warn("service/rpc", msg, rejectError);
 

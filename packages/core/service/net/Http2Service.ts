@@ -16,6 +16,7 @@ import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServ
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { StringObj } from "#base/object/String";
 import { Json } from "#base/object/Json";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2Events> {
     protected declare _server: Http2SecureServer;
@@ -92,7 +93,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
                 error: [
                     {
                         code: SERVICE_ERROR_CODES.REQUEST_METHOD_NOT_SUPPORT,
-                        message: "Request method handler is not found, please ensure your http request uses correct method.",
+                        message: MessageBundle.text("ERROR_CORE_SERVICE_NET_HTTP_INVALID_CALL"),
                     },
                 ],
             };

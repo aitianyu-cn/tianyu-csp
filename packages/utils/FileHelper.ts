@@ -6,6 +6,8 @@ import { IOFileBuffer, IOFileFlags, IOFilePath } from "#interface";
 import { ErrorHelper } from "#utils";
 import { IO_ERROR_CODES } from "#core/Constant";
 import { PROJECT_ROOT_PATH } from "packages/Common";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
+import { StringObj } from "#base/index";
 
 /** File and Directory Operation Open APIs */
 export class FileHelper {
@@ -24,7 +26,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPEN_FAILED,
-                            `open file[${filePath}] in mode[${flag}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_OPEN_FAILED", filePath, flag, err.message),
                             err.stack,
                         ),
                     );
@@ -63,7 +65,11 @@ export class FileHelper {
                         reject(
                             ErrorHelper.getError(
                                 IO_ERROR_CODES.IO_FILE_READ_FAILED,
-                                `read file[${file}] failed - error: ${err.message}`,
+                                MessageBundle.text(
+                                    "ERROR_UTILS_FILE_HELPER_READ_FAILED",
+                                    StringObj.stringifySafe(file),
+                                    err.message,
+                                ),
                                 err.stack,
                             ),
                         );
@@ -107,11 +113,17 @@ export class FileHelper {
                         reject(
                             ErrorHelper.getError(
                                 IO_ERROR_CODES.IO_FILE_WRITE_FAILED,
-                                `write file[${file}] with data[${buffer.buffer.toString(
-                                    "utf-8",
-                                    buffer.start,
-                                    bufferStringCut ? 1024 : bufferSize - bufferStart,
-                                )}${bufferStringCut ? "..." : ""}] failed - error: ${err.message}`,
+                                MessageBundle.text(
+                                    "ERROR_UTILS_FILE_HELPER_WRITE_FAILED",
+                                    StringObj.stringifySafe(file),
+                                    buffer.buffer.toString(
+                                        "utf-8",
+                                        buffer.start,
+                                        bufferStringCut ? 1024 : bufferSize - bufferStart,
+                                    ),
+                                    bufferStringCut ? "..." : "",
+                                    err.message,
+                                ),
                                 err.stack,
                             ),
                         );
@@ -122,13 +134,18 @@ export class FileHelper {
                             reject(
                                 ErrorHelper.getError(
                                     IO_ERROR_CODES.IO_FILE_WRITE_FAILED,
-                                    `write file[${file}] with data[${buffer.buffer.toString(
-                                        "utf-8",
-                                        buffer.start,
-                                        bufferStringCut ? 1024 : bufferSize - bufferStart,
-                                    )}${bufferStringCut ? "..." : ""}] failed - error: expect write data ${
-                                        buffer.length
-                                    } bytes, but only written ${bytesWriten} bytes`,
+                                    MessageBundle.text(
+                                        "ERROR_UTILS_FILE_HELPER_WRITE_DATA_LOST",
+                                        StringObj.stringifySafe(file),
+                                        buffer.buffer.toString(
+                                            "utf-8",
+                                            buffer.start,
+                                            bufferStringCut ? 1024 : bufferSize - bufferStart,
+                                        ),
+                                        bufferStringCut ? "..." : "",
+                                        String(buffer.length),
+                                        bytesWriten,
+                                    ),
                                 ),
                             );
                         }
@@ -151,7 +168,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                            `flush file[${fd}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_FLUSH_FAILED", fd, err.message),
                             err.stack,
                         ),
                     );
@@ -175,7 +192,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                            `close file[${fd}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_CLOSE_FAILED", fd, err.message),
                             err.stack,
                         ),
                     );
@@ -203,7 +220,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                            `set length of file[${filePath}] to ${length} failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_CLOSE_FAILED", filePath, length, err.message),
                             err.stack,
                         ),
                     );
@@ -228,7 +245,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_DIR_OPERATION_FAILED,
-                            `create dir[${filePath}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_MKDIR_FAILED", filePath, err.message),
                             err.stack,
                         ),
                     );
@@ -264,7 +281,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                            `remove file[${filePath}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_RMFILE_FAILED", filePath, err.message),
                             err.stack,
                         ),
                     );
@@ -289,7 +306,7 @@ export class FileHelper {
                     reject(
                         ErrorHelper.getError(
                             IO_ERROR_CODES.IO_FILE_OPERATION_FAILED,
-                            `remove dir[${filePath}] failed - error: ${err.message}`,
+                            MessageBundle.text("ERROR_UTILS_FILE_HELPER_RMDIR_FAILED", filePath, err.message),
                             err.stack,
                         ),
                     );

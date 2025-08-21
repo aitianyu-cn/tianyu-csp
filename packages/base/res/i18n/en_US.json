@@ -1,0 +1,4 @@
+{
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX": "Invalid index: {0} in alphabet \"{1}\"",
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER": "Invalid character found: {0}"
+}

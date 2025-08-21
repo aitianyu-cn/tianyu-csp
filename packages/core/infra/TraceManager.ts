@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { ITrace, TraceArea } from "#interface";
 import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
@@ -30,7 +31,10 @@ export class TraceManager implements ITrace {
             },
             "trace",
             "trace",
-            `Could not to record the trace for '${message.substring(0, message.length > 20 ? 20 : message.length)}'.`,
+            MessageBundle.text(
+                "ERROR_CORE_INFRA_TRACE_MGR_FAILED",
+                message.substring(0, message.length > 20 ? 20 : message.length),
+            ),
         );
     }
 }

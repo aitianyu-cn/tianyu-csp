@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 
@@ -20,7 +21,10 @@ export class StringObj {
             return "undefined";
         }
         if (type === "function") {
-            throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, "Could not stringify a 'function' type object");
+            throw ErrorHelper.getError(
+                SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                MessageBundle.text("ERROR_BASE_OBJECT_STRING_OBJ_PARSE_FUNCTION"),
+            );
         }
         if (type === "string") {
             return data;
@@ -41,7 +45,11 @@ export class StringObj {
         try {
             return StringObj.stringify(data);
         } catch (e) {
-            void TIANYU.audit.error("base/object/StringObj", `could not safety stringify an object.`, String(e));
+            void TIANYU.audit.error(
+                "base/object/StringObj",
+                MessageBundle.text("ERROR_BASE_OBJECT_STRING_OBJ_PARSE_EXCEPTION"),
+                String(e),
+            );
             return "";
         }
     }

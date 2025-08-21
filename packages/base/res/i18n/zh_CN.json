@@ -1,0 +1,4 @@
+{
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX": "在字母表 \"{1}\" 中无法索引 {0} 字符",
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER": "字母表中无法找到字符: {0}"
+}

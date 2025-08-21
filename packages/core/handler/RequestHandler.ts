@@ -15,6 +15,7 @@ import {
 import { ErrorHelper } from "#utils";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
 import { REST_REQUEST_ITEM_MAP } from "./RestHandlerConstant";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /**
  * Tianyu CSP Http Request handler
@@ -84,8 +85,8 @@ export class RequestHandler {
             return Promise.reject(
                 ErrorHelper.getError(
                     HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString(),
-                    "request could not be handled",
-                    "network dispatcher is not inited or not exist.",
+                    MessageBundle.text("ERROR_CORE_HANDLER_REQUEST_UNHANDLED"),
+                    MessageBundle.text("ERROR_CORE_HANDLER_REQUEST_UNHANDLED_DET"),
                 ),
             );
         }

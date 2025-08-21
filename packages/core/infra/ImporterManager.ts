@@ -10,6 +10,7 @@ import { DataEncoding, IImporter } from "#interface";
 import * as MODULE_IMPORT from "#module";
 import { SUPPORTED_SUFFIX } from "./Constant";
 import { ImportCache } from "./tools/ImporterCache";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 const SUPPORTED_HTML_SUFFIX = ["", ".html", ".htm", "/index.html", "/index.htm"];
 const IMPORT_CACHE = new ImportCache();
@@ -18,7 +19,10 @@ const IMPORT_CACHE = new ImportCache();
 export function importImpl(): IImporter {
     const importer = ((packageName: string, objectName: string) => {
         if (!packageName || !objectName) {
-            throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `import package and Object should not be empty`);
+            throw ErrorHelper.getError(
+                SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                MessageBundle.text("ERROR_CORE_INFRA_IMPORTER_MGR_EMPTY_PACK"),
+            );
         }
 
         let targetPath = IMPORT_CACHE.get(packageName, objectName);
@@ -29,7 +33,7 @@ export function importImpl(): IImporter {
             if (!targetPath) {
                 throw ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `import package '${packageName}' and Object '${objectName}' from path ${dir} not found`,
+                    MessageBundle.text("ERROR_CORE_INFRA_IMPORTER_MGR_PACK_UNDIRECT", packageName, objectName, dir),
                 );
             }
 
@@ -42,7 +46,7 @@ export function importImpl(): IImporter {
             IMPORT_CACHE.remove(packageName, objectName);
             throw ErrorHelper.getError(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `import package '${packageName}' and Object '${objectName}' failed, it might be deleted or moved.`,
+                MessageBundle.text("ERROR_CORE_INFRA_IMPORTER_MGR_PACK_MOVED", packageName, objectName),
             );
         }
     }) as IImporter;

@@ -14,6 +14,7 @@ import { createServer, IncomingMessage, ServerResponse } from "http";
 import { AbstractHttpService, IHttpServerAction, IHttpServerLifecycle, IHttpServerListener } from "./AbstractHttpService";
 import { StringObj } from "#base/object/String";
 import { Json } from "#base/object/Json";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /** Http 1.0 service */
 export class HttpService extends AbstractHttpService<HttpServiceOption> {
@@ -125,7 +126,7 @@ export class HttpService extends AbstractHttpService<HttpServiceOption> {
                 error: [
                     {
                         code: SERVICE_ERROR_CODES.REQUEST_METHOD_NOT_SUPPORT,
-                        message: "Request method handler is not found, please ensure your http request uses correct method.",
+                        message: MessageBundle.text("ERROR_CORE_SERVICE_NET_HTTP_INVALID_CALL"),
                     },
                 ],
             };

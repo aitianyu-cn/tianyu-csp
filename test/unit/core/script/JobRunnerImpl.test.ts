@@ -166,7 +166,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
             const messagePort = {
                 postMessage: (data: any) => {
                     expect(data.error.length).toEqual(1);
-                    expect(data.error[0].error).toEqual("Technical Error.");
+                    expect(data.error[0].error).toEqual("Technical error occurs.");
                 },
             };
             jest.spyOn(process, "exit").mockImplementation((code?: string | number | null | undefined) => {

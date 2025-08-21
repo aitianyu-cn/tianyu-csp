@@ -5,6 +5,7 @@ import { LogLevel } from "@aitianyu.cn/types";
 import { handleAuditRecord, IAuditRecordBuffer } from "./code/AuditCode";
 import { AUDIT_CONFIGURATION } from "packages/Common";
 import { TraceHelper } from "#utils";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 export class AuditManager implements IAudit {
     private _buffer: IAuditRecordBuffer[];
@@ -26,7 +27,7 @@ export class AuditManager implements IAudit {
     }
     public async record(app: string, message: string, level?: LogLevel, additionalData?: any): Promise<void> {
         if (AUDIT_CONFIGURATION.log) {
-            const logMsg = `[${app}] --- ${message}`;
+            const logMsg = MessageBundle.text("STRING_CORE_INFRA_AUDIT_MGR_LOG_MSG", app, message);
             void TIANYU.logger.log(logMsg, level || LogLevel.LOG);
         }
 
@@ -35,7 +36,7 @@ export class AuditManager implements IAudit {
 
     public async error(app: string, message: string, additionalData?: any): Promise<void> {
         if (AUDIT_CONFIGURATION.log) {
-            const logMsg = `[${app}] --- ${message}`;
+            const logMsg = MessageBundle.text("STRING_CORE_INFRA_AUDIT_MGR_LOG_MSG", app, message);
             void TIANYU.logger.error(logMsg);
         }
 
@@ -44,7 +45,7 @@ export class AuditManager implements IAudit {
 
     public async debug(app: string, message: string, additionalData?: any): Promise<void> {
         if (AUDIT_CONFIGURATION.log) {
-            const logMsg = `[${app}] --- ${message}`;
+            const logMsg = MessageBundle.text("STRING_CORE_INFRA_AUDIT_MGR_LOG_MSG", app, message);
             void TIANYU.logger.debug(logMsg);
         }
 
@@ -53,7 +54,7 @@ export class AuditManager implements IAudit {
 
     public async warn(app: string, message: string, additionalData?: any): Promise<void> {
         if (AUDIT_CONFIGURATION.log) {
-            const logMsg = `[${app}] --- ${message}`;
+            const logMsg = MessageBundle.text("STRING_CORE_INFRA_AUDIT_MGR_LOG_MSG", app, message);
             void TIANYU.logger.warn(logMsg);
         }
 

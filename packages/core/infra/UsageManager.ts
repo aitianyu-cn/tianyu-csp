@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { IUsage, OperationActions } from "#interface";
 import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
@@ -25,7 +26,7 @@ export class UsageManager implements IUsage {
             },
             "usage",
             "record",
-            `Could not to record the usage for function '${moduleOrFunctionName}' in '${project}' project.`,
+            MessageBundle.text("ERROR_CORE_INFRA_USAGE_MGR_FAILED", moduleOrFunctionName, project),
         );
     }
 }

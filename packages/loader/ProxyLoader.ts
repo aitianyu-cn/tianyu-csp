@@ -8,6 +8,7 @@ import { Http2Client } from "packages/modules/net/Http2Client";
 import { LOADER_IGNORE_PATTERN, REST_CONFIG } from "packages/Common";
 import { StringHelper } from "@aitianyu.cn/types";
 import { StringObj } from "#base/object/String";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /**
  * @internal
@@ -46,8 +47,8 @@ export async function loader(): Promise<NetworkServiceResponseData> {
             headers: {},
             body: ErrorHelper.getError(
                 SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR,
-                `proxy to http://${relocatHost}${url} failed`,
-                "Due to security requirement, 'HTTP/1.1 no SSL/TSL' protocol is not supported in production application anymore, please provide a security host.",
+                MessageBundle.text("ERROR_LOADER_PROXY_PROTOCOL_INVALID", relocatHost, url),
+                MessageBundle.text("ERROR_LOADER_PROXY_PROTOCOL_INVALID_DET"),
             ),
         };
     }
@@ -75,7 +76,12 @@ export async function loader(): Promise<NetworkServiceResponseData> {
             status = error;
         }
 
-        const msg = `request to proxy to ${protocol === "http" ? "http" : "https"}://${relocatHost}${url} failed`;
+        const msg = MessageBundle.text(
+            "ERROR_LOADER_PROXY_REQUEST_FAILED",
+            protocol === "http" ? "http" : "https",
+            relocatHost,
+            url,
+        );
         void TIANYU.audit.warn(
             "service/proxy",
             msg,

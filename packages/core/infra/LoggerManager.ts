@@ -5,6 +5,7 @@ import { LogLevel } from "@aitianyu.cn/types";
 import { PROJECT_ENVIRONMENT_MODE } from "../../Common";
 import { TraceHelper } from "#utils";
 import { doXcall } from "./code/GenericXcall";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /** CSP Log Manager for global definition */
 export class LoggerManager implements ILogger {
@@ -18,7 +19,11 @@ export class LoggerManager implements ILogger {
             },
             "logger",
             "log",
-            `Could not to record the '${LogLevelMap[level]}' for '${msg.substring(0, msg.length > 20 ? 20 : msg.length)}'.`,
+            MessageBundle.text(
+                "ERROR_CORE_INFRA_LOG_MGR_FAILED",
+                LogLevelMap[level],
+                msg.substring(0, msg.length > 20 ? 20 : msg.length),
+            ),
             true,
         );
     }

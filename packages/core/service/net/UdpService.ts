@@ -6,6 +6,7 @@ import { ErrorHelper } from "#utils";
 import { CallbackAction } from "@aitianyu.cn/types";
 import { AbstractSocketService } from "./AbstractSocketService";
 import dgram from "dgram";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /** UDP Service */
 export class UdpService extends AbstractSocketService {
@@ -45,10 +46,22 @@ export class UdpService extends AbstractSocketService {
                     error &&
                         void TIANYU.audit.error(
                             this.app,
-                            `udp-server[${this.id}] error on sending to remote ${rinfo.address}:${rinfo.port} - ${error.message}`,
+                            MessageBundle.text(
+                                "ERROR_CORE_SERVICE_NET_UDP_WRITE_RESPONSE_ERROR",
+                                this.id,
+                                rinfo.address,
+                                rinfo.port,
+                                error.message,
+                            ),
                             ErrorHelper.getError(
                                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                                `udp-server[${this.id}] error on sending to remote ${rinfo.address}:${rinfo.port} - ${error.message}`,
+                                MessageBundle.text(
+                                    "ERROR_CORE_SERVICE_NET_UDP_WRITE_RESPONSE_ERROR",
+                                    this.id,
+                                    rinfo.address,
+                                    rinfo.port,
+                                    error.message,
+                                ),
                                 error.stack,
                             ),
                         );
@@ -59,10 +72,10 @@ export class UdpService extends AbstractSocketService {
         this._service.on("error", (error: Error) => {
             void TIANYU.audit.error(
                 this.app,
-                `tcp-server[${this.id}] error at local[${this.host}:${this.port}] - ${error.message}`,
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_UDP_GENERAL_ERROR", this.id, this.host, this.port, error.message),
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `tcp-server[${this.id}] error at local[${this.host}:${this.port}] - ${error.message}`,
+                    MessageBundle.text("ERROR_CORE_SERVICE_NET_UDP_GENERAL_ERROR", this.id, this.host, this.port, error.message),
                     error.stack,
                 ),
             );

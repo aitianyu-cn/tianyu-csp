@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { GenericRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
@@ -30,11 +31,11 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
             TIANYU.environment.development &&
                 void TIANYU.audit.error(
                     "job/runner/net",
-                    `execute request from ${data.payload.url} failed.`,
+                    MessageBundle.text("ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED", data.payload.url),
                     ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `execute request from ${data.payload.url} failed.`,
-                        (reason as any)?.message || "Technical Error.",
+                        MessageBundle.text("ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED", data.payload.url),
+                        (reason as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                     ),
                 );
         },
@@ -48,8 +49,8 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute request from ${data.payload.url} failed.`,
-                    (e as any)?.message || "Technical Error.",
+                    MessageBundle.text("ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED", data.payload.url),
+                    (e as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                 ),
             );
         }
@@ -59,8 +60,8 @@ export async function run_network_request(workerData: any, parentPort: MessagePo
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute request from ${data.payload.url} failed.`,
-                    (e as any)?.message || "Technical Error.",
+                    MessageBundle.text("ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED", data.payload.url),
+                    (e as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                 ),
             );
         } else {

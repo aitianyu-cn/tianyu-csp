@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 
@@ -22,7 +23,7 @@ export class DataView {
 
         throw ErrorHelper.getError(
             SERVICE_ERROR_CODES.INTERNAL_ERROR,
-            "Expected `data` to be an ArrayBuffer, Buffer, Int8Array, Uint8Array or Uint8ClampedArray",
+            MessageBundle.text("ERROR_BASE_OBJECT_DATAVIEW_PARSE_TYPE_ERRORY"),
         );
     }
 }

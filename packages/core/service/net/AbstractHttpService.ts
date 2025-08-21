@@ -29,6 +29,7 @@ import { DEFAULT_REST_REQUEST_ITEM_MAP } from "#core/infra/Constant";
 import { IncomingHttpHeaders } from "http";
 import { gzipSync } from "zlib";
 import { AbstractService } from "./AbstractService";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 const RESPONSE_ENCODE_MAP: MapOfType<(src: string) => string | Buffer> = {
     gzip: (src: string) => {
@@ -244,7 +245,7 @@ export abstract class AbstractHttpService<OPT extends HttpServiceOption, Event e
     }
 
     private onError(error: Error): void {
-        const msg = `http server error on ${this._host}:${this._port} - ${error.message}`;
+        const msg = MessageBundle.text("ERROR_CORE_SERVICE_NET_ABS_HTTP_ERROR", this._host, this._port, error.message);
         void TIANYU.audit.error(this.app, msg, ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack));
     }
 

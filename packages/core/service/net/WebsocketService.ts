@@ -8,6 +8,7 @@ import { IncomingMessage } from "http";
 import { ErrorHelper } from "#utils";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { WebsocketConnection } from "./WebsocketConnection";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 interface WebSocketConnect {
     connection: IWSServerConnection;
@@ -42,6 +43,7 @@ interface WebSocketListener extends Record<EventEmitKeys, WebSocketListenerItem<
     connect: WebSocketListenerItem<EventEmitEventCB<"connect">>;
 }
 
+/** Web Socket Server */
 export class WebsocketService extends AbstractSocketService {
     protected declare _service: WebSocketServer;
 
@@ -57,6 +59,13 @@ export class WebsocketService extends AbstractSocketService {
     private _watcher?: NodeJS.Timeout;
     private _autoPing: boolean;
 
+    /**
+     * Create a new Server.
+     * Server will be starting automatically if te option.noServer is undefined or false.
+     *
+     * @param address local binding ip and port
+     * @param option web socket option
+     */
     public constructor(address?: ISocketAddress, option?: IWebsocketServerOption) {
         super(
             new WebSocketServer({
@@ -113,27 +122,52 @@ export class WebsocketService extends AbstractSocketService {
             clearTimeout(this._watcher);
         }
     }
+    /** Waiting for Web Socket instance starting done */
     public async starting(): Promise<void> {
         await this._listeningPromise;
     }
+    /**
+     * Send a ping to specified client
+     *
+     * @param id client id
+     */
     public async ping(id: string): Promise<void> {
         const connection = this._connections.get(id);
         if (connection) {
             await connection.connection.ping();
         }
     }
+    /**
+     * Send a pong to specified client
+     *
+     * @param id client id
+     */
     public async pong(id: string): Promise<void> {
         const connection = this._connections.get(id);
         if (connection) {
             await connection.connection.pong();
         }
     }
+    /**
+     * Send a message to specified client
+     *
+     * @param id client id
+     * @param message message to send
+     * @param option message sending option
+     */
     public async post(id: string, message: any, option?: IWSClientSendOption): Promise<void> {
         const connection = this._connections.get(id);
         if (connection) {
             await connection.connection.post(message, option);
         }
     }
+    /**
+     * Setup a listener on event
+     *
+     * @param event event type
+     * @param cb callbase function when event occur
+     * @returns return an instance of current
+     */
     public on<T extends EventEmitKeys>(event: T, cb: EventEmitEventCB<T>): this {
         switch (event) {
             case "close":
@@ -160,6 +194,13 @@ export class WebsocketService extends AbstractSocketService {
 
         return this;
     }
+    /**
+     * Setup a listener on event, the listener will be removed when the event is triggered
+     *
+     * @param event event type
+     * @param cb callbase function when event occur
+     * @returns return an instance of current
+     */
     public once<T extends EventEmitKeys>(event: T, cb: EventEmitEventCB<T>): this {
         switch (event) {
             case "close":
@@ -186,6 +227,7 @@ export class WebsocketService extends AbstractSocketService {
 
         return this;
     }
+    /** Get current clients list */
     public get clients(): string[] {
         const client: string[] = [];
         for (const key of this._connections.keys()) {
@@ -212,40 +254,33 @@ export class WebsocketService extends AbstractSocketService {
         conn.send(
             ErrorHelper.getErrorString(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on duplicated link.`,
-                "please ensure the connection link is not used.",
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION"),
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_DET"),
             ),
         );
         conn.close();
         this.onError?.(
             { address: request.socket.remoteAddress || "", port: request.socket.remotePort || 0 },
-            new Error(`duplicated connection for same id: ${id}`),
+            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_ERR", id)),
         );
     }
     private handleInvalidConnection(conn: WebSocket, request: IncomingMessage): void {
         conn.send(
             ErrorHelper.getErrorString(
                 SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on current user.`,
-                "please ensure the connection user is valid.",
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER"),
+                MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_DET"),
             ),
         );
         conn.close();
         this.onError?.(
             { address: request.socket.remoteAddress || "", port: request.socket.remotePort || 0 },
-            new Error(`user connection cannot be validated`),
+            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_ERR")),
         );
     }
     private onservererror(error: Error): void {
-        void TIANYU.audit.error(
-            this.app,
-            `websocket-server[${this.id}] error - ${error.message}`,
-            ErrorHelper.getError(
-                SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                `websocket-server[${this.id}] error - ${error.message}`,
-                error.stack,
-            ),
-        );
+        const msg = MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_ERROR", this.id, error.message);
+        void TIANYU.audit.error(this.app, msg, ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack));
         this.onError?.(null, error);
     }
     private processConnection(websocket: WebSocket, request: IncomingMessage): string {
@@ -382,8 +417,8 @@ export class WebsocketService extends AbstractSocketService {
     public listen(_callback?: CallbackAction): void {
         throw ErrorHelper.getError(
             SERVICE_ERROR_CODES.INTERNAL_ERROR,
-            `websocket-server[${this.id}] error - the instance is running on ${`[${this.host}]:${this.port}`} already.`,
-            "websocket server will be automatically running when the instance is created, not needs to explicitly start it.",
+            MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN", this.id, this.host, this.port),
+            MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN_DET"),
         );
     }
 }

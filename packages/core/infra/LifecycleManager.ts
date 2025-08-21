@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { MapOfType } from "@aitianyu.cn/types";
 import { ILifecycle, IReleasable } from "packages/interface/api/lifecycle";
 
@@ -42,7 +43,7 @@ export class LifecycleManager implements ILifecycle {
                         reject(e);
                     }
                 }).catch((error) => {
-                    void TIANYU.audit.error(`lifecycle/${id}`, "object lifecyle failed.", {
+                    void TIANYU.audit.error(`lifecycle/${id}`, MessageBundle.text("ERROR_CORE_INFRA_LIFECYCLE_MGR_FAILED"), {
                         error: error?.message || "",
                         stack: error?.stack || "",
                     });

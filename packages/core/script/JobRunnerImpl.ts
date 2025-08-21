@@ -1,6 +1,7 @@
 /** @format */
 
 import { StringObj } from "#base/object/String";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { GlobalRequestManager } from "#core/infra/RequestManager";
 import { SessionManager } from "#core/infra/SessionManager";
@@ -36,11 +37,11 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
             TIANYU.environment.development &&
                 void TIANYU.audit.error(
                     "job/runner/native",
-                    `execute job from ${payload.name} (${payload.id}) failed.`,
+                    MessageBundle.text("ERROR_CORE_SCRIPT_JOBRUNNER_LOADING_FAILED", payload.name, payload.id),
                     ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `execute job from ${payload.name} (${payload.id}) failed.`,
-                        (reason as any)?.message || "Technical Error.",
+                        MessageBundle.text("ERROR_CORE_SCRIPT_JOBRUNNER_LOADING_FAILED", payload.name, payload.id),
+                        (reason as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                     ),
                 );
         },
@@ -59,8 +60,13 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute job '${payload.name}' failed with payload: ${StringObj.stringifySafe(payload.payload)}.`,
-                    (e as any)?.message || "Technical Error.",
+                    MessageBundle.text(
+                        "ERROR_CORE_SCRIPT_JOBRUNNER_RUNTIME_FAILED",
+                        payload.name,
+                        StringObj.stringifySafe(payload.payload),
+                    ),
+
+                    (e as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                 ),
             );
         }
@@ -70,8 +76,12 @@ export async function run_job_scripts(workerData: any, parentPort: MessagePort |
             result.error.push(
                 ErrorHelper.getError(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    `execute job '${payload.name}' failed with payload: ${StringObj.stringifySafe(payload.payload)}.`,
-                    (e as any)?.message || "Technical Error.",
+                    MessageBundle.text(
+                        "ERROR_CORE_SCRIPT_JOBRUNNER_RUNTIME_FAILED",
+                        payload.name,
+                        StringObj.stringifySafe(payload.payload),
+                    ),
+                    (e as any)?.message || MessageBundle.text("ERROR_GENERAL_ERROR"),
                 ),
             );
         } else {

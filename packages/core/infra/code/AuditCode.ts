@@ -1,6 +1,7 @@
 /** @format */
 
 import { StringObj } from "#base/object/String";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { HttpProtocal, ISocketAddress, SocketAddressFamily } from "#interface";
 import { MapOfType } from "@aitianyu.cn/types";
 import { AUDIT_CONFIGURATION, PROJECT_NAME } from "packages/Common";
@@ -58,7 +59,14 @@ export async function audit4UDP(
     buffers: IAuditRecordBuffer[],
 ): Promise<void> {
     for (const buffer of buffers) {
-        const msg = `[${buffer.level}] --- ${buffer.timestamp} --- ${PROJECT_NAME} --- ${buffer.app} --- ${buffer.message}`;
+        const msg = MessageBundle.text(
+            "STRING_CORE_INFRA_CODE_AUDIT_UDP_MSG",
+            buffer.level,
+            buffer.timestamp,
+            PROJECT_NAME,
+            buffer.app,
+            buffer.message,
+        );
         void TIANYU.import.MODULE.Net.UdpClient(Buffer.from(msg), {
             remote,
             family,
@@ -82,7 +90,15 @@ export async function audit4TCP(
 
     for (const buffer of buffers) {
         const addition = buffer.additionalData ? ` --- ${StringObj.stringifySafe(buffer.additionalData)}` : "";
-        const msg = `[${buffer.level}] --- ${buffer.timestamp} --- ${PROJECT_NAME} --- ${buffer.app} --- ${buffer.message}${addition}`;
+        const msg = MessageBundle.text(
+            "STRING_CORE_INFRA_CODE_AUDIT_TCP_MSG",
+            buffer.level,
+            buffer.timestamp,
+            PROJECT_NAME,
+            buffer.app,
+            buffer.message,
+            addition,
+        );
         await client.send(Buffer.from(msg));
     }
 

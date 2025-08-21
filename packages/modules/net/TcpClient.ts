@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { TcpClientOptions } from "#interface";
 import { ErrorHelper } from "#utils";
@@ -46,7 +47,12 @@ export class TcpClient implements IReleasable {
     public async connect(options: net.TcpSocketConnectOpts): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const connectionErrorHandler = (error: Error) => {
-                const err_msg = `connect to remote[${options.host}:${options.port}] failed - ${error.message}`;
+                const err_msg = MessageBundle.text(
+                    "ERROR_MODULES_NET_TCP_CONNECTION_ERROR",
+                    String(options.host),
+                    String(options.port),
+                    error.message,
+                ); // `connect to remote[${options.host}:${options.port}] failed - ${error.message}`;
                 const err = ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, err_msg, error.stack);
                 this._log && void TIANYU.audit.error("client/tcp", err_msg, err);
 
@@ -79,9 +85,13 @@ export class TcpClient implements IReleasable {
                 if (!error) {
                     resolve();
                 } else {
-                    const err_msg = `send to remote[${this._client.remoteAddress}:${
-                        this._client.remotePort
-                    }] failed - source data[${msg.toString("utf-8")}] - ${error.message}`;
+                    const err_msg = MessageBundle.text(
+                        "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED",
+                        String(this._client.remoteAddress),
+                        String(this._client.remotePort),
+                        msg.toString("utf-8"),
+                        error.message,
+                    );
                     const err = ErrorHelper.getError(SERVICE_ERROR_CODES.SERVICE_REQUEST_ERROR, err_msg, error.stack);
                     this._log && void TIANYU.audit.error("client/tcp", err_msg, err);
 

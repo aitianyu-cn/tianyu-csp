@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { HTTP_STATUS_CODE, RequestPayloadData } from "#interface";
 import { ErrorHelper } from "#utils";
@@ -12,7 +13,7 @@ export const DISPATCH_ERROR_RESPONSES = {
             error: [
                 {
                     code: SERVICE_ERROR_CODES.REQUEST_METHOD_NOT_SUPPORT,
-                    message: "Request method handler is not found, please ensure your http request uses correct method.",
+                    message: MessageBundle.text("ERROR_CORE_SERVICE_NET_HTTP_INVALID_CALL"),
                 },
             ],
         },
@@ -24,8 +25,13 @@ export const DISPATCH_ERROR_RESPONSES = {
             error: [
                 {
                     code: SERVICE_ERROR_CODES.REQUEST_PATH_INVALID,
-                    message: `Request "${payload.url}" is not accessiable, please check url and retry later.`,
-                    error: `Request '${payload.method}' => "${payload.host}${payload.url}" could not be executed due to request url handler does not exist or the method handler of this url is not configered.`,
+                    message: MessageBundle.text("ERROR_CORE_SERVICE_NET_HTTP_REST_NOT_FOUND", payload.url),
+                    error: MessageBundle.text(
+                        "ERROR_CODE_SERVICE_NET_HTTP_REST_NOT_FOUND_DET",
+                        payload.method,
+                        payload.host,
+                        payload.url,
+                    ),
                 },
             ],
         },
@@ -37,7 +43,7 @@ export const DISPATCH_ERROR_RESPONSES = {
             error: [
                 {
                     code: error?.error.code || SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    message: error?.error.message || "Technical error occurs when processing request.",
+                    message: error?.error.message || MessageBundle.text("ERROR_CODE_SERVICE_NET_HTTP_GENERAL_ERROR"),
                     error: error?.error.error,
                 },
             ],

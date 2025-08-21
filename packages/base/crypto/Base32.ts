@@ -3,6 +3,7 @@
 import { Bytes } from "#base/object/Bytes";
 import { DataView } from "#base/object/DataView";
 import { Integer } from "#base/object/Integer";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 
@@ -47,7 +48,7 @@ export class Base32 {
                 if (char === undefined) {
                     throw ErrorHelper.getError(
                         SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        `Invalid index: ${index} in alphabet "${alphabet}"`,
+                        MessageBundle.text("ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX", index, alphabet),
                     );
                 }
                 output += char;
@@ -129,7 +130,10 @@ export class Base32 {
         const idx = alphabet.indexOf(char);
 
         if (idx === -1) {
-            throw ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, `Invalid character found: ${char}`);
+            throw ErrorHelper.getError(
+                SERVICE_ERROR_CODES.INTERNAL_ERROR,
+                MessageBundle.text("ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER", char),
+            );
         }
 
         return idx;

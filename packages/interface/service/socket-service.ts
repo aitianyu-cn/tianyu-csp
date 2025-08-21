@@ -24,6 +24,7 @@ export interface ISocketAddress {
 
 /** Web Socket Server Connection Instance */
 export interface IWSServerConnection {
+    /** Get the current status of connection */
     status: 0 | 1 | 2 | 3;
     /**
      * Setup a listener for message and the callback function will be invoked when server receives client data

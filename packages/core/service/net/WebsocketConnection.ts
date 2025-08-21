@@ -5,8 +5,10 @@ import { IWSClientSendOption, IWSServerConnection } from "#interface";
 import { IncomingMessage } from "http";
 import { RawData, WebSocket } from "ws";
 
+/** Web Socket event emit types */
 export type WebSocketEmittedType = "message" | "error" | "ping" | "pong" | "close";
 
+/** CSP Packaged Web Socket Connection */
 export class WebsocketConnection implements IWSServerConnection {
     private _id: string;
     private _socket: WebSocket;
@@ -18,6 +20,13 @@ export class WebsocketConnection implements IWSServerConnection {
     private onPong?: (data: Buffer) => void;
     private onClose?: (code: number, reason: Buffer) => void;
 
+    /**
+     * Create instance
+     *
+     * @param id connection id
+     * @param socket web socket connection instance
+     * @param request web socket connection request message
+     */
     public constructor(id: string, socket: WebSocket, request: IncomingMessage) {
         this._id = id;
         this._socket = socket;

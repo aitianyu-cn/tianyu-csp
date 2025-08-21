@@ -13,6 +13,7 @@ import { Mutex } from "async-mutex";
 import { DEFAULT_JOB_OVERTIME, DEFAULT_MAX_JOB_COUNT, SERVICE_ERROR_CODES } from "#core/Constant";
 import { JobRunner, JobRunnerPayload } from "./JobRunner";
 import { IContributor } from "@aitianyu.cn/tianyu-app-fwk";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 /**
  * @internal
@@ -87,7 +88,7 @@ export class JobManager {
                     error: [
                         {
                             code: SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                            message: "start job failed",
+                            message: MessageBundle.text("ERROR_JOB_MGR_START_FAILED"),
                             error: error?.message,
                         },
                     ],
@@ -138,7 +139,7 @@ export class JobManager {
             this._counter--;
             void this._dispatchInternal();
         } catch (reason: any) /* istanbul ignore next */ {
-            void TIANYU.audit.error("job/manager", reason?.message || "Technical error occurs.");
+            void TIANYU.audit.error("job/manager", reason?.message || MessageBundle.text("ERROR_GENERAL_ERROR"));
         }
     }
 }
