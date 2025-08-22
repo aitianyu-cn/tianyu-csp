@@ -76,10 +76,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
             });
 
             const received = new Promise<void>((resolve) => {
-                service.onData = (_, data) => {
+                service.on("message", (_id, data) => {
                     expect(data.toString("utf-8")).toEqual(`[DEBUG] --- 222 --- ${PROJECT_NAME} --- a --- test --- {}`);
                     resolve();
-                };
+                });
             });
 
             const remote: ISocketAddress = {
@@ -120,10 +120,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.AuditCodes", (
             });
 
             const received = new Promise<void>((resolve) => {
-                service.onData = (_, data) => {
+                service.on("message", (_id, data) => {
                     expect(data.toString("utf-8")).toEqual(`[DEBUG] --- 222 --- ${PROJECT_NAME} --- a --- test`);
                     resolve();
-                };
+                });
             });
 
             const remote: ISocketAddress = {

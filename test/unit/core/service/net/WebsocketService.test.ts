@@ -133,6 +133,14 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
             expect(SERVICE.clients.length).toEqual(1);
             expect(SPY).toHaveBeenCalled();
         });
+
+        it("sendPong", async () => {
+            const socket: any = {
+                pong: jest.fn().mockReturnValue(Promise.resolve()),
+            };
+            await SERVICE["sendPong"](socket);
+            expect(socket.pong).toHaveBeenCalled();
+        });
     });
 
     it("service error", () => {
@@ -143,6 +151,22 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
 
         expect(SPY).toHaveBeenCalled();
         expect(SERVICE["onError"]).toHaveBeenCalled();
+    });
+
+    it("send error", (done) => {
+        const socket: any = {
+            send: jest.fn().mockImplementation((_data, cb) => {
+                cb(new Error());
+            }),
+        };
+
+        SERVICE["sendData"](socket, Buffer.from("")).then(
+            () => done.fail(),
+            () => {
+                expect(socket.send).toHaveBeenCalled();
+                done();
+            },
+        );
     });
 
     describe("processConnection", () => {

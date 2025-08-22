@@ -14,12 +14,12 @@ import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { ErrorHelper } from "#utils";
 
-export interface SocketListenerItem<T extends Function> {
+export interface SocketListenerItem<T> {
     on: T[];
     once: T[];
 }
 
-export interface SocketEventMapSrc extends Record<string, Function> {
+export interface SocketEventMapSrc {
     connect: (id: string, request: ISocketConnectionRequest & any) => void;
     message: (id: string, data: Buffer, isBinary: boolean) => void;
     error: (id: string, error: Error) => void;
@@ -84,6 +84,8 @@ export abstract class AbstractSocketService<
     private _watcher?: NodeJS.Timeout;
     private _autoPing: boolean;
 
+    protected _autoPong: boolean;
+
     /**
      * To create a specified socket service with given protocal and address
      *
@@ -112,6 +114,7 @@ export abstract class AbstractSocketService<
         this._watchTimeout = option?.timeout || AbstractSocketService.DEFAULT_TIMEOUT_TIME;
         this._watcher = undefined;
         this._autoPing = !!option?.autoPing;
+        this._autoPong = !!option?.autoPong;
 
         this._service.on("connection", this.onconnection.bind(this));
         this._service.on("error", this.onservererror.bind(this));
@@ -217,7 +220,7 @@ export abstract class AbstractSocketService<
             if (this._listeners.close) {
                 const listeners = [...this._listeners.close.on, ...this._listeners.close.once];
                 this._listeners.close.once = [];
-                listeners.forEach((cb) => cb(id, code, reason));
+                listeners.forEach((cb) => this.callFun(cb, id, code, reason));
             }
         }
     }
@@ -228,7 +231,7 @@ export abstract class AbstractSocketService<
             const listeners = [...this._listeners.message.on, ...this._listeners.message.once];
             this._listeners.message.once = [];
 
-            listeners.forEach((cb) => cb(id, data, isBinary));
+            listeners.forEach((cb) => this.callFun(cb, id, data, isBinary));
         }
     }
     protected onerror(id: string, error: Error): void {
@@ -236,7 +239,7 @@ export abstract class AbstractSocketService<
             const listeners = [...this._listeners.error.on, ...this._listeners.error.once];
             this._listeners.error.once = [];
 
-            listeners.forEach((cb) => cb(id, error));
+            listeners.forEach((cb) => this.callFun(cb, id, error));
         }
     }
     protected onping(id: string): void {
@@ -246,7 +249,7 @@ export abstract class AbstractSocketService<
             const listeners = [...this._listeners.ping.on, ...this._listeners.ping.once];
             this._listeners.ping.once = [];
 
-            listeners.forEach((cb) => cb(id));
+            listeners.forEach((cb) => this.callFun(cb, id));
         }
     }
     protected onpong(id: string): void {
@@ -256,7 +259,7 @@ export abstract class AbstractSocketService<
             const listeners = [...this._listeners.pong.on, ...this._listeners.pong.once];
             this._listeners.pong.once = [];
 
-            listeners.forEach((cb) => cb(id));
+            listeners.forEach((cb) => this.callFun(cb, id));
         }
     }
     protected abstract sendData(socket: SOCKET_RAW, data: Buffer): Promise<void>;
@@ -265,6 +268,7 @@ export abstract class AbstractSocketService<
     protected abstract checkClosed(status: number): boolean;
     protected abstract handleConnection(id: string, socket: SOCKET_RAW, request: REQ): SOCKET_TYPE;
     protected abstract handleClose(socket: SOCKET_RAW): void;
+    protected abstract handleRemote(socket: SOCKET_RAW, request: REQ): ISocketAddress;
 
     public static DEFAULT_TIMEOUT_TIME: number = 30000;
 
@@ -336,10 +340,7 @@ export abstract class AbstractSocketService<
             connection: this.handleConnection(id, socket, request),
             last: Date.now(),
             flag: "active",
-            remote: {
-                address: request.socket.remoteAddress || "",
-                port: request.socket.remotePort || 0,
-            },
+            remote: this.handleRemote(socket, request),
         });
 
         const listeners = [...(this._listeners.connect?.on || []), ...(this._listeners.connect?.once || [])];
@@ -347,7 +348,7 @@ export abstract class AbstractSocketService<
             this._listeners.connect.once = [];
         }
 
-        listeners.forEach((cb) => cb(id, request));
+        listeners.forEach((cb) => this.callFun(cb, id, request));
 
         if (!this._watcher) {
             this._watcher = setTimeout(this.onwatch.bind(this), this._watchTimeout / 2);
@@ -367,7 +368,7 @@ export abstract class AbstractSocketService<
         );
         this.handleClose(conn);
         this.onError?.(
-            { address: request.socket.remoteAddress || "", port: request.socket.remotePort || 0 },
+            this.handleRemote(conn, request),
             new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_ERR", id)),
         );
     }
@@ -385,8 +386,14 @@ export abstract class AbstractSocketService<
         );
         this.handleClose(conn);
         this.onError?.(
-            { address: request.socket.remoteAddress || "", port: request.socket.remotePort || 0 },
+            this.handleRemote(conn, request),
             new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_ERR")),
         );
+    }
+
+    private callFun(cb: any, ...args: any[]): void {
+        if (typeof cb === "function") {
+            (cb as Function)(...args);
+        }
     }
 }

@@ -90,6 +90,7 @@ export interface IWSServerConnection {
 }
 
 export interface IScoketServiceOption<REQ extends ISocketConnectionRequest | undefined> {
+    autoPong?: boolean;
     /** Set auto to ping the client for keeping long connection life */
     autoPing?: boolean;
     /** Connection keeplive time for sending ping message timely */

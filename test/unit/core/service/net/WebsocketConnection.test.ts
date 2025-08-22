@@ -1,12 +1,12 @@
 /** @format */
 
-import { WSConnection } from "#core/service/net";
+import { WebsocketConnection } from "#core/service/net/WebsocketConnection";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConnection", () => {
     it("on", () => {
         const socket = { on: jest.fn(), close: jest.fn() };
 
-        const connection = new WSConnection("123", socket as any, {} as any);
+        const connection = new WebsocketConnection("123", socket as any, {} as any);
 
         expect(connection["onError"]).toBeUndefined();
         expect(connection["onReceive"]).toBeUndefined();
@@ -34,7 +34,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
     it("status", () => {
         const socket = { on: jest.fn(), close: jest.fn(), readyState: 1 };
 
-        const connection = new WSConnection("123", socket as any, {} as any);
+        const connection = new WebsocketConnection("123", socket as any, {} as any);
 
         expect(connection.status).toEqual(1);
     });
@@ -49,7 +49,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
 
             await connection.ping();
 
@@ -65,7 +65,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
             connection.on("error", jest.fn());
 
             connection.ping().then(
@@ -88,7 +88,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
 
             await connection.pong();
 
@@ -104,7 +104,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
             connection.on("error", jest.fn());
 
             connection.pong().then(
@@ -127,7 +127,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
 
             await connection.post("");
 
@@ -143,7 +143,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
                 }),
             };
 
-            const connection = new WSConnection("123", socket as any, {} as any);
+            const connection = new WebsocketConnection("123", socket as any, {} as any);
             connection.on("error", jest.fn());
 
             connection.post("").then(
@@ -184,11 +184,11 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketConn
         const FN_CLOSE = jest.fn();
 
         let oncb: any = {};
-        let connection: WSConnection;
+        let connection: WebsocketConnection;
 
         beforeEach(() => {
             oncb = {};
-            connection = new WSConnection("123", socket as any, {} as any);
+            connection = new WebsocketConnection("123", socket as any, {} as any);
 
             expect(() => {
                 connection

@@ -102,6 +102,9 @@ export class WebsocketService extends AbstractSocketService<IWSServerConnection,
     protected handleClose(socket: WebSocket): void {
         socket.close();
     }
+    protected handleRemote(_socket: WebSocket, request: IncomingMessage): ISocketAddress {
+        return { address: request.socket.remoteAddress || "", port: request.socket.remotePort || 0 };
+    }
 
     public static DEFAULT_TIMEOUT_TIME: number = 30000;
 
