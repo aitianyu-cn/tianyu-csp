@@ -8,6 +8,8 @@
 4. add basic libs for base data type and crypto.
 5. add auth modules and support TOTP calculation.
 6. enhance job execution payload.
+7. support message bundle for i18n.
+8. support webscoket.
 
 ## version 0.3.0
 

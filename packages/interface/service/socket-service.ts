@@ -2,7 +2,7 @@
 
 import { INetworkService } from "./service";
 import { Integer } from "#base/index";
-import { PerMessageDeflateOptions, RawData, VerifyClientCallbackAsync, VerifyClientCallbackSync } from "ws";
+import { PerMessageDeflateOptions, VerifyClientCallbackAsync, VerifyClientCallbackSync } from "ws";
 import { IncomingMessage } from "http";
 
 /** Socket Protocal Type: TCP or UDP */
@@ -32,7 +32,7 @@ export interface IWSServerConnection {
      * @param event message
      * @param cb callback function
      */
-    on(event: "message", cb: (message: RawData, isBinary: boolean) => void): this;
+    on(event: "message", cb: (message: Buffer, isBinary: boolean) => void): this;
     /**
      * Setup a listener for error and the callback function will be invoked when server receives an error
      *
@@ -89,6 +89,29 @@ export interface IWSServerConnection {
     close(): void;
 }
 
+export interface IScoketServiceOption<REQ extends ISocketConnectionRequest | undefined> {
+    /** Set auto to ping the client for keeping long connection life */
+    autoPing?: boolean;
+    /** Connection keeplive time for sending ping message timely */
+    timeout?: number;
+    /** Function to generate client id */
+    clientIdGenerator?: (remote: ISocketAddress, req: REQ) => string;
+    /** Function to handle error */
+    error?: (remote: ISocketAddress | string | null, error: Error) => void;
+}
+
+export interface ISocketConnectionRequest {
+    socket: {
+        remoteAddress?: string;
+        remotePort?: number;
+    };
+}
+
+export interface ITcpServiceOption extends IScoketServiceOption<ISocketConnectionRequest> {
+    pingMsg?: string;
+    pongMsg?: string;
+}
+
 /** Option for Web Socket Client Sending */
 export interface IWSClientSendOption {
     /** flag to enabld the data encrypto */
@@ -101,27 +124,19 @@ export interface IWSClientSendOption {
 }
 
 /** Web Socket Server Options */
-export interface IWebsocketServerOption<V extends typeof IncomingMessage = typeof IncomingMessage> {
+export interface IWebsocketServerOption<V extends IncomingMessage = IncomingMessage> extends IScoketServiceOption<V> {
     /** Path to allow client to connect */
     path?: string | undefined;
     /** Set auto response the pong when server receives an client ping */
     autoPong?: boolean | undefined;
-    /** Set auto to ping the client for keeping long connection life */
-    autoPing?: boolean;
     /** Support the server not to start a network listening */
     noServer?: boolean | undefined;
     /** Support the message zip */
     perMessageDeflate?: boolean | PerMessageDeflateOptions | undefined;
     /** Function to verify a client connection when connecting */
-    verifyClient?: VerifyClientCallbackAsync<InstanceType<V>> | VerifyClientCallbackSync<InstanceType<V>> | undefined;
+    verifyClient?: VerifyClientCallbackAsync<V> | VerifyClientCallbackSync<V> | undefined;
     /** Function to handle the connection protocol */
-    handleProtocols?: (protocols: Set<string>, request: InstanceType<V>) => string | false;
-    /** Function to generate client id */
-    clientIdGenerator?: (remote: ISocketAddress, req: IncomingMessage) => string;
-    /** Function to handle error */
-    error?: (remote: ISocketAddress | string | null, error: Error) => void;
-    /** Connection keeplive time for sending ping message timely */
-    timeout?: number;
+    handleProtocols?: (protocols: Set<string>, request: V) => string | false;
 }
 
 /**

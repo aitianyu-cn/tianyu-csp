@@ -1,12 +1,12 @@
 /** @format */
 
 import { Integer } from "#base/index";
-import { WSService } from "#core/service/net";
+import { WebsocketService } from "#core/service/net/WebsocketService";
 import { TimerTools } from "test/tools/TimerTools";
 import { RawData } from "ws";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", () => {
-    const SERVICE = new WSService(
+    const SERVICE = new WebsocketService(
         { address: "0.0.0.0", port: 60005 },
         {
             clientIdGenerator: (_, req) => {

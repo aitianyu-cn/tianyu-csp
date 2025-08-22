@@ -3,7 +3,7 @@
 import { StringObj } from "#base/index";
 import { IWSClientSendOption, IWSServerConnection } from "#interface";
 import { IncomingMessage } from "http";
-import { RawData, WebSocket } from "ws";
+import { WebSocket } from "ws";
 
 /** Web Socket event emit types */
 export type WebSocketEmittedType = "message" | "error" | "ping" | "pong" | "close";
@@ -15,7 +15,7 @@ export class WebsocketConnection implements IWSServerConnection {
     private _request: IncomingMessage;
 
     private onError?: (error: Error) => void;
-    private onReceive?: (message: RawData, isBinary: boolean) => void;
+    private onReceive?: (message: Buffer, isBinary: boolean) => void;
     private onPing?: (data: Buffer) => void;
     private onPong?: (data: Buffer) => void;
     private onClose?: (code: number, reason: Buffer) => void;
@@ -86,14 +86,14 @@ export class WebsocketConnection implements IWSServerConnection {
     public on(
         event: WebSocketEmittedType,
         cb:
-            | ((message: RawData, isBinary: boolean) => void)
+            | ((message: Buffer, isBinary: boolean) => void)
             | ((code: number, reason: Buffer) => void)
             | ((error: Error) => void)
             | ((data: Buffer) => void),
     ): this {
         switch (event) {
             case "message":
-                this.onReceive = cb as (message: RawData, isBinary: boolean) => void;
+                this.onReceive = cb as (message: Buffer, isBinary: boolean) => void;
                 break;
             case "error":
                 this.onError = cb as (error: Error) => void;
@@ -120,7 +120,7 @@ export class WebsocketConnection implements IWSServerConnection {
     private onclose(code: number, reason: Buffer): void {
         this.onClose?.(code, reason);
     }
-    private onreceive(data: RawData, isBinary: boolean): void {
+    private onreceive(data: Buffer, isBinary: boolean): void {
         this.onReceive?.(data, isBinary);
     }
     private onerror(error: Error): void {

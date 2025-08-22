@@ -37,12 +37,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
                 .on("" as any, jest.fn());
         }).not.toThrow();
 
-        expect(SERVICE["_listeners"].close.on.length).toEqual(1);
-        expect(SERVICE["_listeners"].connect.on.length).toEqual(1);
-        expect(SERVICE["_listeners"].message.on.length).toEqual(1);
-        expect(SERVICE["_listeners"].error.on.length).toEqual(1);
-        expect(SERVICE["_listeners"].ping.on.length).toEqual(1);
-        expect(SERVICE["_listeners"].pong.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].close?.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].connect?.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].message?.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].error?.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].ping?.on.length).toEqual(1);
+        expect(SERVICE["_listeners"].pong?.on.length).toEqual(1);
     });
 
     it("once", () => {
@@ -56,17 +56,17 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
                 .once("" as any, jest.fn());
         }).not.toThrow();
 
-        expect(SERVICE["_listeners"].close.once.length).toEqual(1);
-        expect(SERVICE["_listeners"].connect.once.length).toEqual(1);
-        expect(SERVICE["_listeners"].message.once.length).toEqual(1);
-        expect(SERVICE["_listeners"].error.once.length).toEqual(1);
-        expect(SERVICE["_listeners"].ping.once.length).toEqual(1);
-        expect(SERVICE["_listeners"].pong.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].close?.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].connect?.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].message?.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].error?.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].ping?.once.length).toEqual(1);
+        expect(SERVICE["_listeners"].pong?.once.length).toEqual(1);
     });
 
     describe("internal", () => {
         const ID = "123";
-        beforeEach(() => {
+        beforeEach(async () => {
             const SPY = jest.fn();
             SERVICE.on("connect", SPY);
             SERVICE["clientIdGenerator"] = () => ID;
@@ -75,7 +75,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
                 close: () => undefined,
                 on: () => socket,
             };
-            SERVICE["onconnection"](
+            await SERVICE["onconnection"](
                 socket as any,
                 {
                     socket: {
@@ -146,31 +146,31 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
     });
 
     describe("processConnection", () => {
-        it("invalid connection", () => {
+        it("invalid connection", async () => {
             SERVICE["clientIdGenerator"] = () => "";
             SERVICE["onError"] = jest.fn();
 
             const socket = {
                 close: jest.fn(),
-                send: jest.fn(),
+                send: jest.fn().mockImplementation((_, cb) => {
+                    cb();
+                }),
             };
-            expect(
-                SERVICE["processConnection"](
-                    socket as any,
-                    {
-                        socket: {
-                            remoteAddress: "",
-                            remotePort: 0,
-                        },
-                    } as any,
-                ),
-            ).toEqual("");
+            await SERVICE["onconnection"](
+                socket as any,
+                {
+                    socket: {
+                        remoteAddress: "",
+                        remotePort: 0,
+                    },
+                } as any,
+            );
             expect(socket.send).toHaveBeenCalled();
             expect(socket.close).toHaveBeenCalled();
             expect(SERVICE["onError"]).toHaveBeenCalled();
         });
 
-        it("duplicated connection", () => {
+        it("duplicated connection", async () => {
             SERVICE["onError"] = jest.fn();
             SERVICE["clientIdGenerator"] = () => "123";
             SERVICE["_connections"].set("123", {
@@ -182,19 +182,19 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
 
             const socket = {
                 close: jest.fn(),
-                send: jest.fn(),
+                send: jest.fn().mockImplementation((_, cb) => {
+                    cb();
+                }),
             };
-            expect(
-                SERVICE["processConnection"](
-                    socket as any,
-                    {
-                        socket: {
-                            remoteAddress: "",
-                            remotePort: 0,
-                        },
-                    } as any,
-                ),
-            ).toEqual("");
+            await SERVICE["onconnection"](
+                socket as any,
+                {
+                    socket: {
+                        remoteAddress: "",
+                        remotePort: 0,
+                    },
+                } as any,
+            );
             expect(socket.send).toHaveBeenCalled();
             expect(socket.close).toHaveBeenCalled();
             expect(SERVICE["onError"]).toHaveBeenCalled();
@@ -262,7 +262,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
                 flag: "active",
                 remote: { address: "", port: 0 },
             });
-            SERVICE["processConnection"](
+            await SERVICE["onconnection"](
                 {
                     close: () => undefined,
                     on: () => undefined,
@@ -277,6 +277,9 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.WebsocketServ
                 } as any,
             );
 
+            if (SERVICE["_watcher"]) {
+                clearTimeout(SERVICE["_watcher"]);
+            }
             await SERVICE["onwatch"]();
             await TimerTools.sleep(2000);
 

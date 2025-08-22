@@ -1,28 +1,43 @@
 /** @format */
 
 import net from "net";
-import { ErrorHelper } from "#utils";
-import { ISocketAddress } from "#interface";
+import { ISocketAddress, ISocketConnectionRequest, ITcpServiceOption } from "#interface";
 import { CallbackAction } from "@aitianyu.cn/types";
-import { AbstractSocketService } from "./AbstractSocketService";
-import { SERVICE_ERROR_CODES } from "#core/Constant";
-import { MessageBundle } from "#base/res/InternalMessageBundle";
+import { AbstractSocketService, ISocketConnection, SocketEventMapSrc } from "./AbstractSocketService";
+
+interface TcpConnectionEmitMap extends SocketEventMapSrc {}
+
+class SocketConnection implements ISocketConnection {
+    private socket: net.Socket;
+
+    public constructor(socket: net.Socket) {
+        this.socket = socket;
+    }
+
+    public get status(): number {
+        return this.socket.closed || this.socket.destroyed ? 1 : 0;
+    }
+
+    public close(): void {
+        this.socket.destroy();
+    }
+
+    public get connection(): net.Socket {
+        return this.socket;
+    }
+}
 
 /** TCP service */
-export class TcpService extends AbstractSocketService {
+export class TcpService extends AbstractSocketService<
+    SocketConnection,
+    net.Socket,
+    TcpConnectionEmitMap,
+    ISocketConnectionRequest
+> {
     protected declare _service: net.Server;
 
-    /** Given a function to handle a new TCP connection is established */
-    public endConnection?: (remote: ISocketAddress) => void;
-    /** Given a function to handle a TCP connection is closed */
-    public onConnected?: (remote: ISocketAddress) => void;
-    /**
-     * Given a function to handle error in TCP service and TCP connection
-     *
-     * - if "remote" is null, that indicates the error occurs in TCP service
-     * - if "remote" is not null, that indicates the error occurs in TCP connection
-     */
-    public onError?: (remote: ISocketAddress | null, error: Error) => void;
+    private pingMsg: string;
+    private pongMsg: string;
 
     /**
      * To create a new TCP service instance with given local binding address
@@ -30,25 +45,16 @@ export class TcpService extends AbstractSocketService {
      * @param address local binding address, default address will be applied when the address is undefined.
      *                default address default is "0.0.0.0" and the port is a random number from 1024 to 65535
      */
-    public constructor(address?: ISocketAddress) {
-        super(net.createServer(), "tcp", address);
+    public constructor(address?: ISocketAddress, option?: ITcpServiceOption) {
+        super(net.createServer(), "tcp", address, option);
 
-        this._service.on("connection", this.connectionListener.bind(this));
-        this._service.on("error", this.errorHandler.bind(this));
+        this.pingMsg = option?.pingMsg || TcpService.DEFAULT_PING;
+        this.pongMsg = option?.pongMsg || TcpService.DEFAULT_PONG;
     }
 
     /** Get a value indicates the service is in running status */
     public get listening(): boolean {
         return this._service.listening;
-    }
-
-    public override async close(callback?: (err?: Error) => void): Promise<void> {
-        if (!this.listening) {
-            callback?.();
-            return;
-        }
-
-        return super.close(callback);
     }
 
     public listen(callback?: CallbackAction): void {
@@ -58,82 +64,67 @@ export class TcpService extends AbstractSocketService {
         });
     }
 
-    private connectionListener(socket: net.Socket): void {
-        const remoteHost: ISocketAddress = {
-            address: socket.remoteAddress || /* istanbul ignore next */ "",
-            port: socket.remotePort || /* istanbul ignore next */ 0,
-        };
-
-        this.onConnected?.(remoteHost);
-
-        socket.on("data", async (data: Buffer) => {
-            const res = await this.onData?.(remoteHost, data);
-            if (res) {
-                this.sendResponse(socket, res);
-            }
-        });
-
-        socket.on("end", () => {
-            this.endConnection?.(remoteHost);
-        });
-
-        socket.on(
-            "error",
-            /* istanbul ignore next */ (error: Error) => {
-                const msg = MessageBundle.text(
-                    "ERROR_CORE_SERVICE_NET_TCP_SOCKET_ERROR",
-                    this.id,
-                    remoteHost.address,
-                    remoteHost.port,
-                    error.message,
-                );
-                void TIANYU.audit.error(
-                    this.app,
-                    msg,
-                    ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack),
-                );
-                this.onError?.(remoteHost, error);
-            },
-        );
-    }
-
-    private sendResponse(socket: net.Socket, data: Buffer): void {
-        socket.write(data, (error?: Error | null) => {
-            error &&
-                /* istanbul ignore next */ void TIANYU.audit.error(
-                    this.app,
-                    MessageBundle.text(
-                        "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR",
-                        this.id,
-                        String(socket.remoteAddress),
-                        String(socket.remotePort),
-                        error.message,
-                    ),
-                    ErrorHelper.getError(
-                        SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                        MessageBundle.text(
-                            "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR",
-                            this.id,
-                            String(socket.remoteAddress),
-                            String(socket.remotePort),
-                            error.message,
-                        ),
-                        error.stack,
-                    ),
-                );
+    protected async sendData(socket: net.Socket, data: Buffer): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            socket.write(data, (error?: Error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
         });
     }
-
-    private errorHandler(error: Error): void {
-        void TIANYU.audit.error(
-            this.app,
-            MessageBundle.text("ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR", this.id, error.message),
-            ErrorHelper.getError(
-                SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                MessageBundle.text("ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR", this.id, error.message),
-                error.stack,
-            ),
-        );
-        this.onError?.(null, error);
+    protected async sendPing(connection: SocketConnection): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            connection.connection.write(Buffer.from(this.pingMsg), (error?: Error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
+    protected async sendPong(connection: SocketConnection): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            connection.connection.write(Buffer.from(this.pongMsg), (error?: Error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+    protected checkClosed(status: number): boolean {
+        return status === 1;
+    }
+    protected handleConnection(id: string, socket: net.Socket, _request: ISocketConnectionRequest): SocketConnection {
+        socket.on("close", this.oncloseV2.bind(this, id));
+        socket.on("data", this.onmessage.bind(this.id));
+        socket.on("error", this.onerror.bind(this, id));
+
+        return new SocketConnection(socket);
+    }
+    protected handleClose(socket: net.Socket): void {
+        socket.destroy();
+    }
+
+    private onmessage(id: string, data: Buffer): void {
+        const d2s = data.toString("utf-8");
+        if (d2s === this.pingMsg) {
+            this.onping(id);
+        } else if (d2s === this.pongMsg) {
+            this.onpong(id);
+        } else {
+            this.onmessage(id, data);
+        }
+    }
+    private oncloseV2(id: string, hadError: boolean): void {
+        this.onclose(id, hadError ? -1 : 0, Buffer.from(""));
+    }
+
+    public static DEFAULT_PING: string = "PING";
+    public static DEFAULT_PONG: string = "PoNG";
 }
