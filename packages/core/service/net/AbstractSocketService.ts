@@ -313,7 +313,7 @@ export abstract class AbstractSocketService<
         });
     }
     private onservererror(error: Error): void {
-        const msg = MessageBundle.text("ERROR_CORE_SERVICE_NET_SOCKET_SERVER_ERROR", this.id, error.message);
+        const msg = MessageBundle.text("ERROR_CORE_SERVICE_NET_SOCKET_SERVER_ERROR", this.type, this.id, error.message);
         void TIANYU.audit.error(this.app, msg, ErrorHelper.getError(SERVICE_ERROR_CODES.INTERNAL_ERROR, msg, error.stack));
         this.onError?.(null, error);
     }
@@ -360,8 +360,8 @@ export abstract class AbstractSocketService<
             Buffer.from(
                 ErrorHelper.getErrorString(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION"),
-                    MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_DET"),
+                    MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION", this.type),
+                    MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_DET"),
                 ),
                 "utf-8",
             ),
@@ -369,7 +369,7 @@ export abstract class AbstractSocketService<
         this.handleClose(conn);
         this.onError?.(
             this.handleRemote(conn, request),
-            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_ERR", id)),
+            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_ERR", id)),
         );
     }
     private async handleInvalidConnection(conn: SOCKET_RAW, request: REQ): Promise<void> {
@@ -378,8 +378,8 @@ export abstract class AbstractSocketService<
             Buffer.from(
                 ErrorHelper.getErrorString(
                     SERVICE_ERROR_CODES.INTERNAL_ERROR,
-                    MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER"),
-                    MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_DET"),
+                    MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER", this.type),
+                    MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_DET"),
                 ),
                 "utf-8",
             ),
@@ -387,7 +387,7 @@ export abstract class AbstractSocketService<
         this.handleClose(conn);
         this.onError?.(
             this.handleRemote(conn, request),
-            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_ERR")),
+            new Error(MessageBundle.text("ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_ERR")),
         );
     }
 

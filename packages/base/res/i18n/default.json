@@ -57,21 +57,19 @@
     "ERROR_CODE_SERVICE_NET_HTTP_REST_NOT_FOUND_DET": "Request '{0}' => '{1}{2}' could not be executed due to request url handler does not exist or the method handler of this url is not configered.",
     "ERROR_CODE_SERVICE_NET_HTTP_GENERAL_ERROR": "Technical error occurs when processing request.",
 
-    "ERROR_CORE_SERVICE_NET_TCP_SOCKET_ERROR": "tcp-server[{0}] error on connection[{1}:{2}] - {3}",
-    "ERROR_CORE_SERVICE_NET_TCP_WRITE_RESPONSE_ERROR": "tcp-server[{0}] error on sending to remote[{1}:{2}] - {3}",
-    "ERROR_CORE_SERVICE_NET_TCP_GENERAL_ERROR": "tcp-server[{0}] error - {1}",
-
     "ERROR_CORE_SERVICE_NET_UDP_WRITE_RESPONSE_ERROR": "udp-server[{0}] error on sending to remote {1}:{2} - {3}",
     "ERROR_CORE_SERVICE_NET_UDP_GENERAL_ERROR": "udp-server[{0}] error at local[{1}:{2}] - {3}",
 
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION": "websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on duplicated link.",
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_DET": "please ensure the connection link is not used.",
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_DUPLICATED_CONNECTION_ERR": "duplicated connection for same id: {0}",
+    "ERROR_CORE_SERVICE_NET_SOCKET_SERVER_ERROR": "{0} Socket Service[{1}] error - {2}",
 
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER": "websocket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on current user.",
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_DET": "please ensure the connection user is valid.",
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVICE_INVALID_USER_ERR": "user connection cannot be validated",
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_ERROR": "websocket-server[{0}] error - {1}",
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION": "{0} socket-connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on duplicated link.",
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_DET": "please ensure the connection link is not used.",
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_ERR": "duplicated connection for same id: {0}",
+
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER": "{0} connection creation failed. This might be an authorication issue or internal server problem, could not to create connection on current user.",
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_DET": "please ensure the connection user is valid.",
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_ERR": "user connection cannot be validated",
+
     "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN": "websocket-server[{0}] error - the instance is running on ${`[{1}]:{2}`} already.",
     "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN_DET": "websocket server will be automatically running when the instance is created, not needs to explicitly start it.",
 
@@ -88,7 +86,7 @@
 
     "ERROR_MODULES_NET_HTTP2_TRANSFER": "request data from {0} failed",
 
-    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID": "Connect remote '${payload.host} ${payload.url}' in HTTP failed",
+    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID": "Connect remote '{0}{1}' in HTTP failed",
     "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID_DET": "Could not connect remote in HTTP protocol outside of Development environment.",
     "ERROR_MODULES_NET_RPC_RESPONSE_CONVERTION_FAILED": "Convert RPC data to target structure failed",
     "ERROR_MODULES_NET_RPC_REQUEST_FAILED": "request to remote to {0}://{1}{0} failed",

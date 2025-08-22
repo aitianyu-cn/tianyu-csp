@@ -1,4 +1,99 @@
 {
-    "ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX": "在字母表 \"{1}\" 中无法索引 {0} 字符",
-    "ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER": "字母表中无法找到字符: {0}"
+    "ERROR_GENERAL_ERROR": "出现了一个未知错误。",
+
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_INDEX": "在字母表\"{1}\"中索引无效：{0}",
+    "ERROR_BASE_CRYPTO_BASE32_INVALID_CHARACTER": "发现无效字符：{0}",
+
+    "ERROR_BASE_OBJECT_DATAVIEW_PARSE_TYPE_ERRORY": "期望`data`是一个ArrayBuffer、Buffer、Int8Array、Uint8Array或Uint8ClampedArray。",
+
+    "ERROR_BASE_OBJECT_JSON_PARSE_EXCEPTION": "无法安全地将字符串\"{0}...\"解析为对象。",
+
+    "ERROR_BASE_OBJECT_STRING_OBJ_PARSE_FUNCTION": "无法序列化'函数'类型的对象。",
+    "ERROR_BASE_OBJECT_STRING_OBJ_parse_exception": "无法安全地序列化对象。",
+
+    "ERROR_CORE_HANDLER_DISPATCH_PROCESS": "{0}处理过程中出现错误。",
+    "ERROR_CORE_HANDLER_DISPATCH_REQUEST_PROCESS_DET": "由于某些技术问题，网络请求无法被内部处理。",
+    "ERROR_CORE_HANDLER_DISPATCH_JOB_PROCESS_DET": "由于某些技术问题（JobManager无效），作业无法被内部处理。",
+
+    "ERROR_CORE_HANDLER_REQUEST_UNHANDLED": "请求无法被处理",
+    "ERROR_CORE_HANDLER_REQUEST_UNHANDLED_DET": "网络分发器未初始化或不存在。",
+
+    "ERROR_CORE_INFRA_CODE_FEATURE_FAILED": "无法读取功能'{0}'的启用状态。",
+    "ERROR_CORE_INFRA_CODE_XCALL_UNEXIST": "系统外部函数'{0}.{1}'未配置。",
+    "ERROR_CORE_INFRA_CODE_XCALL_NO_METHOD": "系统外部函数'{0}.{1}.{2}'无法访问。",
+    "ERROR_CORE_INFRA_CODE_SESSION_ID_ERROR": "无法读取会话'{0}'的信息。",
+    "ERROR_CORE_INFRA_CODE_SESSION_INVALID": "会话无效。",
+    "ERROR_CORE_INFRA_CODE_SESSION_USER_ID_ERROR": "无法读取会话'{0}'的信息。",
+    "ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID": "用户无效。",
+    "ERROR_CORE_INFRA_CODE_SESSION_LICENSE_ERROR": "无法读取许可证'{0}'的信息。",
+    "ERROR_CORE_INFRA_CODE_SESSION_LICENSE_INVALID": "许可证无效。",
+    "ERROR_CORE_INFRA_CODE_SESSION_PRIVILEGE_ERROR": "无法读取许可证'{0}'的角色信息。",
+
+    "ERROR_CORE_INFRA_IMPORTER_MGR_EMPTY_PACK": "导入的包和对象不能为空。",
+    "ERROR_CORE_INFRA_IMPORTER_MGR_PACK_UNDIRECT": "从路径{2}未找到导入包'{0}'和对象'{1}'。",
+    "ERROR_CORE_INFRA_IMPORTER_MGR_PACK_MOVED": "导入包'{0}'和对象'{1}'失败，可能已被删除或移动。",
+
+    "ERROR_CORE_INFRA_LIFECYCLE_MGR_FAILED": "对象生命周期回收失败。",
+
+    "ERROR_CORE_INFRA_LOG_MGR_FAILED": "日志管理器无法记录'{0}'到'{1}'。",
+
+    "ERROR_CORE_INFRA_TRACE_MGR_FAILED": "跟踪管理器无法记录'{0}'的跟踪信息。",
+
+    "ERROR_CORE_INFRA_USAGE_MGR_FAILED": "使用量管理器无法记录函数'{0}'在项目'{1}'中的使用情况。",
+
+    "ERROR_CORE_SCRIPT_JOBRUNNER_LOADING_FAILED": "从{0}({1})执行作业失败。",
+    "ERROR_CORE_SCRIPT_JOBRUNNER_RUNTIME_FAILED": "执行作业'{0}'失败，负载：{1}。",
+
+    "ERROR_CORE_SCRIPT_REQUEST_RUNNER_LOADING_FAILED": "从{0}执行请求失败。",
+
+    "ERROR_CORE_SERVICE_NET_ABS_HTTP_ERROR": "{0}:{1}上的HTTP服务器错误 - {2}",
+    "ERROR_CORE_SERVICE_NET_HTTP_INVALID_CALL": "未找到请求方法处理程序，请确保您的HTTP请求使用了正确的方法。",
+    "ERROR_CORE_SERVICE_NET_HTTP_REST_NOT_FOUND": "请求'{0}'不可访问，请检查URL并稍后再试。",
+    "ERROR_CODE_SERVICE_NET_HTTP_REST_NOT_FOUND_DET": "请求'{0}' => '{1}{2}'无法执行，因为请求处理程序或URL的方法处理程序未配置。",
+    "ERROR_CODE_SERVICE_NET_HTTP_GENERAL_ERROR": "处理请求时出现未知错误。",
+
+    "ERROR_CORE_SERVICE_NET_UDP_WRITE_RESPONSE_ERROR": "UDP-Server[{0}]在发送到远程{1}:{2}时出错 - {3}",
+    "ERROR_CORE_SERVICE_NET_UDP_GENERAL_ERROR": "UDP-Server[{0}]在本地[{1}:{2}]处出错 - {3}",
+
+    "ERROR_CORE_SERVICE_NET_SOCKET_SERVER_ERROR": "{0}-Socket服务[{1}]出现错误 - {2}",
+
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION": "{0}-Socket连接创建失败。这可能是授权问题或内部服务器问题，无法在重复链接上创建连接。",
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_DET": "请确保连接链路未被使用。",
+    "ERROR_CORE_SERVICE_NET_SERVICE_DUPLICATED_CONNECTION_ERR": "同一ID的重复连接：{0}",
+
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER": "{0}-连接创建失败。这可能是授权问题或内部服务器问题，无法在当前用户上创建连接。",
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_DET": "请确保连接用户有效。",
+    "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_ERR": "用户连接无法验证",
+
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN": "Websocket-Server[{0}]出错 - 实例已在`[{1}]:{2}`上运行。",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN_DET": "创建实例时会自动启动WebSocket服务器，无需显式启动。",
+
+    "ERROR_JOB_MGR_START_FAILED": "启动作业失败",
+    "ERROR_JOB_RUNNER_TIMEOUT": "作业'{0}'在超过{1}秒后仍未完成。",
+    "ERROR_JOB_WORKER_INVALID": "新作业运行失败，因为先前的作业仍在运行或出现致命错误。",
+
+    "ERROR_LOADER_PROXY_PROTOCOL_INVALID": "代理到http://{0}{1}失败",
+    "ERROR_LOADER_PROXY_PROTOCOL_INVALID_DET": "由于安全要求，在生产环境中不再支持'HTTP/1.1无SSL/TSL'协议，请提供一个HTTPS安全主机。",
+    "ERROR_LOADER_PROXY_REQUEST_FAILED": "请求代理到{0}://{1}{0}失败",
+
+    "ERROR_MODULES_FS_FILE_OPTER_FAILED": "[FileStreamOperator]尝试关闭文件失败，因为文件已修改但未保存。",
+    "ERROR_MODULES_FS_FILE_OPTER_FAILED_DET": "文件：{0}\n操作：您可以调用<实例>.flush或设置<实例>.close()的forceSave参数为false，并再次尝试",
+
+    "ERROR_MODULES_NET_HTTP2_TRANSFER": "从{0}请求数据失败",
+
+    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID": "连接远程'{0}{1}'在HTTP中失败",
+    "ERROR_MODULES_NET_RPC_PROTOCOL_INVALID_DET": "由于安全要求，无法在开发环境之外连接到远程的HTTP协议，请提供一个HTTPS安全主机。",
+    "ERROR_MODULES_NET_RPC_RESPONSE_CONVERTION_FAILED": "将RPC响应数据转换为目标结构失败",
+    "ERROR_MODULES_NET_RPC_REQUEST_FAILED": "请求代理到{0}://{1}{0}失败",
+
+    "ERROR_MODULES_NET_TCP_CONNECTION_ERROR": "TCP-Client连接到远程[{0}:{1}]失败 - {2}",
+    "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED": "向远程[{0}:{1}]发送数据失败 - 源数据[{2}] - {3}",
+    "ERROR_MODULES_NET_UDP_CONNECTION_ERROR": "UDP-Client连接到远程[{0}:{1}]失败 - {2}",
+
+    "ERROR_UTILS_FILE_HELPER_OPEN_FAILED": "以模式{1}打开文件[{0}]失败 - 错误：{2}",
+    "ERROR_UTILS_FILE_HELPER_READ_FAILED": "读取文件[{0}]失败 - 错误：{1}",
+    "ERROR_UTILS_FILE_HELPER_WRITE_FAILED": "将数据[{1}{2}]写入文件[{0}]失败 - 错误：{3}",
+    "ERROR_UTILS_FILE_HELPER_WRITE_DATA_LOST": "将数据[{1}{2}]写入文件[{0}]失败 - 错误：期望写入{3}字节，但只写入了{4}字节。",
+    "ERROR_UTILS_FILE_HELPER_CLOSE_FAILED": "关闭文件[{0}]失败 - 错误：{1}",
+    "ERROR_UTILS_FILE_HELPER_SEEK_FAILED": "在文件[{0}]中定位到位置{1}失败 - 错误：{2}"
 }

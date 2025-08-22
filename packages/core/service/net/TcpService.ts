@@ -180,5 +180,5 @@ export class TcpService extends AbstractSocketService<
     }
 
     public static DEFAULT_PING: string = "PING";
-    public static DEFAULT_PONG: string = "PoNG";
+    public static DEFAULT_PONG: string = "PONG";
 }
