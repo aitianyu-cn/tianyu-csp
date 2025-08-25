@@ -65,7 +65,7 @@
     "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_DET": "Please ensure the connection user is valid.",
     "ERROR_CORE_SERVICE_NET_SERVICE_INVALID_USER_ERR": "User connection cannot be validated",
 
-    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN": "Websocket-Server[{0}] error - the instance is running on ${`[{1}]:{2}`} already.",
+    "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN": "Websocket-Server[{0}] error - the instance is running on [{1}]:{2} already.",
     "ERROR_CORE_SERVICE_NET_WEBSOCKET_SERVER_LISTEN_DET": "Websocket Server will be automatically running when the instance is created, not needs to explicitly start it.",
 
     "ERROR_JOB_MGR_START_FAILED": "Start Job Failed",
