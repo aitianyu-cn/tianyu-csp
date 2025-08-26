@@ -82,11 +82,12 @@ export async function audit4TCP(
     buffers: IAuditRecordBuffer[],
 ): Promise<void> {
     const client = new TIANYU.import.MODULE.Net.TcpClient({ log: false });
-    await client.connect({
+    client.connect({
         family: family === "IPv4" ? 4 : /* istanbul ignore next */ 6,
         port: remote.port,
         host: remote.address,
     });
+    await client.connecting();
 
     for (const buffer of buffers) {
         const addition = buffer.additionalData ? ` --- ${StringObj.stringifySafe(buffer.additionalData)}` : "";
@@ -102,7 +103,7 @@ export async function audit4TCP(
         await client.send(Buffer.from(msg));
     }
 
-    client.close();
+    await client.close();
 }
 
 export async function audit4HTTP(

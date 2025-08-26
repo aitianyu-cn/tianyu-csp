@@ -53,20 +53,20 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
 
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onData = (data: Buffer) => {
+                client.on("message", (data: Buffer) => {
                     dataStr = data.toString("utf-8");
                     resolve();
-                };
-                client.onData = onData;
+                });
             });
-            await client.connect({
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await client.connecting();
             await client.send(Buffer.from("Hello"));
             await receivePromise;
 
-            client.close();
+            await client.close();
 
             expect(dataStr).toEqual("Hello World!");
         });
@@ -104,66 +104,70 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
         it("ping", async () => {
             const client = new Net.TcpClient({ log: true, autoPong: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onPing = () => {
+                client.on("ping", () => {
                     resolve();
-                };
-                client.onPing = onPing;
+                });
             });
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await client.connecting();
             await TimerTools.sleep(1000);
 
             await SERVICE.ping("123");
             await receivePromise;
 
-            client.close();
+            await client.close();
         }, 10000);
 
         it("pong", async () => {
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onPong = () => {
+                client.on("pong", () => {
                     resolve();
-                };
-                client.onPong = onPong;
+                });
             });
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await client.connecting();
             await TimerTools.sleep(1000);
+
             await SERVICE.pong("123");
             await receivePromise;
 
-            client.close();
+            await client.close();
         }, 10000);
 
         it("duplicate connection", async () => {
             const first = new Net.TcpClient({ log: true });
-            await first.connect({
+            first.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
-
+            await first.connecting();
             let dataStr = "";
 
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onData = (data: Buffer) => {
+                client.on("message", (data: Buffer) => {
                     dataStr = data.toString("utf-8");
                     resolve();
-                };
-                client.onData = onData;
+                });
             });
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await client.connecting();
             await receivePromise;
 
-            client.close();
+            await client.close();
 
             expect(Json.parseSafe(dataStr)?.code).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
         });
@@ -171,20 +175,20 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
         it("handle ping", async () => {
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onPong = () => {
+                client.on("pong", () => {
                     resolve();
-                };
-                client.onPong = onPong;
+                });
             });
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
-            await TimerTools.sleep(1000);
+            await client.connecting();
             await client.ping();
             await receivePromise;
 
-            client.close();
+            await client.close();
         }, 10000);
 
         it("ping failed", async () => {
@@ -195,14 +199,15 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
                 return Promise.reject();
             });
             const client = new Net.TcpClient({ log: true });
-            client.onData = jest.fn();
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await client.connecting();
             await client.send(Buffer.from(TcpService.DEFAULT_PING));
 
-            client.close();
+            await client.close();
 
             await errorPro;
         });
@@ -215,15 +220,16 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
                 };
                 SERVICE.once("pong", onData);
             });
-            await client.connect({
+
+            client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
-            await TimerTools.sleep(1000);
+            await client.connecting();
             await client.pong();
             await receivePromise;
 
-            client.close();
+            await client.close();
         }, 10000);
     });
 

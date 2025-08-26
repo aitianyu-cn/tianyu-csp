@@ -1,21 +1,13 @@
 /** @format */
 
-import { IReleasable, IWSClientSendOption } from "#interface";
-import { guid } from "@aitianyu.cn/types";
+import { IReleasable, ISocketAddress, ISocketLongConnectionOption, IWSClientSendOption, SocketClientOptions } from "#interface";
 import { ClientRequestArgs } from "http";
-import { ClientOptions, RawData, WebSocket } from "ws";
+import { ClientOptions, WebSocket } from "ws";
+import { AbstractSocketClient } from "./AbstractSocketClient";
 
 /** Web Socket Client */
-export class WebsocketClient implements IReleasable {
-    private _id: string;
-    private _socket: WebSocket;
-    private _connecting: Promise<void>;
-
-    public onData?: (data: RawData, isBinary: boolean) => void;
-    public onPing?: () => void;
-    public onPong?: () => void;
-    public onError?: (error: Error) => void;
-
+export class WebsocketClient extends AbstractSocketClient<WebSocket> implements IReleasable {
+    private _address: ISocketAddress;
     /**
      * Create a Web Socket Instance
      *
@@ -23,36 +15,25 @@ export class WebsocketClient implements IReleasable {
      * @param protocols connection protocols defines
      * @param options client options
      */
-    public constructor(address: string | URL, protocols?: string | string[], options?: ClientOptions | ClientRequestArgs) {
-        this._id = guid();
-        this._socket = new WebSocket(address, protocols, options);
+    public constructor(
+        address: string | URL,
+        protocols?: string | string[],
+        options?: ISocketLongConnectionOption & SocketClientOptions & (ClientOptions | ClientRequestArgs),
+    ) {
+        super("ws", new WebSocket(address, protocols, options), options);
 
-        this._connecting = new Promise<void>((resolve) => {
-            this._socket.once("open", () => {
-                TIANYU.lifecycle.join(this);
-                resolve();
-            });
-        });
-        this._socket.on("close", () => {
-            TIANYU.lifecycle.leave(this.id);
-        });
+        this._address =
+            typeof address === "string"
+                ? WebsocketClient.handleURL(address)
+                : {
+                      address: address.href,
+                      port: 80,
+                  };
+
         this._socket.on("message", this.onmessage.bind(this));
         this._socket.on("ping", this.onping.bind(this));
         this._socket.on("pong", this.onpong.bind(this));
-        this._socket.on("error", this.onerror.bind(this));
-    }
-
-    public get id(): string {
-        return this._id;
-    }
-
-    /**
-     * Waiting for client connection established
-     *
-     * @returns return a waiting promise
-     */
-    public async connect(): Promise<void> {
-        await this._connecting;
+        this._socket.on("open", this.onconnect.bind(this));
     }
 
     public async close(): Promise<void> {
@@ -116,22 +97,14 @@ export class WebsocketClient implements IReleasable {
         });
     }
 
-    private onmessage(data: RawData, isBinary: boolean): void {
-        this.onData?.(data, isBinary);
+    protected get remote(): ISocketAddress {
+        return this._address;
     }
 
-    /* istanbul ignore next */
-    private onping(): void {
-        this.onPing?.();
-    }
-
-    /* istanbul ignore next */
-    private onpong(): void {
-        this.onPong?.();
-    }
-
-    /* istanbul ignore next */
-    private onerror(error: Error): void {
-        this.onError?.(error);
+    private static handleURL(url: string): ISocketAddress {
+        const paire = url.split(":");
+        const herf = paire.slice(0, paire.length - 1);
+        const port = Number(paire[paire.length - 1]);
+        return { address: herf.join(":"), port: Number.isInteger(port) ? port : 80 };
     }
 }

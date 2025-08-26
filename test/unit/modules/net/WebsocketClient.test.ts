@@ -17,6 +17,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
                         return "";
                 }
             },
+            path: "/",
         },
     );
     const messageList: { [key: string]: string[] } = {};
@@ -50,6 +51,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
     });
 
     describe("send message", () => {
+        afterEach(async () => {
+            await TimerTools.sleep(1000);
+        }, 10000);
+
         it("send message", async () => {
             const messages: string[] = [];
             const client = new TIANYU.import.MODULE.Net.WSClient("ws://localhost:60005", undefined, {
@@ -58,15 +63,40 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
                 },
             });
             expect(client.id).not.toEqual("");
+            expect(client["remote"].address).toEqual("ws://localhost");
+            expect(client["remote"].port).toEqual(60005);
 
-            client.onData = (data) => {
+            client.on("message", (data) => {
                 messages.push(data.toString("utf-8"));
-            };
+            });
 
-            await client.connect();
+            await client.connecting();
             await client.send(Buffer.from("hello", "utf-8"));
 
-            await TimerTools.sleep(4000);
+            await TimerTools.sleep(2000);
+            expect(messageList["123"]?.[0]).toEqual("hello");
+            expect(messages[0]).toEqual("hello world!");
+
+            await client.close();
+        }, 200000);
+
+        it("connect with URL", async () => {
+            const messages: string[] = [];
+            const client = new TIANYU.import.MODULE.Net.WSClient(new URL("ws://localhost:60005"), undefined, {
+                headers: {
+                    authorization: "123",
+                },
+            });
+            expect(client.id).not.toEqual("");
+
+            client.on("message", (data) => {
+                messages.push(data.toString("utf-8"));
+            });
+
+            await client.connecting();
+            await client.send(Buffer.from("hello", "utf-8"));
+
+            await TimerTools.sleep(2000);
             expect(messageList["123"]?.[0]).toEqual("hello");
             expect(messages[0]).toEqual("hello world!");
 
@@ -76,10 +106,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
         it("send with error", (done) => {
             const client = new TIANYU.import.MODULE.Net.WSClient("ws://localhost:60005");
 
-            void client.connect().finally(async () => {
+            void client.connecting().finally(async () => {
                 await client.close();
 
-                await TimerTools.sleep(3000);
+                await TimerTools.sleep(1500);
 
                 client.send(Buffer.from("")).then(
                     () => done.fail(),
@@ -97,24 +127,24 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
             });
             expect(client.id).not.toEqual("");
 
-            client.onData = (data) => {
+            client.on("message", (data) => {
                 messages.push(data.toString("utf-8"));
-            };
+            });
 
-            await client.connect();
+            await client.connecting();
             await client.send(Buffer.from("hello", "utf-8"));
 
-            await TimerTools.sleep(3000);
+            await TimerTools.sleep(1500);
             expect(messageList["123"]?.[0]).toEqual("hello");
             expect(messages[0]).toEqual("hello world!");
 
             await client.send(Buffer.from("hello-1", "utf-8"));
-            await TimerTools.sleep(4000);
+            await TimerTools.sleep(2000);
             expect(messageList["123"]?.[1]).toEqual("hello-1");
             expect(messages[1]).toEqual("hello world!");
 
             await client.send(Buffer.from("hello-2", "utf-8"));
-            await TimerTools.sleep(4000);
+            await TimerTools.sleep(2000);
             expect(messageList["123"]?.[2]).toEqual("hello-2");
             expect(messages[2]).toEqual("hello world!");
 
@@ -125,10 +155,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
     it("ping with error", (done) => {
         const client = new TIANYU.import.MODULE.Net.WSClient("ws://localhost:60005");
 
-        void client.connect().finally(async () => {
+        void client.connecting().finally(async () => {
             await client.close();
 
-            await TimerTools.sleep(3000);
+            await TimerTools.sleep(1500);
 
             client.ping().then(
                 () => done.fail(),
@@ -140,10 +170,10 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
     it("pong with error", (done) => {
         const client = new TIANYU.import.MODULE.Net.WSClient("ws://localhost:60005");
 
-        void client.connect().finally(async () => {
+        void client.connecting().finally(async () => {
             await client.close();
 
-            await TimerTools.sleep(3000);
+            await TimerTools.sleep(1500);
 
             client.pong().then(
                 () => done.fail(),
@@ -159,33 +189,49 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.modules.net.WebsocketClient", 
                 authorization: "123",
             },
         });
-        client.onPing = () => {
+        client.on("ping", () => {
             void client.pong(Buffer.from("pong", "utf-8"));
-        };
-        client.onPong = () => {
+        });
+        client.on("pong", () => {
             messages.push("pong");
-        };
+        });
         expect(client.id).not.toEqual("");
 
-        client.onData = (data) => {
+        client.on("message", (data) => {
             messages.push(data.toString("utf-8"));
-        };
+        });
 
-        await client.connect();
+        await client.connecting();
         await client.send(Buffer.from("hello", "utf-8"));
 
-        await TimerTools.sleep(3000);
+        await TimerTools.sleep(1500);
         expect(messageList["123"]?.[0]).toEqual("hello");
         expect(messages[0]).toEqual("hello world!");
 
         await client.ping();
-        await TimerTools.sleep(4000);
+        await TimerTools.sleep(2000);
         expect(messages[1]).toEqual("pong");
 
         await SERVICE.ping("123");
-        await TimerTools.sleep(4000);
+        await TimerTools.sleep(2000);
         expect(messageList["123"]?.[1]).toEqual("pong");
 
         await client.close();
     }, 500000);
+
+    it("connection error", (done) => {
+        const client = new TIANYU.import.MODULE.Net.WSClient("ws://localhost", undefined, {
+            headers: {
+                authorization: "123",
+            },
+        });
+
+        client.connecting().then(
+            () => done.fail(),
+            () => {
+                expect(client["remote"].port).toEqual(80);
+                done();
+            },
+        );
+    });
 });
