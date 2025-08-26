@@ -4,6 +4,7 @@ import { Json } from "#base/index";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { TcpService } from "#core/service/net/TcpService";
 import { Net } from "#module";
+import { TimerTools } from "test/tools/TimerTools";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", () => {
     const dataHanler = async (id: string, data: Buffer, _isBinary: boolean) => {
@@ -101,50 +102,43 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
         });
 
         it("ping", async () => {
-            let dataStr = "";
-
-            const client = new Net.TcpClient({ log: true });
+            const client = new Net.TcpClient({ log: true, autoPong: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onData = (data: Buffer) => {
-                    dataStr = data.toString("utf-8");
+                const onPing = () => {
                     resolve();
                 };
-                client.onData = onData;
+                client.onPing = onPing;
             });
             await client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await TimerTools.sleep(1000);
+
             await SERVICE.ping("123");
             await receivePromise;
 
             client.close();
-
-            expect(dataStr).toEqual(TcpService.DEFAULT_PING);
-        });
+        }, 10000);
 
         it("pong", async () => {
-            let dataStr = "";
-
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onData = (data: Buffer) => {
-                    dataStr = data.toString("utf-8");
+                const onPong = () => {
                     resolve();
                 };
-                client.onData = onData;
+                client.onPong = onPong;
             });
             await client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
+            await TimerTools.sleep(1000);
             await SERVICE.pong("123");
             await receivePromise;
 
             client.close();
-
-            expect(dataStr).toEqual(TcpService.DEFAULT_PONG);
-        });
+        }, 10000);
 
         it("duplicate connection", async () => {
             const first = new Net.TcpClient({ log: true });
@@ -175,27 +169,23 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
         });
 
         it("handle ping", async () => {
-            let dataStr = "";
-
             const client = new Net.TcpClient({ log: true });
             const receivePromise = new Promise<void>((resolve) => {
-                const onData = (data: Buffer) => {
-                    dataStr = data.toString("utf-8");
+                const onPong = () => {
                     resolve();
                 };
-                client.onData = onData;
+                client.onPong = onPong;
             });
             await client.connect({
                 host: "127.0.0.1",
                 port: 60001,
             });
-            await client.send(Buffer.from(TcpService.DEFAULT_PING));
+            await TimerTools.sleep(1000);
+            await client.ping();
             await receivePromise;
 
             client.close();
-
-            expect(dataStr).toEqual(TcpService.DEFAULT_PONG);
-        });
+        }, 10000);
 
         it("ping failed", async () => {
             const errorPro = new Promise<void>((resolve) => {
@@ -229,11 +219,12 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.service.net.TcpService", 
                 host: "127.0.0.1",
                 port: 60001,
             });
-            await client.send(Buffer.from(TcpService.DEFAULT_PONG));
+            await TimerTools.sleep(1000);
+            await client.pong();
             await receivePromise;
 
             client.close();
-        });
+        }, 10000);
     });
 
     describe("test case 3", () => {

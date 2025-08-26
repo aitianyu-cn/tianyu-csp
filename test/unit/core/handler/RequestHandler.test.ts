@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { RequestHandler } from "#core/handler/RequestHandler";
 import { createContributor } from "#core/InfraLoader";
 import { DISPATCH_HANDLER_MODULE_ID, HTTP_STATUS_CODE, NetworkServiceResponseData, REQUEST_HANDLER_MODULE_ID } from "#interface";
@@ -41,8 +42,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.RequestHandler", 
                     },
                     (error) => {
                         expect(error.code).toEqual(HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString());
-                        expect(error.message).toEqual("request could not be handled");
-                        expect(error.error).toEqual("network dispatcher is not inited or not exist.");
+                        expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_REQUEST_UNHANDLED"));
+                        expect(error.error).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_REQUEST_UNHANDLED_DET"));
                         done();
                     },
                 );

@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import * as SESSION_HANDLER from "#core/infra/code/SessionCodes";
 import { run_job_scripts } from "#core/script/JobRunnerImpl";
@@ -166,7 +167,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.script.JobRunnerImpl", ()
             const messagePort = {
                 postMessage: (data: any) => {
                     expect(data.error.length).toEqual(1);
-                    expect(data.error[0].error).toEqual("Technical error occurs.");
+                    expect(data.error[0].error).toEqual(MessageBundle.text("ERROR_GENERAL_ERROR"));
                 },
             };
             jest.spyOn(process, "exit").mockImplementation((code?: string | number | null | undefined) => {

@@ -87,6 +87,10 @@
     "ERROR_MODULES_NET_RPC_REQUEST_FAILED": "代理请求到 {0}://{1}{0} 失败。",
 
     "ERROR_MODULES_NET_TCP_CONNECTION_ERROR": "TCP-客户端连接到远程[{0}:{1}] 失败 - {2}",
+    "ERROR_MODULES_NET_TCP_AUTO_HEARTBEAT_FAILED": "TCP-客户端无法向远程服务器 [{0}:{1}] 发送 'PING'，心跳检测失败。",
+    "ERROR_MODULES_NET_TCP_AUTO_PONG_FAILED": "TCP-客户端已经从远程服务器 [{0}:{1}] 接收到 'PING'，但在发送自动 'PONG' 响应到远程时出现错误。",
+    "ERROR_MODULES_NET_TCP_HEARTBEAT_PING_FAILED": "TCP-客户端无法向远程服务器 [{0}:{1}] 发送 'PING'。",
+    "ERROR_MODULES_NET_TCP_HEARTBEAT_PONG_FAILED": "TCP-客户端无法向远程服务器 [{0}:{1}] 发送 'PONG'。",
     "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED": "发送到远程[{0}:{1}] 失败 - 源数据[{2}] - {3}",
     "ERROR_MODULES_NET_UDP_CONNECTION_ERROR": "UDP-客户端连接到远程[{0}:{1}] 失败 - {2}",
 

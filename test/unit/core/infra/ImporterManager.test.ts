@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ImporterManager", () => {
@@ -10,7 +11,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.ImporterManager", (
                 expect(true).toBeFalsy();
             } catch (e: any) {
                 expect(e.code).toEqual(SERVICE_ERROR_CODES.INTERNAL_ERROR);
-                expect(e.message).toEqual(`import package and Object should not be empty`);
+                expect(e.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_IMPORTER_MGR_EMPTY_PACK"));
             }
         });
 

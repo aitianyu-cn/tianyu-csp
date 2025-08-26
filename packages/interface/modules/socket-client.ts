@@ -1,6 +1,6 @@
 /** @format */
 
-import { ISocketAddress, SocketAddressFamily } from "../service/socket-service";
+import { ISocketAddress, ISocketLongConnectionOption, ITcpOption, SocketAddressFamily } from "../service/socket-service";
 
 /** Socket Client Configuration Options */
 export interface SocketClientOptions {
@@ -26,4 +26,4 @@ export interface UdpClientResponse {
 }
 
 /** TCP Client Options */
-export interface TcpClientOptions extends SocketClientOptions {}
+export interface TcpClientOptions extends SocketClientOptions, ITcpOption, ISocketLongConnectionOption {}

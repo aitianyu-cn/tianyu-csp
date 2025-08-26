@@ -8,6 +8,7 @@ import {
     handleSessionUser,
 } from "#core/infra/code/SessionCodes";
 import * as XCALL from "#core/infra/code/GenericXcall";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 const SESSION_ID = "session_id";
 const USER_ID = "test_user";
@@ -28,7 +29,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 () => done.fail(),
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_NOT_VALID);
-                    expect(error.message).toEqual("Session not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_INVALID"));
                     done();
                 },
             );
@@ -46,7 +47,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 () => done.fail(),
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_SESSION_OUT_OF_TIME);
-                    expect(error.message).toEqual("Session not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_INVALID"));
                     done();
                 },
             );
@@ -80,7 +81,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 },
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_NOT_FOUND);
-                    expect(error.message).toEqual("User not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID"));
                     done();
                 },
             );
@@ -99,7 +100,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 },
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_NOT_FOUND);
-                    expect(error.message).toEqual("User not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID"));
                     done();
                 },
             );
@@ -118,7 +119,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 },
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.USER_NOT_FOUND);
-                    expect(error.message).toEqual("User not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_USER_INVALID"));
                     done();
                 },
             );
@@ -153,7 +154,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.infra.code.SessionCodes",
                 },
                 (error) => {
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.LICENSE_ERROR);
-                    expect(error.message).toEqual("license not valid.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_CORE_INFRA_CODE_SESSION_LICENSE_INVALID"));
                     done();
                 },
             );

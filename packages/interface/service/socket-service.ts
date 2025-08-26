@@ -89,12 +89,16 @@ export interface IWSServerConnection {
     close(): void;
 }
 
-export interface IScoketServiceOption<REQ extends ISocketConnectionRequest | undefined> {
-    autoPong?: boolean;
-    /** Set auto to ping the client for keeping long connection life */
+export interface ISocketLongConnectionOption {
+    /** Set auto to ping the remote for keeping long connection life */
     autoPing?: boolean;
+    /** Set auto to pong the remote for keeping long connection life */
+    autoPong?: boolean;
     /** Connection keeplive time for sending ping message timely */
     timeout?: number;
+}
+
+export interface IScoketServiceOption<REQ extends ISocketConnectionRequest | undefined> extends ISocketLongConnectionOption {
     /** Function to generate client id */
     clientIdGenerator?: (remote: ISocketAddress, req: REQ) => string;
     /** Function to handle error */
@@ -108,10 +112,12 @@ export interface ISocketConnectionRequest {
     };
 }
 
-export interface ITcpServiceOption extends IScoketServiceOption<ISocketConnectionRequest> {
+export interface ITcpOption {
     pingMsg?: string;
     pongMsg?: string;
 }
+
+export interface ITcpServiceOption extends IScoketServiceOption<ISocketConnectionRequest>, ITcpOption {}
 
 /** Option for Web Socket Client Sending */
 export interface IWSClientSendOption {

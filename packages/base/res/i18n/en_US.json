@@ -87,6 +87,10 @@
     "ERROR_MODULES_NET_RPC_REQUEST_FAILED": "Request to remote to {0}://{1}{0} failed",
 
     "ERROR_MODULES_NET_TCP_CONNECTION_ERROR": "TCP-Client connect to remote[{0}:{1}] failed - {2}",
+    "ERROR_MODULES_NET_TCP_AUTO_HEARTBEAT_FAILED": "TCP-Client could not send 'PING' to remote server[{0}:{1}]. Heartbeat checking failed.",
+    "ERROR_MODULES_NET_TCP_AUTO_PONG_FAILED": "TCP-Client received 'PING' from remote server[{0}:{1}] already, but has error when sending AUTO 'PONG' response to remote.",
+    "ERROR_MODULES_NET_TCP_HEARTBEAT_PING_FAILED": "TCP-Client could not send PING to remote server[{0}:{1}].",
+    "ERROR_MODULES_NET_TCP_HEARTBEAT_PONG_FAILED": "TCP-Client could not send PONG to remote server[{0}:{1}].",
     "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED": "Send to remote[{0}:{1}] failed - source data[{2}] - {3}",
     "ERROR_MODULES_NET_UDP_CONNECTION_ERROR": "UDP-Client connect to remote[{0}:{1}] failed - {2}",
 

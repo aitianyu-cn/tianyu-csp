@@ -1,5 +1,6 @@
 /** @format */
 
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 import { SERVICE_ERROR_CODES } from "#core/Constant";
 import { DispatchHandler } from "#core/handler/DispatchHandler";
 import { createContributor } from "#core/InfraLoader";
@@ -27,10 +28,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler_I
                     expect(error.status).toEqual("error");
 
                     expect(error.error.code).toEqual(HTTP_STATUS_CODE.SERVICE_UNAVAILABLE.toString());
-                    expect(error.error.message).toEqual("error occurs when request processing.");
-                    expect(error.error.error).toEqual(
-                        "network request could not be handled internally due to some technical errors.",
-                    );
+                    expect(error.error.message).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_PROCESS", "request"));
+                    expect(error.error.error).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_REQUEST_PROCESS_DET"));
                     done();
                 },
             );
@@ -48,10 +47,8 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.core.handler.DispatchHandler_I
                     expect(result.status).toEqual("error");
 
                     expect(result.error[0].code).toEqual(SERVICE_ERROR_CODES.JOB_RUNNING_INITIAL_FAILED);
-                    expect(result.error[0].message).toEqual("error occurs when job processing.");
-                    expect(result.error[0].error).toEqual(
-                        "job could not be handled internally due to some technical errors (JobManager is not valid).",
-                    );
+                    expect(result.error[0].message).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_PROCESS", "job"));
+                    expect(result.error[0].error).toEqual(MessageBundle.text("ERROR_CORE_HANDLER_DISPATCH_JOB_PROCESS_DET"));
                     done();
                 },
                 () => done.fail(),

@@ -6,6 +6,7 @@ import { JobWorker } from "#job";
 import { PROJECT_ROOT_PATH } from "packages/Common";
 import path from "path";
 import * as TYPES from "@aitianyu.cn/types";
+import { MessageBundle } from "#base/res/InternalMessageBundle";
 
 describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
     describe("run", () => {
@@ -114,7 +115,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
                     done.fail();
                 },
                 (error) => {
-                    expect(error.message).toEqual("New job run failed, Preious job is in running or has fatal error.");
+                    expect(error.message).toEqual(MessageBundle.text("ERROR_JOB_WORKER_INVALID"));
                     expect(error.code).toEqual(SERVICE_ERROR_CODES.PRE_JOB_INVALID);
                     done();
                 },
@@ -155,7 +156,7 @@ describe("aitianyu-cn.node-module.tianyu-csp.unit.job.JobWorker", () => {
                             done.fail();
                         },
                         (error) => {
-                            expect(error.message).toEqual("New job run failed, Preious job is in running or has fatal error.");
+                            expect(error.message).toEqual(MessageBundle.text("ERROR_JOB_WORKER_INVALID"));
                             expect(error.code).toEqual(SERVICE_ERROR_CODES.PRE_JOB_RUNNING);
                             done();
                         },

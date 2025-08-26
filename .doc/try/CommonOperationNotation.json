@@ -1,0 +1,12 @@
+{
+    "op-name": {
+        "type": "operation name",
+        "col": [
+            "col_name",
+            {
+                "src": "src_name",
+                "target": "target_name"
+            }
+        ]
+    }
+}
