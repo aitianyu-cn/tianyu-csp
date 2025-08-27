@@ -105,18 +105,26 @@ export interface IScoketServiceOption<REQ extends ISocketConnectionRequest | und
     error?: (remote: ISocketAddress | string | null, error: Error) => void;
 }
 
+/** Socket Connection Request Body */
 export interface ISocketConnectionRequest {
+    /** Socket connection info */
     socket: {
+        /** Remote address */
         remoteAddress?: string;
+        /** Remote port */
         remotePort?: number;
     };
 }
 
+/** TCP connect option */
 export interface ITcpOption {
+    /** custom ping msg */
     pingMsg?: string;
+    /** custom pong msg */
     pongMsg?: string;
 }
 
+/** TCP server option */
 export interface ITcpServiceOption extends IScoketServiceOption<ISocketConnectionRequest>, ITcpOption {}
 
 /** Option for Web Socket Client Sending */

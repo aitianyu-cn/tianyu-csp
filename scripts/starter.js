@@ -13,7 +13,7 @@ try {
     dispatcher.initialize();
     requester.initialize();
 
-    const http1 = new TianyuCSP.Infra.HttpService(
+    const http1 = new TianyuCSP.Infra.Net.HttpService(
         {
             host: "0.0.0.0",
             port: "4000",

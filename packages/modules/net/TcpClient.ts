@@ -65,10 +65,19 @@ export class TcpClient extends AbstractSocketClient<net.Socket> implements IRele
         return this.sendMessage(msg, "ERROR_MODULES_NET_TCP_UDP_REQUEST_FAILED");
     }
 
+    /**
+     * To send a connection ping
+     *
+     * @returns return a promise for pinging done
+     */
     public async ping(): Promise<void> {
         return this.sendMessage(Buffer.from(this._pingMsg, "utf-8"), "ERROR_MODULES_NET_TCP_HEARTBEAT_PING_FAILED");
     }
-
+    /**
+     * To send a connection pong
+     *
+     * @returns return a promise for ponging done
+     */
     public async pong(): Promise<void> {
         return this.sendMessage(Buffer.from(this._pongMsg, "utf-8"), "ERROR_MODULES_NET_TCP_HEARTBEAT_PONG_FAILED");
     }
