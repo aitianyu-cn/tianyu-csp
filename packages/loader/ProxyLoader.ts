@@ -58,6 +58,13 @@ export async function loader(): Promise<NetworkServiceResponseData> {
     const body = TIANYU.request.body;
     const method: HttpCallMethod = body ? "POST" : "GET";
 
+    /* istanbul ignore if */
+    if (protocol !== "http2") {
+        for (const headkey of Object.keys(header)) {
+            headkey.startsWith(":") && delete header[headkey];
+        }
+    }
+
     const { host, port } = HttpHelper.parseHost(relocatHost);
     const client = HTTP_CLIENT_MAP[protocol](host, url, method);
     client.setHeader(header);

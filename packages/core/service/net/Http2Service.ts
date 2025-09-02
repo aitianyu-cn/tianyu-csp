@@ -18,6 +18,8 @@ import { StringObj } from "#base/object/String";
 import { Json } from "#base/object/Json";
 import { MessageBundle } from "#base/res/InternalMessageBundle";
 
+const HTTP2_UNSUPPORTED_HEADER = ["transfer-encoding", "connection"];
+
 export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2Events> {
     protected declare _server: Http2SecureServer;
 
@@ -113,8 +115,7 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
                 ...response.headers,
                 ":status": response.statusCode,
             };
-
-            stream.respond(header);
+            stream.respond(this._processHeader(header));
             stream.end(
                 response.binary && response.body
                     ? Buffer.from(response.body, "base64")
@@ -128,5 +129,16 @@ export class Http2Service extends AbstractHttpService<Http2ServiceOption, IHttp2
                       ),
             );
         }, 0);
+    }
+
+    private _processHeader(header: OutgoingHttpHeaders): OutgoingHttpHeaders {
+        const newheader: OutgoingHttpHeaders = {};
+        for (const item of Object.keys(header)) {
+            if (!HTTP2_UNSUPPORTED_HEADER.includes(item)) {
+                newheader[item] = header[item];
+            }
+        }
+
+        return newheader;
     }
 }
